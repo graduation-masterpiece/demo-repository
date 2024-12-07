@@ -1,13 +1,15 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 
+
+
 const SettingsPage = () => {
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
-      <div className="flex flex-col p-20">
-        <p className="text-[50px] font-bold border-b-black border-b-[1px] ml-80 whitespace-nowrap w-fit">
-          Settings
+      <div className="flex flex-col w-[1200px] h-[770px] mx-[18em] mt-[4.5em]">
+        <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
+         Settings
         </p>
       </div>
     </div>

@@ -3,20 +3,17 @@ import React from "react";
 
 export const ServiceName = () => {
   return (
-    <div className="flex items-center justify-center space-x-4 mt-40 mr-10">
-      {/* 이미지 영역 */}
-      <div>
-        <img
-          src="/images/book.png" // 닫기 아이콘 이미지 경로
-          alt="Book"
-          className="w-[120px] h-[110px]"
-        />
-      </div>
-
-      {/* 텍스트 영역 */}
-      <div className="text-[48px] font-bold text-black mt-7">
-        Books in short form
-      </div>
+    <div className="flex flex-col text-left space-y-[-20px]">
+      <p className="text-[72px] font-bold text-black text-left">
+        Books
+      </p>
+      <p className="text-[36px] text-black text-left ml-1">
+        in
+      </p>
+      <p className="text-[48px] font-bold text-black text-left ml-0.5 pb-2.5">
+        Short form
+      </p>
+      <p className="border-[2.5px] border-black w-[233px] ml-1"></p>
     </div>
   );
 };
