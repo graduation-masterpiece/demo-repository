@@ -1,63 +1,72 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2'); // MySQL 모듈을 불러옵니다.
+const db = require('./db'); // db.js에서 db 객체 가져오기
+const { processBook } = require('./gpt'); // gpt.js에서 processBook 함수 가져오기
 const app = express();
 
-// MySQL 연결 설정
-const db = mysql.createConnection({
-  host: 'localhost',     // MySQL 서버 호스트 (보통 localhost)
-  user: 'root',          // MySQL 사용자명
-  password: 'qkrwogur1',          // MySQL 비밀번호 (빈 문자열이면 비밀번호 없을 때)
-  database: 'graduation_work'  // 사용할 데이터베이스 이름
-});
-
-// MySQL 연결
-db.connect((err) => {
-  if (err) {
-    console.error('MySQL 연결 오류:', err);
-    return;
-  }
-  console.log('MySQL에 연결되었습니다.');
-});
-
-// CORS 설정: http://localhost:3000에서 오는 요청을 허용
+// CORS 설정
 app.use(cors({
-  origin: 'http://localhost:3000',  // React 앱의 포트
-  methods: ['GET', 'POST'],        // 필요한 HTTP 메소드
-  allowedHeaders: ['Content-Type'] // 필요한 헤더
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
 }));
 
-// body-parser 설정 (혹시 필요하다면)
+// body-parser 설정
 app.use(express.json());
 
 // POST 요청 처리
-app.post('/book', (req, res) => {
-  const { isbn, title, author, publisher, pubdate, description } = req.body;
+app.post('/book', async (req, res) => {
+  const { isbn, title, author, publisher, pubdate, description } = req.body; // 요청 본문에서 데이터 가져옴
 
-  // MySQL에 데이터 삽입
-  const query = `INSERT INTO book_info (id, title, author, publisher, published_date, description) 
-                 VALUES (?, ?, ?, ?, ?, ?)`;
+  try {
+    // 1. book_info 테이블에 데이터 삽입 
+    const insertBookInfoQuery = `INSERT INTO book_info (id, title, author, publisher, published_date, description) 
+                                  VALUES (?, ?, ?, ?, ?, ?)`;
+    const bookInfoValues = [isbn, title, author, publisher, pubdate, description];
 
-  const values = [isbn, title, author, publisher, pubdate, description];
+    db.query(insertBookInfoQuery, bookInfoValues, async (err, result) => {
+      if (err) {
+        console.error('MySQL 쿼리 실행 중 오류 발생:', err);
+        return res.status(500).send('서버 오류');
+      }
+      console.log('책 정보가 book_info 테이블에 저장되었습니다:', result);
 
-  db.query(query, values, (err, result) => {
-    if (err) {
-      console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-      return res.status(500).send('서버 오류');
-    }
-    console.log('책 정보가 데이터베이스에 저장되었습니다:', 'ISBN: ',isbn,' 제목: ',title);
-    
-    // isbn과 title 두 정보를 응답으로 반환
-    res.status(200).send({
-      message: '책 정보가 성공적으로 저장되었습니다.',
-      isbn: isbn,
-      title: title
+      // 2. 이미지 생성 및 요약본 생성 (book_info에 데이터 삽입 후 진행)
+      try {
+        const imageResult = await processBook(isbn); // 방금 삽입한 책의 ID를 사용
+        const imagePath = imageResult.imagePath; // 생성된 이미지 URL
+        const summary = imageResult.splitSummary; // 생성된 요약본
+
+        // 3. book_card 테이블에 이��지와 요약본 저장
+        const insertBookCardQuery = `INSERT INTO book_card (image_url, summary, book_info_id, likes) 
+                                      VALUES (?, ?, ?, ?)`;
+        const bookCardValues = [imagePath, summary, isbn, 0]; // book_info의 ID와 기본 likes 값 0
+
+        db.query(insertBookCardQuery, bookCardValues, (err) => {
+          if (err) {
+            console.error('MySQL 쿼리 실행 중 오류 발생:', err);
+            return res.status(500).send('서버 오류');
+          }
+          console.log('이미지와 요약본이 book_card 테이블에 저장되었습니다.');
+          res.status(200).send({
+            message: '책 정보와 이미지, 요약본이 성공적으로 저장되었습니다.',
+            imageUrl: imagePath,
+            summary: summary
+          });
+        });
+      } catch (imageError) {
+        console.error('이미지 생성 중 오류 발생:', imageError);
+        res.status(500).send('이미지 생성 중 오류 발생');
+      }
     });
-  });
+  } catch (error) {
+    console.error('Book processing error:', error);
+    res.status(500).send('책 처리 중 오류 발생');
+  }
 });
 
 // 서버 실행
-const PORT = 5000;
+const PORT = 5001;
 app.listen(PORT, () => {
   console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다.`);
 });

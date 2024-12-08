@@ -7,9 +7,16 @@ const SearchResults = ({ results }) => {
 
     const handleBookButtonClick = async (book) => {
         console.log("선택한 책:", book);
+
+        // isbn이 없는 경우를 체크
+        if (!book.isbn) {
+        console.error("ISBN이 없습니다:", book);
+        alert("ISBN 정보가 없는 책입니다.");
+        return;
+        }
         
         try {
-            const response = await fetch("http://localhost:5000/book", {  // 경로 수정
+            const response = await fetch("http://localhost:5001/book", {  // 경로 수정
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
