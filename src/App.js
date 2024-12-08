@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainPage from "./components/MainPage";
-import LibraryPage from "./components/LibraryPage";
-import FavoritePage from "./components/FavoritePage";
+import MyLibraryPage from "./components/MyLibraryPage";
+import ShortBooksPage from "./components/ShortBooksPage";
 import SettingsPage from "./components/SettingsPage";
 import SummaryPage from "./components/SummaryPage";
 
@@ -12,8 +12,8 @@ function App() {
       <Routes>
         {/* Define the paths for MainPage and LibraryPage */}
         <Route path="/" element={<MainPage />} />
-        <Route path="/library" element={<LibraryPage />} />
-        <Route path="/Favorite" element={<FavoritePage/>} />
+        <Route path="/MyLibrary" element={<MyLibraryPage />} />
+        <Route path="/ShortBooks" element={<ShortBooksPage/>} />
         <Route path="/Settings" element={<SettingsPage/>}/>
         <Route path="/Summary" element={<SummaryPage/>}/>
       </Routes>
