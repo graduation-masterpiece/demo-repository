@@ -16,6 +16,7 @@ const ShortBooksPage = () => {
           ? `http://localhost:5001/book/${id}`
           : 'http://localhost:5001/book-cards';
         const response = await axios.get(url);
+        console.log('받아온 책 데이터:', response.data);
         setShortBooks(response.data);
         setCurrentBookIndex(0);
         setCurrentSentenceIndex(0);
@@ -32,7 +33,7 @@ const ShortBooksPage = () => {
       setCurrentSentenceIndex(currentSentenceIndex - 1);
     } else if (currentBookIndex > 0) {
       setCurrentBookIndex(currentBookIndex - 1);
-      setCurrentSentenceIndex(shortBooks[currentBookIndex - 1].summary.length - 1);
+      setCurrentSentenceIndex(0);
     }
   };
 
@@ -40,7 +41,7 @@ const ShortBooksPage = () => {
     const currentBook = shortBooks[currentBookIndex];
     if (!currentBook) return;
 
-    if (currentSentenceIndex < currentBook.summary.length - 1) {
+    if (currentSentenceIndex < currentBook.summary.length) {
       setCurrentSentenceIndex(currentSentenceIndex + 1);
     } else if (currentBookIndex < shortBooks.length - 1) {
       setCurrentBookIndex(currentBookIndex + 1);
@@ -74,24 +75,43 @@ const ShortBooksPage = () => {
           <div className="flex justify-center items-center w-[1000px] h-[650px] bg-[#424141] rounded-2xl">
             {currentBook && (
               <div className="relative w-[800px] h-[600px]">
-                <img
-                  src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
-                  alt="card_book"
-                  className={`w-full h-full object-cover ${currentSentenceIndex === 0 ? '' : 'opacity-50'}`}
-                />
-                {currentSentenceIndex > 0 && (
-                  <div className="absolute inset-0 bg-white opacity-70 z-10" />
-                )}
-                {currentSentenceIndex > 0 && (
-                  <div className="text-black text-[52px] font-bold break-words flex flex-col justify-center items-center w-[600px] h-[400px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                    <div className="inline whitespace-normal break-keep text-center">
-                      {currentBook.summary[currentSentenceIndex - 1].split('*').map((part, index) => (
-                        <span key={index} className={index % 2 === 1 ? 'text-orange-500' : ''} style={{ display: 'inline' }}>
-                          {part}
-                        </span>
-                      ))}
+                {currentSentenceIndex === 0 ? (
+                  // 첫 장에 이미지만 표시
+                  <img
+                    src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                    alt="card_book"
+                    className="w-full h-full object-cover"
+                  />
+                ) : currentSentenceIndex < currentBook.summary.length ? (
+                  // 첫 문장부터 표시
+                  <>
+                    <img
+                      src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                      alt="card_book"
+                      className={`w-full h-full object-cover ${currentSentenceIndex === 0 ? '' : 'opacity-50'}`}
+                    />
+                    <div className="absolute inset-0 bg-white opacity-70 z-10" />
+                    <div className="text-black text-[52px] font-bold break-words flex flex-col justify-center items-center w-[600px] h-[400px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                      <div className="inline whitespace-normal break-keep text-center">
+                        {currentBook.summary && currentBook.summary[currentSentenceIndex] ? (
+                          currentBook.summary[currentSentenceIndex - 1].split('*').map((part, index) => (
+                            <span key={index} className={index % 2 === 1 ? 'text-orange-500' : ''}>
+                              {part}
+                            </span>
+                          ))
+                        ) : (
+                          <span>내용이 없습니다.</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  // 마지막 장에 책 표지 이미지 표시
+                  <img
+                    src={currentBook.book_cover}
+                    alt="cover_image"
+                    className="w-full h-full object-cover"
+                  />
                 )}
               </div>
             )}
