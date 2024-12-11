@@ -20,13 +20,13 @@ app.use('/generated_images', express.static(path.join(__dirname, 'generated_imag
 
 // POST 요청 처리
 app.post('/book', async (req, res) => {
-  const { isbn, title, author, publisher, pubdate, description } = req.body;
+  const { isbn, title, author, publisher, pubdate, description, book_cover } = req.body;
 
   try {
     // 1. book_info 테이블에 데이터 삽입 
-    const insertBookInfoQuery = `INSERT INTO book_info (id, title, author, publisher, published_date, description) 
-                                VALUES (?, ?, ?, ?, ?, ?)`;
-    const bookInfoValues = [isbn, title, author, publisher, pubdate, description];
+    const insertBookInfoQuery = `INSERT INTO book_info (id, title, author, publisher, published_date, description, book_cover) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const bookInfoValues = [isbn, title, author, publisher, pubdate, description, book_cover];
 
     db.query(insertBookInfoQuery, bookInfoValues, async (err, result) => {
       if (err) {
@@ -77,6 +77,7 @@ app.get('/book-cards', (req, res) => {
       bi.id,
       bi.title,
       bi.author,
+      bi.book_cover,
       bc.image_url,
       bc.summary,
       bc.likes
@@ -110,6 +111,7 @@ app.get('/book-cards', (req, res) => {
           title: book.title,
           author: book.author,
           image_url: book.image_url,
+          book_cover: book.book_cover,
           summary: parsedSummary,
           likes: book.likes
         };
@@ -131,6 +133,7 @@ app.get('/book/:id', (req, res) => {
       bi.id,
       bi.title,
       bi.author,
+      bi.book_cover,
       bc.image_url,
       bc.summary,
       bc.likes
@@ -164,6 +167,7 @@ app.get('/book/:id', (req, res) => {
         id: book.id,
         title: book.title,
         author: book.author,
+        book_cover: book.book_cover,
         image_url: book.image_url,
         summary: parsedSummary,
         likes: book.likes

@@ -27,7 +27,8 @@ const SearchResults = ({ results }) => {
                     author: book.author, // 저자
                     publisher: book.publisher, // 출판사
                     pubdate: book.pubdate, // 출판일
-                    description: book.description // 설명
+                    description: book.description, // 설명
+                    book_cover: book.image // 책 표지 URL
                 })
             });
     
