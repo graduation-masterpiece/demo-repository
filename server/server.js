@@ -1,3 +1,5 @@
+const dotenv = require('dotenv'); // dotenv 모듈 불러오기
+dotenv.config(); // 환경 변수 로드
 const express = require('express');
 const cors = require('cors');
 const db = require('./db'); // db.js에서 db 객체 가져오기
@@ -64,6 +66,7 @@ app.post('/book', async (req, res) => {
     res.status(500).send('책 처리 중 오류 발생');
   }
 });
+
 
 // 서버 실행
 const PORT = 5001;

@@ -3,12 +3,12 @@ const path = require('path'); // 경로 모듈 불러오기
 const db = require('./db'); // db.js에서 db 객체 가져오기
 const axios = require('axios'); // axios 모듈 불러오기
 const { OpenAI } = require('openai'); // OpenAI 모듈 불러오기
-const dotenv = require('dotenv'); // dotenv 모듈 불러오기
-dotenv.config(); // 환경 변수 로드
+// dotenv 로드
+require('dotenv').config();
 
 // OpenAI 클라이언트 초기화
 const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY
+  apiKey: "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"
 });
 
 // 책 정보를 데이터베이스에서 가져오는 함수

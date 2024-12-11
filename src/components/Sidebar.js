@@ -28,10 +28,21 @@ const Sidebar = () => {
         } z-50 shadow-lg transition-all duration-300 flex flex-col justify-between`}
       >
         <div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between mt-10">
+            <Link to="/" className="flex items-center justify-center space-x-2 px-2 py-2 bg-[#ECE6CC] rounded-r-lg border-[2.5px] border-black active:text-white">
+              <img
+                src="/images/sidebar_search.png"
+                alt="Library"
+                className="h-7 w-7 ml-[-1px]"
+              />
+
+              <div to="/" className="text-[24px] font-medium">
+                Home
+              </div>
+            </Link>
             <button
               onClick={toggleSidebar}
-              className="mt-5 p-2 bg-white border-gray-500 border-[2px] rounded-l-lg"
+              className="p-2 bg-white border-gray-500 border-[2px] rounded-l-lg"
             >
               <img
                 src="/images/sidebar_left.png"
@@ -54,7 +65,7 @@ const Sidebar = () => {
             </div>
           )}
 
-          <nav className="mt-6">
+          <nav>
             <ul className="space-y-5">
               {!isLoggedIn && (
                 <li
@@ -75,32 +86,25 @@ const Sidebar = () => {
               )}
 
               <hr className="border-[2px] border-[#777777] w-[230px]" />
-              {/* <li className="flex items-center justify-center space-x-2 hover:text-red-500 px-2 py-1 bg-white w-[230px] rounded-r-lg border-[2.5px] border-black">
-                <img
-                  src="/images/sidebar_search.png"
-                  alt="Library"
-                  className="h-7 w-7 ml-[-1px]"
-                />
-               
-                <Link to="/" className="text-lg font-medium">
-                  Search
-                </Link>
-              </li> */}
 
-              <Link to="/ShortBooks" className="flex items-center justify-center px-2 py-2 bg-[#FEABAB] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white">
+              <Link
+                to="/ShortBooks"
+                className="flex items-center justify-center px-2 py-2 bg-[#FEABAB] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white"
+              >
                 <div className="flex flex-row space-x-3 mr-6">
                   <img
                     src="/images/sidebar_lib.png"
                     alt="Library"
                     className="h-6 w-6 mt-1"
                   />
-                  <p className="text-[20px] font-semibold">
-                    Short Books
-                  </p>
+                  <p className="text-[20px] font-semibold">Short Books</p>
                 </div>
               </Link>
 
-              <Link to="/MyLibrary" className="flex items-center justify-center px-2 py-2 bg-[#F0DF98] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white">
+              <Link
+                to="/MyLibrary"
+                className="flex items-center justify-center px-2 py-2 bg-[#F0DF98] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white"
+              >
                 <div className="flex flex-row space-x-3 mr-10">
                   <img
                     src="/images/sidebar_favorite.png"
@@ -108,13 +112,14 @@ const Sidebar = () => {
                     className="h-6 w-6 mt-1"
                   />
                   {/* Link to LibraryPage */}
-                  <p className="text-[20px] font-semibold">
-                    My Library
-                  </p>
+                  <p className="text-[20px] font-semibold">My Library</p>
                 </div>
               </Link>
 
-              <Link to="/Settings" className="flex items-center justify-center px-2 py-2 bg-[#A7D0AC] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white">
+              <Link
+                to="/Settings"
+                className="flex items-center justify-center px-2 py-2 bg-[#A7D0AC] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white"
+              >
                 <div className="flex flex-row space-x-3 mr-[3.7em]">
                   <img
                     src="/images/sidebar_settings.png"
@@ -122,9 +127,7 @@ const Sidebar = () => {
                     className="h-6 w-6 mt-1"
                   />
                   {/* Link to LibraryPage */}
-                  <p className="text-[20px] font-semibold">
-                    Settings
-                  </p>
+                  <p className="text-[20px] font-semibold">Settings</p>
                 </div>
               </Link>
             </ul>
@@ -137,7 +140,6 @@ const Sidebar = () => {
               className="flex items-end justify-between w-[130px] px-3 py-1 space-x-2 cursor-pointer active:white bg-white border-[2px] border-black rounded-l-lg ml-auto"
               onClick={handleLogout}
             >
-              
               <span className="text-[20px] font-medium">Logout</span>
               <img
                 src="/images/sidebar_logout.png"
