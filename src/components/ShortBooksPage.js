@@ -84,7 +84,13 @@ const ShortBooksPage = () => {
                 )}
                 {currentSentenceIndex > 0 && (
                   <div className="text-black text-[52px] font-bold break-words flex flex-col justify-center items-center w-[600px] h-[400px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                    {currentBook.summary[currentSentenceIndex]}
+                    <div className="inline whitespace-normal break-keep text-center">
+                      {currentBook.summary[currentSentenceIndex - 1].split('*').map((part, index) => (
+                        <span key={index} className={index % 2 === 1 ? 'text-orange-500' : ''} style={{ display: 'inline' }}>
+                          {part}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

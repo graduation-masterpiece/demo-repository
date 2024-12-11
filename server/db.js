@@ -1,3 +1,5 @@
+require('dotenv').config(); // dotenv 패키지 로드
+
 // db.js
 const mysql = require('mysql2');
 
@@ -5,7 +7,7 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'zion000228',
+  password: process.env.DB_PASSWORD,
   database: 'graduation_work'
 });
 
