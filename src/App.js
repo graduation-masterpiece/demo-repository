@@ -16,6 +16,7 @@ function App() {
         <Route path="/ShortBooks" element={<ShortBooksPage/>} />
         <Route path="/Settings" element={<SettingsPage/>}/>
         <Route path="/Summary" element={<SummaryPage/>}/>
+        <Route path="/book/:id" element={<ShortBooksPage/>} />
       </Routes>
     </BrowserRouter>
   );
