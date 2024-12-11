@@ -3,12 +3,14 @@ const path = require('path'); // 경로 모듈 불러오기
 const db = require('./db'); // db.js에서 db 객체 가져오기
 const axios = require('axios'); // axios 모듈 불러오기
 const { OpenAI } = require('openai'); // OpenAI 모듈 불러오기
-// dotenv 로드
-require('dotenv').config();
+const dotenv = require('dotenv'); // dotenv 모듈 불러오기
+dotenv.config(); // 환경 변수 로드
+
+OPENAI_API_KEY = "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"
 
 // OpenAI 클라이언트 초기화
 const openai = new OpenAI({
-  apiKey: "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"
+  apiKey: OPENAI_API_KEY
 });
 
 // 책 정보를 데이터베이스에서 가져오는 함수
@@ -33,7 +35,16 @@ async function getBookInfo(id) {
 
 // 텍스트 요약 함수
 async function summarizeText(title, text) {
-  const summaryPrompt = `다음 텍스트는 소설 ${title}의 출판사 서평이야. 이 서평을 바탕으로 독자의 흥미를 끄는 간결한 소설 소개글을 작성해줘. 독자가 이 책을 꼭 읽고 싶어지도록 핵심 갈등이나 분위기를 암시하는 문장을 포함하고, 강렬한 질문이나 인상적인 문장으로 시작해줘. 최종 글은 최대 500자 이내로 작성해줘.:\n${text}`;
+  const summaryPrompt = `
+  다음 텍스트는 소설 "${title}"의 책 설명이야. 
+  이 서평을 바탕으로 독자의 흥미를 끄는 간결한 소설 소개글을 작성해줘. 
+  소개글은 독자가 이 책을 꼭 읽고 싶어지도록 핵심 갈등이나 분위기를 암시하는 문장을 포함하며, 강렬한 질문이나 인상적인 문장으로 시작해줘. 
+  최종 글은 최대 500자 이내로 작성해줘. 
+  그리고 생성된 글에서 소설의 분위기를 대표하는 핵심 단어는 *단어* 형식으로 표시해줘. 
+  예를 들어, 핵심 단어가 사랑이라면, *사랑* 이런 식으로 표시해줘. 
+  핵심 단어는 한 문장에 하나만 있고, 전체적으로 2~3개로 제한해줘.
+  추가적인 설명이나 코드 블록은 포함하지 마. 
+  `;
 
   try {
     const response = await openai.chat.completions.create({
@@ -46,6 +57,7 @@ async function summarizeText(title, text) {
     });
 
     return response.choices[0].message.content.trim();
+
   } catch (error) {
     console.error('Summarization error:', error);
     throw error;
@@ -149,13 +161,13 @@ async function processBook(id) {
     // 3. splitSummary를 JSON 형태로 변환
     const jsonSummary = JSON.stringify(splitSummary);
 
-    // 3. 책 요약문으로 이미지 생성 후 다운로드
+    // 4. 책 요약문으로 이미지 생성 후 다운로드
     const modifiedPrompt = await modifyPrompt(description);
     const imagePath = await generateImage(modifiedPrompt);
 
     return {
       title: title,
-      splitSummary: jsonSummary,
+      summary: jsonSummary,
       imagePath: imagePath
     };
   } catch (error) {
