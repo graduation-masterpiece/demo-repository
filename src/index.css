@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* index.css */
+.background-book {
+  background-image: url('../public/images/book.png'); /* 절대 경로 사용 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.background-clip {
+  background-image: url('../public/images/clip.png'); /* 절대 경로 사용 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.background-magnifier {
+  background-image: url('../public/images/magnifier.png'); /* 절대 경로 사용 */
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.background-pic1 {
+  background-image: url('../public/images/pic1.png'); /* 절대 경로 사용 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.background-pic2 {
+  background-image: url('../public/images/pic2.png'); /* 절대 경로 사용 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.background-pic3 {
+  background-image: url('../public/images/pic3.png'); /* 절대 경로 사용 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
