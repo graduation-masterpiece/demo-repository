@@ -106,12 +106,25 @@ const ShortBooksPage = () => {
                     </div>
                   </>
                 ) : (
-                  // 마지막 장에 책 표지 이미지 표시
-                  <img
-                    src={currentBook.book_cover}
-                    alt="cover_image"
-                    className="w-full h-full object-cover"
-                  />
+                  // 마지막 장에 책 표지 이미지
+                  <div className="relative w-full h-full">
+                    {/* 배경 이미지 (생성된 이미지) */}
+                    <img
+                      src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                      alt="background_book"
+                      className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    />
+                    <div className="absolute inset-0 bg-white opacity-70" />
+
+                    {/* 책 표지 이미지 */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-[400px] max-h-[600px]">
+                      <img
+                        src={currentBook.book_cover}
+                        alt="cover_image"
+                        className="w-auto h-auto max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
             )}
