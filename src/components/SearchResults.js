@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "./Modal"; // 알림 창
 
 const SearchResults = ({ results }) => {
+
+    const [loadingMessage, setLoadingMessage] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState(""); 
+
+
     if (!results || results.length === 0) {
         return <p className="text-gray-500">검색 결과가 없습니다.</p>;
     }
@@ -14,6 +21,12 @@ const SearchResults = ({ results }) => {
         alert("ISBN 정보가 없는 책입니다.");
         return;
         }
+
+        // 대기 중 알림 표시
+        setLoadingMessage("카드뉴스를 생성중입니다.");
+        setModalContent("카드뉴스를 생성중입니다.");
+        setIsModalOpen(true); // 모달 열기
+
         
         try {
             const response = await fetch("http://localhost:5001/book", {  // 경로 수정
@@ -33,19 +46,27 @@ const SearchResults = ({ results }) => {
             });
     
             if (response.ok) {
-                alert("책 정보가 서버로 전송되었습니다!");
+                setModalContent("카드뉴스가 생성 되었습니다!");
             } else {
                 throw new Error("서버 전송 실패");
             }
         } catch (error) {
             console.error("서버 전송 오류:", error);
-            alert("서버에 책 정보를 전송하는 데 실패했습니다.");
+            setIsModalOpen("서버에 책 정보를 전송하는 데 실패했습니다.");
+        } finally{
+            setTimeout(() => {
+                setIsModalOpen(true); // 모달 열기
+            });
         }
     };
-    
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false); // 모달 닫기
+    };
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+            {isModalOpen && <Modal message={modalContent} onClose={handleCloseModal} />}
             {results.map((item, index) => (
                 <div
                     key={index}
