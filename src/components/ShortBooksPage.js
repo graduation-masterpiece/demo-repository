@@ -107,33 +107,30 @@ const ShortBooksPage = () => {
                   </>
                 ) : (
                   // 마지막 장에 책 표지 이미지
-                  <div className="relative w-full h-full">
+                  <div className="relative w-full h-full flex">
                     {/* 배경 이미지 (생성된 이미지) */}
                     <img
                       src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
                       alt="background_book"
                       className="absolute inset-0 w-full h-full object-cover opacity-50"
                     />
-
-                    <div className="absolute inset-0 bg-white opacity-70">
-                      {/* 왼쪽 절반에 책 표지 이미지 */}
-                      <div className="w-1/2 h-full flex items-center justify-center">
-                        <img
-                          src={currentBook.book_cover}
-                          alt="cover_image"
-                          className="w-auto h-auto max-w-[90%] max-h-[90%] object-contain"
-                        />
-                      </div>
-
-                      {/* 오른쪽 절반: 책 정보 */}
-                      <div className="w-1/2 h-full flex flex-col items-center justify-center p-8">
-                        <h1 className="text-4xl font-bold mb-4 text-gray-800 text-center">
-                          {currentBook.title || "제목 없음"}
-                        </h1>
-                        <p className="text-2xl text-gray-600 text-center">
-                          {currentBook.author || "작가 미상"}
-                        </p>
-                      </div>
+                    <div className="absolute inset-0 bg-white opacity-70 z-10" />
+                    {/* 왼쪽 절반에 책 표지 이미지 */}
+                    <div className="w-1/2 h-full flex items-center justify-center z-20">
+                      <img
+                        src={currentBook.book_cover}
+                        alt="cover_image"
+                        className="w-auto h-auto max-w-[90%] max-h-[90%] object-contain"
+                      />
+                    </div>
+                    {/* 오른쪽 절반: 책 정보 */}
+                    <div className="w-1/2 h-full flex flex-col items-center justify-center p-8 z-20">
+                      <h1 className="text-4xl font-bold mb-4 text-center">
+                        {currentBook.title || "제목 없음"}
+                      </h1>
+                      <p className="text-2xl text-center">
+                        {currentBook.author || "작가 미상"}
+                      </p>
                     </div>
                   </div>
                 )}
