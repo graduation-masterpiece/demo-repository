@@ -114,15 +114,26 @@ const ShortBooksPage = () => {
                       alt="background_book"
                       className="absolute inset-0 w-full h-full object-cover opacity-50"
                     />
-                    <div className="absolute inset-0 bg-white opacity-70" />
 
-                    {/* 책 표지 이미지 */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-[400px] max-h-[600px]">
-                      <img
-                        src={currentBook.book_cover}
-                        alt="cover_image"
-                        className="w-auto h-auto max-w-full max-h-full object-contain"
-                      />
+                    <div className="absolute inset-0 bg-white opacity-70">
+                      {/* 왼쪽 절반에 책 표지 이미지 */}
+                      <div className="w-1/2 h-full flex items-center justify-center">
+                        <img
+                          src={currentBook.book_cover}
+                          alt="cover_image"
+                          className="w-auto h-auto max-w-[90%] max-h-[90%] object-contain"
+                        />
+                      </div>
+
+                      {/* 오른쪽 절반: 책 정보 */}
+                      <div className="w-1/2 h-full flex flex-col items-center justify-center p-8">
+                        <h1 className="text-4xl font-bold mb-4 text-gray-800 text-center">
+                          {currentBook.title || "제목 없음"}
+                        </h1>
+                        <p className="text-2xl text-gray-600 text-center">
+                          {currentBook.author || "작가 미상"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
