@@ -46,7 +46,7 @@ const SearchResults = ({ results }) => {
             });
     
             if (response.ok) {
-                setModalContent("카드뉴스가 생성 되었습니다!");
+                setModalContent("카드뉴스가 생성되었습니다!");
             } else {
                 throw new Error("서버 전송 실패");
             }
