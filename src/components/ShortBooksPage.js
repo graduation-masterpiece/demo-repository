@@ -54,11 +54,11 @@ const ShortBooksPage = () => {
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
-      <div className="flex flex-col w-[1200px] mx-[18em] mt-[4.5em]">
+      <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
         <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
           Short Books
         </p>
-        <div className="flex flex-row items-center justify-center space-x-3 mt-3 p-3 rounded-xl h-[700px] border-[2px] border-gray-600 bg-[#C4D0B3]">
+        <div className="flex flex-row items-center justify-center space-x-3 mt-3 p-3 rounded-xl h-[75vh] border-[2px] border-gray-600 bg-[#C4D0B3]">
           {/* 이전 버튼 */}
           <button
             onClick={handlePrePage}
@@ -72,9 +72,9 @@ const ShortBooksPage = () => {
           </button>
 
           {/* 카드 영역 */}
-          <div className="flex justify-center items-center w-[1000px] h-[650px] bg-[#424141] rounded-2xl">
+          <div className="flex justify-center items-center w-[52vw] h-[70vh] bg-[#424141] rounded-2xl">
             {currentBook && (
-              <div className="relative w-[800px] h-[600px]">
+              <div className="relative w-[45vw] h-[65vh]">
                 {currentSentenceIndex === 0 ? (
                   // 첫 장에 이미지만 표시
                   <img
@@ -91,7 +91,7 @@ const ShortBooksPage = () => {
                       className={`w-full h-full object-cover ${currentSentenceIndex === 0 ? '' : 'opacity-50'}`}
                     />
                     <div className="absolute inset-0 bg-white opacity-70 z-10" />
-                    <div className="text-black text-[52px] font-bold break-words flex flex-col justify-center items-center w-[600px] h-[400px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                    <div className="text-black text-[3vw] font-bold break-words flex flex-col justify-center items-center w-[38vw] h-[65vh] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
                       <div className="inline whitespace-normal break-keep text-center">
                         {currentBook.summary && currentBook.summary[currentSentenceIndex] ? (
                           currentBook.summary[currentSentenceIndex - 1].split('*').map((part, index) => (
@@ -150,24 +150,24 @@ const ShortBooksPage = () => {
             />
           </button>
         </div>
-        <div className="fixed top-[10.3em] right-[8em] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+        {/* <div className="fixed top-[21vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
             <img src="/images/search.png" alt="search" className="w-8 h-8" />
           </button>
-        </div>
-        <div className="fixed top-[37em] right-[8em] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+        </div> */}
+        <div className="fixed top-[64vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
-            <img src="/images/white_like.png" alt="like" className="w-8 h-8" />
+            <img src="/images/white_like.png" alt="like" className="w-4 h-4" />
           </button>
         </div>
-        <div className="fixed top-[43em] right-[8em] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+        <div className="fixed top-[74vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
-            <img src="/images/share.png" alt="share" className="w-8 h-8" />
+            <img src="/images/share.png" alt="share" className="w-4 h-4" />
           </button>
         </div>
-        <div className="fixed top-[49em] right-[8em] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+        <div className="fixed top-[84vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
-            <img src="/images/white_trash.png" alt="trash" className="w-8 h-8" />
+            <img src="/images/white_trash.png" alt="trash" className="w-4 h-4" />
           </button>
         </div>
       </div>
