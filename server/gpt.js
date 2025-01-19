@@ -64,9 +64,13 @@ async function summarizeText(title, text) {
 
 // 요약된 텍스트를 문장 기준으로 나누는 함수
 function splitTextIntoSentences(text) {
-  text = text.replace(/\n/g, ' ').trim();
+  // 모든 연속된 공백을 단일 공백으로 변경
+  text = text.replace(/\s+/g, ' ').trim();
   text = text.replace(/"/g, ''); // 모든 따옴표 제거
-  return text.trim().match(/[^.!?]+[.!?]+/g) || [];
+  
+  // 정규식을 사용해 문장 분리 후 각 문장의 앞뒤 공백 제거
+  return text.match(/[^.!?]+[.!?]+/g)
+    .map(sentence => sentence.trim());
 }
 
 // 이미지 생성 프롬프트 수정 함수
