@@ -1,0 +1,29 @@
+*
+* Visual Studio Code Server
+*
+* By using the software, you agree to
+* the Visual Studio Code Server License Terms (https://aka.ms/vscode-server-license) and
+* the Microsoft Privacy Statement (https://privacy.microsoft.com/en-US/privacystatement).
+*
+Server bound to /tmp/code-2606c1bc-0fa9-4ba5-b87f-7fd15e5c2bc7
+Extension host agent listening on /tmp/code-2606c1bc-0fa9-4ba5-b87f-7fd15e5c2bc7
+
+[07:04:26] 
+
+
+
+
+[07:04:26] Extension host agent started.
+[07:04:27] Started initializing default profile extensions in extensions installation folder. file:///home/ubuntu/.vscode-server/extensions
+[07:04:27] [<unknown>][07a37708][ExtensionHostConnection] New connection established.
+[07:04:27] [<unknown>][c2cf3776][ManagementConnection] New connection established.
+[07:04:27] Completed initializing default profile extensions in extensions installation folder. file:///home/ubuntu/.vscode-server/extensions
+[07:04:27] [<unknown>][07a37708][ExtensionHostConnection] <21970> Launched Extension Host Process.
+New EH opened, aborting shutdown
+[07:09:26] New EH opened, aborting shutdown
+[07:10:39] No ptyHost heartbeat after 6 seconds
+[07:10:45] [<unknown>][c2cf3776][ManagementConnection] The client has reconnected.
+[07:11:19] [<unknown>][c2cf3776][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+[07:11:20] [<unknown>][f142264e][ManagementConnection] New connection established.
+[07:11:20] [<unknown>][463d5e53][ExtensionHostConnection] New connection established.
+[07:11:20] [<unknown>][463d5e53][ExtensionHostConnection] <23429> Launched Extension Host Process.

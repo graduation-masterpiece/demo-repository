@@ -1,0 +1,32 @@
+0 verbose cli /home/ubuntu/.nvm/versions/node/v18.20.7/bin/node /home/ubuntu/.nvm/versions/node/v18.20.7/bin/npm
+1 info using npm@10.8.2
+2 info using node@v18.20.7
+3 silly config load:file:/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/ubuntu/demo-repository/server/.npmrc
+5 silly config load:file:/home/ubuntu/.npmrc
+6 silly config load:file:/home/ubuntu/.nvm/versions/node/v18.20.7/etc/npmrc
+7 verbose title npm run build
+8 verbose argv "run" "build"
+9 verbose logfile logs-max:10 dir:/home/ubuntu/.npm/_logs/2025-03-21T15_02_45_300Z-
+10 verbose logfile /home/ubuntu/.npm/_logs/2025-03-21T15_02_45_300Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 verbose stack Error: Missing script: "build"
+13 verbose stack
+13 verbose stack To see a list of scripts, run:
+13 verbose stack   npm run
+13 verbose stack     at #run (/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/lib/commands/run-script.js:110:13)
+13 verbose stack     at async RunScript.exec (/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/lib/commands/run-script.js:39:7)
+13 verbose stack     at async Npm.exec (/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/lib/npm.js:207:9)
+13 verbose stack     at async module.exports (/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/lib/cli/entry.js:74:5)
+14 error Missing script: "build"
+14 error
+14 error To see a list of scripts, run:
+14 error   npm run
+15 verbose cwd /home/ubuntu/demo-repository/server
+16 verbose os Linux 6.8.0-1024-aws
+17 verbose node v18.20.7
+18 verbose npm  v10.8.2
+19 verbose exit 1
+20 verbose code 1
+21 error A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-03-21T15_02_45_300Z-debug-0.log
