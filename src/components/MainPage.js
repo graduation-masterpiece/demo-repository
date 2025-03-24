@@ -10,18 +10,15 @@ const MainPage = () => {
   const [results, setResults] = useState([]); // 검색 결과 상태
 
   const handleSearch = async (query) => {
-    const clientId = "tUH85Dx01c0068T7jLDd";
-    const clientSecret = "EKPw9gjRR9"
-    const url = `https://openapi.naver.com/v1/search/book.json?query=${encodeURIComponent(
-      query
-    )}&display=10&start=1`;
+    const encodedQuery = encodeURIComponent(query);
+    const url = `/api/naver-search?query=${encodedQuery}&display=30&start=1`;
 
     try {
       const response = await axios.get(url, {
-        headers: {
-          "X-Naver-Client-Id": clientId,
-          "X-Naver-Client-Secret": clientSecret,
-        },
+	header: {
+	  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+	  'Accept-Charset': 'utf-8'
+	}
       });
       setResults(response.data.items); // 검색 결과 상태 업데이트
     } catch (error) {

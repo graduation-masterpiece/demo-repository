@@ -6,6 +6,17 @@ const { OpenAI } = require('openai'); // OpenAI 모듈 불러오기
 const dotenv = require('dotenv'); // dotenv 모듈 불러오기
 dotenv.config(); // 환경 변수 로드
 
+// AWS s3 클라이언트
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+
+const s3 = new S3Client({
+  region: 'ap-northeast-2',
+  credentials: {
+    accessKeyId: 'AKIA6ODU7ZD4MNCZYCTT',
+    secretAccessKey: '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'
+  }
+});
+
 // OpenAI 클라이언트 초기화
 const openai = new OpenAI({
   apiKey: process.env.GPT_API_KEY
@@ -135,13 +146,24 @@ async function generateImage(prompt, size = '1024x1024') {
     const imageUrl = response.data[0].url;
     const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
 
-    // 이미지 파일 경로 설정
-    const imagePath = path.join(__dirname, 'generated_images', `${Date.now()}.png`);
+    // S3에 업로드하기 위한 파일명 생성
+    const fileName = `${Date.now()}.png`;
+    const bucketName = 'bookcard-images'; // .env에 정의된 S3 버킷 이름
+    const s3Key = `images/${fileName}`;
 
-    // 이미지 파일 저장
-    fs.writeFileSync(imagePath, imageResponse.data);
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: s3Key,
+      Body: imageResponse.data,
+      ContentType: 'image/png',
+      ACL: 'public-read'
+    });
 
-    return imagePath;
+    await s3.send(command);
+
+    // S3에 업로드된 이미지 URL 구성 (리전에 따라 URL 형식이 다를 수 있음)
+    const s3Url = `https://${bucketName}.s3.ap-northeast-2.amazonaws.com/${s3Key}`;
+    return s3Url;
 
   } catch (error) {
     console.error('Image generation error:', error);

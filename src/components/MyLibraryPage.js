@@ -10,7 +10,7 @@ const MyLibraryPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/my-library');
+        const response = await axios.get('http://15.164.227.43/api/my-library');
         setBooks(response.data);
       } catch (error) {
         console.error('책 정보를 가져오는 중 오류 발생:', error);
@@ -34,7 +34,7 @@ const MyLibraryPage = () => {
                 id={book.id}
                 title={book.title}
                 likes={book.likes}
-                image={`http://localhost:5001/generated_images/${book.image_url.split('/').pop()}`}
+                image={book.image_url}
               />
             ))}
           </div>
