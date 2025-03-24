@@ -29,7 +29,7 @@ const SearchResults = ({ results }) => {
 
         
         try {
-            const response = await fetch("http://localhost:5001/book", {  // 경로 수정
+            const response = await fetch("/api/book", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
