@@ -15,7 +15,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
         <meta property="og:title" content={title}/>
         <meta property="og:description" content="My Library Card"/>
         <meta property="og:image" content={image}/>
-        <meta property="og:url" content="http://127.0.0.1:3000/book/" />
+        <meta property="og:url" content={`http://15.164.227.43/book/${id}`} />
         <meta property="og:site_name" content="My Library Card"/>
         <meta property="og:locale" content="ko_KR"/>
         <meta property="og:type" content="website"/>
