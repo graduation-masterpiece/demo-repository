@@ -51,13 +51,11 @@ app.post('/api/book', async (req, res) => {
   console.log('요청 본문: ', req.body);
   const { isbn, title, author, publisher, pubdate, description, book_cover } = req.body;
 
-  const cleanTitle = title.replace(/\s*\(.*?\)/, '');
-
   try {
     const insertBookInfoQuery = `
       INSERT INTO book_info (id, title, author, publisher, published_date, description, book_cover) 
       VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const bookInfoValues = [isbn, cleanTitle, author, publisher, pubdate, description, book_cover];
+    const bookInfoValues = [isbn, title, author, publisher, pubdate, description, book_cover];
 
     db.query(insertBookInfoQuery, bookInfoValues, async (err, result) => {
       if (err) {
@@ -116,16 +114,31 @@ app.get('/api/book-cards', (req, res) => {
     }
 
     try {
-      const formattedData = results.map(book => ({
-        id: book.id,
-        title: book.title,
-        author: book.author,
-        image_url: book.image_url,
-        book_cover: book.book_cover,
-        summary: book.summary ? JSON.parse(book.summary) : null,
-        likes: book.likes
-      }));
+      const formattedData = results.map(book => {
+        let parsedSummary;
+        // summary가 있으면 JSON.parse 시도
+        if (typeof book.summary === 'string') {
+          try {
+            parsedSummary = JSON.parse(book.summary); // 배열로 복원
+          } catch (parseErr) {
+            console.error('JSON 파싱 오류:', parseErr);
+            // 파싱 실패 시 빈 배열로 처리 (또는 원본 유지)
+            parsedSummary = [];
+          }
+        } else {
+          parsedSummary = book.summary;
+        }
 
+        return {
+          id: book.id,
+          title: book.title,
+          author: book.author,
+          book_cover: book.book_cover,
+          image_url: book.image_url,
+          likes: book.likes,
+          summary: parsedSummary  // 배열 형태
+        };
+      });
       res.status(200).json(formattedData);
     } catch (error) {
       console.error('데이터 변환 중 오류 발생:', error);
