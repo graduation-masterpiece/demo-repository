@@ -118,7 +118,33 @@ app.get('/api/book-cards', (req, res) => {
     }
 
     try {
-      const formattedData = results.map(book => ({
+      const formattedData = results.map(book => {
+        let parsedSummary;
+        // summary가 있으면 JSON.parse 시도
+        if (typeof book.summary === 'string') {
+          try {
+            parsedSummary = JSON.parse(book.summary); // 배열로 복원
+          } catch (parseErr) {
+            console.error('JSON 파싱 오류:', parseErr);
+            // 파싱 실패 시 빈 배열로 처리 (또는 원본 유지)
+            parsedSummary = [];
+          }
+        } else {
+          parsedSummary = book.summary;
+        }
+
+        return {
+          id: book.id,
+          title: book.title,
+          author: book.author,
+          book_cover: book.book_cover,
+          image_url: book.image_url,
+          likes: book.likes,
+          summary: parsedSummary  // 배열 형태
+        };
+      });
+
+      /*const formattedData = results.map(book => ({
         id: book.id,
         title: book.title,
         author: book.author,
@@ -126,7 +152,7 @@ app.get('/api/book-cards', (req, res) => {
         book_cover: book.book_cover,
         summary: book.summary ? JSON.parse(book.summary) : null,
         likes: book.likes
-      }));
+      }));*/
 
       res.status(200).json(formattedData);
     } catch (error) {
