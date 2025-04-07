@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ServiceName } from "./ServiceName";
 import SearchBar from "./SearchBar";
-// import { ImageSection } from "./ImageSection";
 import Sidebar from "./Sidebar";
 import SearchResults from "./SearchResults";
 import axios from "axios";
