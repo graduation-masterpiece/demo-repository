@@ -34,3 +34,8 @@
 2025-03-24 07:33:26.705 [warning] No ptyHost heartbeat after 6 seconds
 2025-03-24 07:33:27.779 [info] [<unknown>][07a37708][ExtensionHostConnection] <21970> Extension Host Process exited with code: 0, signal: null.
 2025-03-24 07:35:21.846 [info] [<unknown>][463d5e53][ExtensionHostConnection] <23429> Extension Host Process exited with code: 0, signal: null.
+2025-03-24 09:26:12.914 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 10:31:42.475 [info] [<unknown>][44a1c632][ExtensionHostConnection] <23959> Extension Host Process exited with code: 0, signal: null.
+2025-03-24 10:31:42.485 [info] Last EH closed, waiting before shutting down
+2025-03-24 10:32:18.582 [info] [<unknown>][79982358][ManagementConnection] The reconnection grace time of 3h has expired, so the connection will be disposed.
+2025-03-24 10:36:42.486 [info] Last EH closed, shutting down
