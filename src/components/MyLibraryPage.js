@@ -76,7 +76,7 @@ const MyLibraryPage = () => {
               disabled={page === 0}
               className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
             >
-              이전
+              Prev
             </button>
             <span className="text-lg">
               {page + 1} / {totalPages}
@@ -86,7 +86,7 @@ const MyLibraryPage = () => {
               disabled={page === totalPages - 1}
               className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
             >
-              다음
+              Next
             </button>
           </div>
         )}
