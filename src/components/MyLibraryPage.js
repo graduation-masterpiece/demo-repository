@@ -14,7 +14,7 @@ const MyLibraryPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://15.164.227.43/api/my-library');
+        const response = await axios.get('http://3.38.107.4/api/my-library');
         setBooks(response.data);
       } catch (error) {
         console.error('책 정보를 가져오는 중 오류 발생:', error);
