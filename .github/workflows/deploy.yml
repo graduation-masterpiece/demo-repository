@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - ec2  # 푸시될 브랜치
+      - develop  # 푸시될 브랜치
 
 jobs:
   deploy:
@@ -27,7 +27,7 @@ jobs:
         run: |
           ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/ubuntu/demo-repository
-            git pull origin ec2 # 브랜치 이름 확인
+            git pull origin develop # 브랜치 이름 확인
 
             npm install
             npm run build
