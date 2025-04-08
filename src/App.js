@@ -4,7 +4,6 @@ import MainPage from "./components/MainPage";
 import MyLibraryPage from "./components/MyLibraryPage";
 import ShortBooksPage from "./components/ShortBooksPage";
 import SettingsPage from "./components/SettingsPage";
-import SummaryPage from "./components/SummaryPage";
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
         <Route path="/MyLibrary" element={<MyLibraryPage />} />
         <Route path="/ShortBooks" element={<ShortBooksPage/>} />
         <Route path="/Settings" element={<SettingsPage/>}/>
-        <Route path="/Summary" element={<SummaryPage/>}/>
         <Route path="/book/:id" element={<ShortBooksPage/>} />
       </Routes>
     </BrowserRouter>

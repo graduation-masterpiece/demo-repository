@@ -6,11 +6,15 @@ import axios from "axios";
 
 const MyLibraryPage = () => {
   const [books, setBooks] = useState([]);
+  const [page, setPage] = useState(0);
+
+  // 페이지당 카드뉴스 12개(3X4)
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/my-library');
+        const response = await axios.get('http://3.38.107.4/api/my-library');
         setBooks(response.data);
       } catch (error) {
         console.error('책 정보를 가져오는 중 오류 발생:', error);
@@ -20,6 +24,28 @@ const MyLibraryPage = () => {
     fetchBooks();
   }, []);
 
+
+
+  // 전체 페이지 수
+  const totalPages = Math.ceil(books.length / itemsPerPage);
+
+  // 12개 이하면 전체 배열, 아니면 현재 페이지의 카드들만 선택
+  const currentBooks = books.length > itemsPerPage ? books.slice(page * itemsPerPage, page * itemsPerPage + itemsPerPage) : books;
+
+  // 페이지 이동 함수
+  const handlePrevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+  };
+
+
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
@@ -27,19 +53,43 @@ const MyLibraryPage = () => {
         <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
          My Library
         </p>
-        <div className="mt-3 p-3 h-[65vh] border-gray-500 border-[4px] rounded-xl bg-white">
+
+        {/* 카드 컨테이너 */}
+        <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto">
           <div className="grid grid-cols-3 gap-4 p-4">
-            {books.map((book) => (
+            {currentBooks.map((book) => (
               <MyLibraryCard 
                 id={book.id}
                 title={book.title}
                 likes={book.likes}
-                image={`http://localhost:5001/generated_images/${book.image_url.split('/').pop()}`}
+                image={book.image_url}
               />
             ))}
           </div>
         </div>
-        <Pagination />
+
+        {/* 페이지네이션 버튼 */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-4 space-x-4">
+            <button
+              onClick={handlePrevPage}
+              disabled={page === 0}
+              className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
+            >
+              Prev
+            </button>
+            <span className="text-lg">
+              {page + 1} / {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page === totalPages - 1}
+              className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

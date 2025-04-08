@@ -13,11 +13,17 @@ const ShortBooksPage = () => {
     const fetchBooks = async () => {
       try {
         const url = id 
-          ? `http://localhost:5001/book/${id}`
-          : 'http://localhost:5001/book-cards';
+          ? `/api/book/${id}`
+          : '/api/book-cards';
         const response = await axios.get(url);
         console.log('받아온 책 데이터:', response.data);
-        setShortBooks(response.data);
+        
+	if (Array.isArray(response.data)) {
+          setShortBooks(response.data);
+        } else {
+          setShortBooks([response.data]);
+        }
+
         setCurrentBookIndex(0);
         setCurrentSentenceIndex(0);
       } catch (error) {
@@ -39,10 +45,10 @@ const ShortBooksPage = () => {
 
   const handleNextPage = () => {
     const currentBook = shortBooks[currentBookIndex];
-    if (!currentBook) return;
+    if (!currentBook || !currentBook.summary) return;
 
-    if (currentSentenceIndex < currentBook.summary.length) {
-      setCurrentSentenceIndex(currentSentenceIndex + 1);
+    if (currentBook.summary && currentSentenceIndex < currentBook.summary.length + 1) {
+	      setCurrentSentenceIndex(currentSentenceIndex + 1);
     } else if (currentBookIndex < shortBooks.length - 1) {
       setCurrentBookIndex(currentBookIndex + 1);
       setCurrentSentenceIndex(0);
@@ -50,6 +56,10 @@ const ShortBooksPage = () => {
   };
 
   const currentBook = shortBooks[currentBookIndex];
+
+  console.log("shortBooks:", shortBooks);
+  console.log("currentBookIndex:", currentBookIndex);
+  console.log("currentBook:", currentBook);
 
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
@@ -78,23 +88,23 @@ const ShortBooksPage = () => {
                 {currentSentenceIndex === 0 ? (
                   // 첫 장에 이미지만 표시
                   <img
-                    src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                    src={currentBook.image_url}
                     alt="card_book"
                     className="w-full h-full object-cover"
                   />
-                ) : currentSentenceIndex < currentBook.summary.length ? (
+                ) : currentSentenceIndex <= currentBook.summary.length ? (
                   // 첫 문장부터 표시
                   <>
                     <img
-                      src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                      src={currentBook.image_url}
                       alt="card_book"
                       className={`w-full h-full object-cover ${currentSentenceIndex === 0 ? '' : 'opacity-50'}`}
                     />
                     <div className="absolute inset-0 bg-white opacity-70 z-10" />
                     <div className="text-black text-[3vw] font-bold break-words flex flex-col justify-center items-center w-[38vw] h-[65vh] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
                       <div className="inline whitespace-normal break-keep text-center">
-                        {currentBook.summary && currentBook.summary[currentSentenceIndex] ? (
-                          currentBook.summary[currentSentenceIndex - 1].split('*').map((part, index) => (
+                        {currentBook.summary && currentBook.summary[currentSentenceIndex-1] ? (
+                          currentBook.summary[currentSentenceIndex-1].split('*').map((part, index) => (
                             <span key={index} className={index % 2 === 1 ? 'text-orange-500' : ''}>
                               {part}
                             </span>
@@ -110,7 +120,7 @@ const ShortBooksPage = () => {
                   <div className="relative w-full h-full flex">
                     {/* 배경 이미지 (생성된 이미지) */}
                     <img
-                      src={`http://localhost:5001/generated_images/${currentBook.image_url.split('/').pop()}`}
+                      src={currentBook.image_url}
                       alt="background_book"
                       className="absolute inset-0 w-full h-full object-cover opacity-50"
                     />
