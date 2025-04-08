@@ -1,0 +1,41 @@
+2025-03-24 07:04:26.951 [info] 
+
+
+
+
+2025-03-24 07:04:26.962 [info] Extension host agent started.
+2025-03-24 07:04:27.014 [info] Started initializing default profile extensions in extensions installation folder. file:///home/ubuntu/.vscode-server/extensions
+2025-03-24 07:04:27.034 [info] [<unknown>][07a37708][ExtensionHostConnection] New connection established.
+2025-03-24 07:04:27.054 [info] [<unknown>][c2cf3776][ManagementConnection] New connection established.
+2025-03-24 07:04:27.069 [info] Completed initializing default profile extensions in extensions installation folder. file:///home/ubuntu/.vscode-server/extensions
+2025-03-24 07:04:27.706 [info] [<unknown>][07a37708][ExtensionHostConnection] <21970> Launched Extension Host Process.
+2025-03-24 07:09:26.963 [info] New EH opened, aborting shutdown
+2025-03-24 07:10:33.669 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:10:45.055 [info] [<unknown>][c2cf3776][ManagementConnection] The client has reconnected.
+2025-03-24 07:11:19.971 [info] [<unknown>][c2cf3776][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+2025-03-24 07:11:20.897 [info] [<unknown>][f142264e][ManagementConnection] New connection established.
+2025-03-24 07:11:20.906 [info] [<unknown>][463d5e53][ExtensionHostConnection] New connection established.
+2025-03-24 07:11:20.915 [info] [<unknown>][463d5e53][ExtensionHostConnection] <23429> Launched Extension Host Process.
+2025-03-24 07:12:03.284 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:12:03.928 [error] Error: Unexpected SIGPIPE
+    at process.<anonymous> (file:///home/ubuntu/.vscode-server/cli/servers/Stable-384ff7382de624fb94dbaf6da11977bba1ecd427/server/out/vs/server/node/server.main.js:189:5899)
+    at process.emit (node:events:531:35)
+2025-03-24 07:12:06.817 [info] [<unknown>][f142264e][ManagementConnection] The client has reconnected.
+2025-03-24 07:12:12.832 [info] [<unknown>][f142264e][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+2025-03-24 07:12:13.757 [info] [<unknown>][79982358][ManagementConnection] New connection established.
+2025-03-24 07:12:13.765 [info] [<unknown>][44a1c632][ExtensionHostConnection] New connection established.
+2025-03-24 07:12:13.778 [info] [<unknown>][44a1c632][ExtensionHostConnection] <23959> Launched Extension Host Process.
+2025-03-24 07:16:02.474 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:16:02.799 [info] [<unknown>][79982358][ManagementConnection] The client has disconnected, will wait for reconnection 3h before disposing...
+2025-03-24 07:22:10.604 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:25:53.440 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:28:13.491 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:30:45.827 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:33:26.705 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 07:33:27.779 [info] [<unknown>][07a37708][ExtensionHostConnection] <21970> Extension Host Process exited with code: 0, signal: null.
+2025-03-24 07:35:21.846 [info] [<unknown>][463d5e53][ExtensionHostConnection] <23429> Extension Host Process exited with code: 0, signal: null.
+2025-03-24 09:26:12.914 [warning] No ptyHost heartbeat after 6 seconds
+2025-03-24 10:31:42.475 [info] [<unknown>][44a1c632][ExtensionHostConnection] <23959> Extension Host Process exited with code: 0, signal: null.
+2025-03-24 10:31:42.485 [info] Last EH closed, waiting before shutting down
+2025-03-24 10:32:18.582 [info] [<unknown>][79982358][ManagementConnection] The reconnection grace time of 3h has expired, so the connection will be disposed.
+2025-03-24 10:36:42.486 [info] Last EH closed, shutting down

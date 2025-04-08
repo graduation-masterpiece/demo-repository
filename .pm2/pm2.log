@@ -1,0 +1,17 @@
+2025-04-07T11:15:31: PM2 log: ===============================================================================
+2025-04-07T11:15:31: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+2025-04-07T11:15:31: PM2 log: Time                 : Mon Apr 07 2025 11:15:31 GMT+0000 (Coordinated Universal Time)
+2025-04-07T11:15:31: PM2 log: PM2 version          : 6.0.5
+2025-04-07T11:15:31: PM2 log: Node.js version      : 18.20.7
+2025-04-07T11:15:31: PM2 log: Current arch         : x64
+2025-04-07T11:15:31: PM2 log: PM2 home             : /home/ubuntu/.pm2
+2025-04-07T11:15:31: PM2 log: PM2 PID file         : /home/ubuntu/.pm2/pm2.pid
+2025-04-07T11:15:31: PM2 log: RPC socket file      : /home/ubuntu/.pm2/rpc.sock
+2025-04-07T11:15:31: PM2 log: BUS socket file      : /home/ubuntu/.pm2/pub.sock
+2025-04-07T11:15:31: PM2 log: Application log path : /home/ubuntu/.pm2/logs
+2025-04-07T11:15:31: PM2 log: Worker Interval      : 30000
+2025-04-07T11:15:31: PM2 log: Process dump file    : /home/ubuntu/.pm2/dump.pm2
+2025-04-07T11:15:31: PM2 log: Concurrent actions   : 2
+2025-04-07T11:15:31: PM2 log: SIGTERM timeout      : 1600
+2025-04-07T11:15:31: PM2 log: Runtime Binary       : /home/ubuntu/.nvm/versions/node/v18.20.7/bin/node
+2025-04-07T11:15:31: PM2 log: ===============================================================================

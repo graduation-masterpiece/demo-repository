@@ -1,0 +1,25 @@
+0 verbose cli /home/ubuntu/.nvm/versions/node/v18.20.7/bin/node /home/ubuntu/.nvm/versions/node/v18.20.7/bin/npm
+1 info using npm@10.8.2
+2 info using node@v18.20.7
+3 silly config load:file:/home/ubuntu/.nvm/versions/node/v18.20.7/lib/node_modules/npm/npmrc
+4 silly config load:file:/home/ubuntu/demo-repository/.npmrc
+5 silly config load:file:/home/ubuntu/.npmrc
+6 silly config load:file:/home/ubuntu/.nvm/versions/node/v18.20.7/etc/npmrc
+7 verbose title npm run build
+8 verbose argv "run" "build"
+9 verbose logfile logs-max:10 dir:/home/ubuntu/.npm/_logs/2025-04-07T08_14_49_707Z-
+10 verbose logfile /home/ubuntu/.npm/_logs/2025-04-07T08_14_49_707Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 http fetch GET 200 https://registry.npmjs.org/npm 371ms
+14 verbose cwd /home/ubuntu/demo-repository/src
+15 verbose os Linux 6.8.0-1026-aws
+16 verbose node v18.20.7
+17 verbose npm  v10.8.2
+18 notice
+18 notice New [31mmajor[39m version of npm available! [31m10.8.2[39m -> [34m11.2.0[39m
+18 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v11.2.0[39m
+18 notice To update run: [4mnpm install -g npm@11.2.0[24m
+18 notice  { force: true, [Symbol(proc-log.meta)]: true }
+19 verbose exit 0
+20 info ok
