@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
@@ -34,32 +34,86 @@ const ShortBooksPage = () => {
     fetchBooks();
   }, [id]);
 
-  const handlePrePage = () => {
-    if (currentSentenceIndex > 0) {
-      setCurrentSentenceIndex(currentSentenceIndex - 1);
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+
+          if (currentScrollY > lastScrollY && currentBookIndex < shortBooks.length - 1) {
+            setCurrentBookIndex(currentBookIndex + 1);
+            setCurrentSentenceIndex(0);
+          }
+          
+          if (currentScrollY < lastScrollY && currentSentenceIndex > 0) {
+            setCurrentBookIndex(currentBookIndex - 1);
+            setCurrentSentenceIndex(0);
+          }
+
+          window.scrollTo({ top: 0 });
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleNextPage, handlePrePage]);
+
+  const handlePrePage = useCallback(() => {
+    const currentBook = shortBooks[currentBookIndex];
+
+    if (!currentBook || !currentBook.summary) return;
+
+    if (currentBook.summary && currentSentenceIndex > 0) {
+      setCurrentSentenceIndex(currentBookIndex - 1);
     } else if (currentBookIndex > 0) {
       setCurrentBookIndex(currentBookIndex - 1);
       setCurrentSentenceIndex(0);
     }
-  };
+  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     const currentBook = shortBooks[currentBookIndex];
+
     if (!currentBook || !currentBook.summary) return;
 
     if (currentBook.summary && currentSentenceIndex < currentBook.summary.length + 1) {
-	      setCurrentSentenceIndex(currentSentenceIndex + 1);
+	setCurrentSentenceIndex(currentBookIndex + 1);
     } else if (currentBookIndex < shortBooks.length - 1) {
       setCurrentBookIndex(currentBookIndex + 1);
       setCurrentSentenceIndex(0);
     }
-  };
+  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
 
   const currentBook = shortBooks[currentBookIndex];
 
   console.log("shortBooks:", shortBooks);
   console.log("currentBookIndex:", currentBookIndex);
   console.log("currentBook:", currentBook);
+
+  const handleLinkShare = async () => {
+    try {
+      const shareURL = `http://3.38.107.4/book/${currentBook.id}`;
+
+      await navigator.clipboard.writeText(shareURL);
+
+      alert("링크가 복사되었습니다.");
+
+      console.log("Shared URL: ", shareURL);
+    } catch (err) {
+      console.error("Share URL Copy Failed: ", err);
+    }
+  };
 
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
@@ -170,7 +224,7 @@ const ShortBooksPage = () => {
             <img src="/images/white_like.png" alt="like" className="w-4 h-4" />
           </button>
         </div>
-        <div className="fixed top-[74vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+        <div onClick={handleLinkShare} className="fixed top-[74vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
             <img src="/images/share.png" alt="share" className="w-4 h-4" />
           </button>
