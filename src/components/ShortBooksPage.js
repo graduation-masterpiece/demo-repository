@@ -228,19 +228,9 @@ const ShortBooksPage = () => {
             <img src="/images/search.png" alt="search" className="w-8 h-8" />
           </button>
         </div> */}
-        <div className="fixed top-[64vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
-          <button className="bg-[#424141] rounded-xl p-4">
-            <img src="/images/white_like.png" alt="like" className="w-4 h-4" />
-          </button>
-        </div>
         <div onClick={handleLinkShare} className="fixed top-[74vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
             <img src="/images/share.png" alt="share" className="w-4 h-4" />
-          </button>
-        </div>
-        <div className="fixed top-[84vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
-          <button className="bg-[#424141] rounded-xl p-4">
-            <img src="/images/white_trash.png" alt="trash" className="w-4 h-4" />
           </button>
         </div>
       </div>
