@@ -50,7 +50,7 @@ const ShortBooksPage = () => {
         setCurrentBookIndex(0);
         setCurrentSentenceIndex(0);
       } catch (error) {
-        console.error('책 정보를 가져오는 중 오류 발생:', error);
+        console.error('Error Occurred During Loading Book Info:', error);
       }
     };
 
@@ -94,8 +94,31 @@ const ShortBooksPage = () => {
   const handleLinkShare = async () => {
     try {
       const shareURL = `http://3.38.107.4/book/${currentBook.id}`;
-      await navigator.clipboard.writeText(shareURL);
-      alert("링크가 복사되었습니다.");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareURL);
+        
+        alert("URL Has Been Copied.");
+        console.log("Shared URL: ", shareURL);
+      } else {
+        const tempInput = document.createElement("input");
+      
+        tempInput.value = shareURL;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999);
+
+        const success = document.execCommand("copy");
+
+        document.body.removeChild(tempInput);
+
+        if (success) {
+          alert("URL Has Been Copied.");
+          console.log("Shared URL: ", shareURL);
+        } else {
+          throw new Error("Share URL Copy Failed");
+        }
+      }
     } catch (err) {
       console.error("Share URL Copy Failed: ", err);
     }
@@ -150,7 +173,7 @@ const ShortBooksPage = () => {
                             </span>
                           ))
                         ) : (
-                          <span>내용이 없습니다.</span>
+                          <span>Summay is empty.</span>
                         )}
                       </div>
                     </div>
@@ -176,10 +199,10 @@ const ShortBooksPage = () => {
                     {/* 오른쪽 절반: 책 정보 */}
                     <div className="w-1/2 h-full flex flex-col items-center justify-center p-8 z-20">
                       <h1 className="text-4xl font-bold mb-4 text-center">
-                        {currentBook.title || "제목 없음"}
+                        {currentBook.title || "No Title"}
                       </h1>
                       <p className="text-2xl text-center">
-                        {currentBook.author || "작가 미상"}
+                        {currentBook.author || "Writer Unknown"}
                       </p>
                     </div>
                   </div>
