@@ -9,16 +9,39 @@ const ShortBooksPage = () => {
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
 
+  const handlePrePage = useCallback(() => {
+    const currentBook = shortBooks[currentBookIndex];
+
+    if (!currentBook || !currentBook.summary) return;
+
+    if (currentBook.summary && currentSentenceIndex > 0) {
+      setCurrentSentenceIndex(currentSentenceIndex - 1);
+    } else if (currentBookIndex > 0) {
+      setCurrentBookIndex(currentBookIndex - 1);
+      setCurrentSentenceIndex(0);
+    }
+  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
+
+  const handleNextPage = useCallback(() => {
+    const currentBook = shortBooks[currentBookIndex];
+
+    if (!currentBook || !currentBook.summary) return;
+
+    if (currentBook.summary && currentSentenceIndex < currentBook.summary.length + 1) {
+      setCurrentSentenceIndex(currentSentenceIndex + 1);
+    } else if (currentBookIndex < shortBooks.length - 1) {
+      setCurrentBookIndex(currentBookIndex + 1);
+      setCurrentSentenceIndex(0);
+    }
+  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const url = id 
-          ? `/api/book/${id}`
-          : '/api/book-cards';
+        const url = id ? `/api/book/${id}` : '/api/book-cards';
         const response = await axios.get(url);
-        console.log('받아온 책 데이터:', response.data);
-        
-	if (Array.isArray(response.data)) {
+
+        if (Array.isArray(response.data)) {
           setShortBooks(response.data);
         } else {
           setShortBooks([response.data]);
@@ -44,13 +67,11 @@ const ShortBooksPage = () => {
           const currentScrollY = window.scrollY;
 
           if (currentScrollY > lastScrollY && currentBookIndex < shortBooks.length - 1) {
-            setCurrentBookIndex(currentBookIndex + 1);
-            setCurrentSentenceIndex(0);
+            handleNextPage();
           }
-          
-          if (currentScrollY < lastScrollY && currentSentenceIndex > 0) {
-            setCurrentBookIndex(currentBookIndex - 1);
-            setCurrentSentenceIndex(0);
+
+          if (currentScrollY < lastScrollY && currentBookIndex > 0) {
+            handlePrePage();
           }
 
           window.scrollTo({ top: 0 });
@@ -63,53 +84,18 @@ const ShortBooksPage = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [handleNextPage, handlePrePage]);
-
-  const handlePrePage = useCallback(() => {
-    const currentBook = shortBooks[currentBookIndex];
-
-    if (!currentBook || !currentBook.summary) return;
-
-    if (currentBook.summary && currentSentenceIndex > 0) {
-      setCurrentSentenceIndex(currentBookIndex - 1);
-    } else if (currentBookIndex > 0) {
-      setCurrentBookIndex(currentBookIndex - 1);
-      setCurrentSentenceIndex(0);
-    }
-  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
-
-  const handleNextPage = useCallback(() => {
-    const currentBook = shortBooks[currentBookIndex];
-
-    if (!currentBook || !currentBook.summary) return;
-
-    if (currentBook.summary && currentSentenceIndex < currentBook.summary.length + 1) {
-	setCurrentSentenceIndex(currentBookIndex + 1);
-    } else if (currentBookIndex < shortBooks.length - 1) {
-      setCurrentBookIndex(currentBookIndex + 1);
-      setCurrentSentenceIndex(0);
-    }
-  }, [shortBooks, currentBookIndex, currentSentenceIndex]);
+  }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
 
   const currentBook = shortBooks[currentBookIndex];
-
-  console.log("shortBooks:", shortBooks);
-  console.log("currentBookIndex:", currentBookIndex);
-  console.log("currentBook:", currentBook);
 
   const handleLinkShare = async () => {
     try {
       const shareURL = `http://3.38.107.4/book/${currentBook.id}`;
-
       await navigator.clipboard.writeText(shareURL);
-
       alert("링크가 복사되었습니다.");
-
-      console.log("Shared URL: ", shareURL);
     } catch (err) {
       console.error("Share URL Copy Failed: ", err);
     }
