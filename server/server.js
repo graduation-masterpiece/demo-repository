@@ -30,15 +30,13 @@ app.get('/api/naver-search', async (req, res) => {
   const display = req.query.display || 10;
   const start = req.query.start || 1;
 
-
   try {
     const response = await axios.get('https://openapi.naver.com/v1/search/book.json', {
       params: { query, display, start },
       headers: {
         'X-Naver-Client-Id': 'au4DM1C3cSYpQy5J5AiF',
         'X-Naver-Client-Secret': 'UDJTo2mDUy',
-	'User-Agent': 'Mozilla/5.0'
-
+	      'User-Agent': 'Mozilla/5.0'
       }
     });
     res.json(response.data);

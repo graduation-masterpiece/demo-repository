@@ -14,10 +14,10 @@ const MainPage = () => {
 
     try {
       const response = await axios.get(url, {
-	header: {
-	  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-	  'Accept-Charset': 'utf-8'
-	}
+	      header: {
+	        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+	        'Accept-Charset': 'utf-8'
+	      }
       });
       setResults(response.data.items); // 검색 결과 상태 업데이트
     } catch (error) {
