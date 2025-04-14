@@ -65,7 +65,7 @@ const ShortBooksPage = () => {
     return () => {
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
+  }, [currentBookIndex, shortBooks.length]);
 
   const currentBook = shortBooks[currentBookIndex];
 
