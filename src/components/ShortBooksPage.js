@@ -75,7 +75,7 @@ const ShortBooksPage = () => {
       const currentIndex = currentBookIndexRef.current;
       const booksLength = shortBooksLengthRef.current;
 
-      if (event.deltaY > 50 && currentIndex < booksLengthh - 1) {
+      if (event.deltaY > 50 && currentIndex < booksLength - 1) {
         setCurrentBookIndex((prevIndex) => prevIndex + 1);
         setCurrentSentenceIndex(0);
       } else if (event.deltaY < -50 && currentIndex > 0) {
@@ -90,7 +90,7 @@ const ShortBooksPage = () => {
       window.removeEventListener("wheel", handleWheel);
       if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
-  }, []);
+  }, [shortBooks.length, currentBookIndex]);
 
   const currentBook = shortBooks[currentBookIndex];
 
