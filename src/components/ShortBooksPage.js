@@ -59,10 +59,11 @@ const ShortBooksPage = () => {
 
   useEffect(() => {
     let throttleTimeout = null;
-    const timeoutTime = 800;
+    const timeoutTime = 1000;
     
     const handleWheel = (event) => {
       if (throttleTimeout) return;
+      
       throttleTimeout = setTimeout(() => {
         throttleTimeout = null;
       }, timeoutTime);
@@ -82,7 +83,7 @@ const ShortBooksPage = () => {
       window.removeEventListener('wheel', handleWheel);
       if (throttleTimeout) clearTimeout(throttleTimeout);
     };
-  }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
+  }, [currentBookIndex, shortBooks.length]);
 
   const currentBook = shortBooks[currentBookIndex];
 
