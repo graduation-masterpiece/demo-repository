@@ -8,6 +8,7 @@ const SearchResults = ({ results }) => {
     const [modalContent, setModalContent] = useState("");
     const [currentIsbn, setCurrentIsbn] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     if (!results || results.length === 0) {
         return <p className="text-gray-500">검색 결과가 없습니다.</p>;
@@ -23,6 +24,7 @@ const SearchResults = ({ results }) => {
         }
     
         setIsLoading(true);
+        setIsCompleted(false);
         setCurrentIsbn(book.isbn);
         setModalContent("카드뉴스를 생성중입니다...");
         setIsModalOpen(true);
@@ -58,8 +60,13 @@ const SearchResults = ({ results }) => {
             if (!response.ok) {
                 throw new Error(data.message || data.error || "서버 전송 실패");
             }
-    
+    	    setIsCompleted(true);
             setModalContent("카드뉴스가 생성되었습니다!");
+
+	    if(!isModalOpen){
+		setTimeout(() => setIsModalOpen(true), 100);
+	    }
+
         } catch (error) {
             console.error("서버 전송 오류:", error);
             setModalContent(error.message || "서버에 책 정보를 전송하는 데 실패했습니다.");
@@ -70,9 +77,11 @@ const SearchResults = ({ results }) => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        if (!isLoading && currentIsbn) {
-            navigate(`/book/${encodeURIComponent(currentIsbn)}`);
-        }
+    };
+
+    const handleNavigateToCard = () => {
+        setIsModalOpen(false);
+        navigate(`/book/${encodeURIComponent(currentIsbn)}`);
     };
 
     return (
@@ -82,7 +91,16 @@ const SearchResults = ({ results }) => {
                     message={modalContent} 
                     onClose={handleCloseModal}
                     showSpinner={isLoading}
-                />
+                >
+		    {!isLoading && isCompleted && (
+                        <button
+                            onClick={handleNavigateToCard}
+                            className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        >
+                            카드뉴스 보기
+                        </button>
+                    )}
+                </Modal>
             )}
             
             {results.map((item, index) => (
