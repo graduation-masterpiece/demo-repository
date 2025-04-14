@@ -85,7 +85,7 @@ const ShortBooksPage = () => {
       
       if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
-  }, [currentBookIndex, shortBooks.length]);
+  }, []);
 
   const currentBook = shortBooks[currentBookIndex];
 
