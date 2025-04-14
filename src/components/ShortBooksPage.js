@@ -60,9 +60,11 @@ const ShortBooksPage = () => {
   useEffect(() => {
     const handleWheel = (event) => {
       if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
-        handleNextPage();
+        setCurrentBookIndex((prevIndex) => prevIndex + 1);
+        setCurrentSentenceIndex(0);
       } else if (event.deltaY < 0 && currentBookIndex > 0) {
-        handlePrePage();
+        setCurrentBookIndex((prevIndex) => prevIndex - 1);
+        setCurrentSentenceIndex(0);
       }
     };
 
