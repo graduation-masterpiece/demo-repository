@@ -90,7 +90,7 @@ const ShortBooksPage = () => {
       window.removeEventListener("wheel", handleWheel);
       if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
-  }, [shortBooks.length, currentBookIndex]);
+  }, []);
 
   const currentBook = shortBooks[currentBookIndex];
 
