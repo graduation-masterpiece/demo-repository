@@ -5,10 +5,10 @@ const mysql = require('mysql2');
 
 // MySQL 연결 설정
 const db = mysql.createConnection({
-  host: 'database-1.cr6sc2og4hhr.ap-northeast-2.rds.amazonaws.com',
-  user: 'admin',
-  password: 'Rdsadminpwd',
-  database: 'graduation_work'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 // MySQL 연결

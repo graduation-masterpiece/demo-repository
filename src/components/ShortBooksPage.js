@@ -38,7 +38,7 @@ const ShortBooksPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const url = id ? `/api/book/${id}` : '/api/book-cards';
+        const url = id ? `http://localhost:5001/api/book/${id}` : 'http://localhost:5001/api/book-cards';
         const response = await axios.get(url);
 
         if (Array.isArray(response.data)) {

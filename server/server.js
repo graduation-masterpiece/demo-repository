@@ -6,6 +6,14 @@ const path = require('path');
 const axios = require('axios');
 require('dotenv').config(); // .env 파일 로드
 
+const redis = require('redis');
+const redisClient = redis.createClient({
+  url: 'redis://localhost:6379' // Redis 서버 주소
+});
+
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.connect();
+
 const app = express();
 
 // CORS 설정
@@ -23,6 +31,54 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// 검색어 저장 및 자동완성 API
+app.post('/api/search-history', async (req, res) => {
+  const { query } = req.body;
+  
+  if (!query) {
+    return res.status(400).json({ error: 'Query is required' });
+  }
+
+  try {
+    // 검색어를 Redis에 저장 (ZSET 사용)
+    await redisClient.zAdd('searchTerms', [
+      { score: Date.now(), value: query.toLowerCase() }
+    ]);
+    
+    // 오래된 검색어 제거 (최근 100개만 유지)
+    await redisClient.zRemRangeByRank('searchTerms', 0, -101);
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Redis error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// 자동완성 API
+app.get('/api/autocomplete', async (req, res) => {
+  const { prefix } = req.query;
+  
+  if (!prefix) {
+    return res.status(400).json({ error: 'Prefix is required' });
+  }
+
+  try {
+    // Redis에서 검색어 조회
+    const allTerms = await redisClient.zRange('searchTerms', 0, -1);
+    
+    // 접두사로 필터링
+    const suggestions = allTerms
+      .filter(term => term.startsWith(prefix.toLowerCase()))
+      .slice(0, 10); // 상위 10개만 반환
+      
+    res.status(200).json({ suggestions });
+  } catch (error) {
+    console.error('Redis error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
 
@@ -35,9 +91,9 @@ app.get('/api/naver-search', async (req, res) => {
     const response = await axios.get('https://openapi.naver.com/v1/search/book.json', {
       params: { query, display, start },
       headers: {
-        'X-Naver-Client-Id': 'au4DM1C3cSYpQy5J5AiF',
-        'X-Naver-Client-Secret': 'UDJTo2mDUy',
-	'User-Agent': 'Mozilla/5.0'
+        'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
+        'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
+	      'User-Agent': 'Mozilla/5.0'
 
       }
     });
@@ -145,16 +201,6 @@ app.get('/api/book-cards', (req, res) => {
         };
       });
 
-      /*const formattedData = results.map(book => ({
-        id: book.id,
-        title: book.title,
-        author: book.author,
-        image_url: book.image_url,
-        book_cover: book.book_cover,
-        summary: book.summary ? JSON.parse(book.summary) : null,
-        likes: book.likes
-      }));*/
-
       res.status(200).json(formattedData);
     } catch (error) {
       console.error('데이터 변환 중 오류 발생:', error);
@@ -228,7 +274,7 @@ app.get('/book/:bookId', async (req, res) => {
       title: book.title,
       description: book.description || 'My Library Card',
       imageUrl: book.image_url,
-      url: `http://15.164.227.43/book/${bookId}`,
+      url: `http://localhost:5001/api/book/${bookId}`,
     });
   } catch (error) {
     console.error('book/:id 오류', error.message);

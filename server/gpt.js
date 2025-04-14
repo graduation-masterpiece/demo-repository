@@ -1,19 +1,20 @@
+const dotenv = require('dotenv'); // dotenv 모듈 불러오기
+dotenv.config(); // 환경 변수 로드
+const OpenAI = require('openai'); // OpenAI 모듈 불러오기
 const fs = require('fs'); // 파일 시스템 모듈 불러오기
 const path = require('path'); // 경로 모듈 불러오기
 const db = require('./db'); // db.js에서 db 객체 가져오기
 const axios = require('axios'); // axios 모듈 불러오기
-const { OpenAI } = require('openai'); // OpenAI 모듈 불러오기
-const dotenv = require('dotenv'); // dotenv 모듈 불러오기
-dotenv.config(); // 환경 변수 로드
+
 
 // AWS s3 클라이언트
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3 = new S3Client({
-  region: 'ap-northeast-2',
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: 'AKIA6ODU7ZD4MNCZYCTT',
-    secretAccessKey: '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'
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   }
 });
 
@@ -133,6 +134,7 @@ async function modifyPrompt(summary) {
 async function generateImage(prompt, size = '1024x1024') {
 
   console.log(prompt)
+  console.log("GPT API KEY:", process.env.GPT_API_KEY);
 
   try {
     const response = await openai.images.generate({
@@ -171,24 +173,23 @@ async function generateImage(prompt, size = '1024x1024') {
   }
 }
 
-// 북카드 만드는 메인 함수 (텍스트 요약 + 이미지 생성)
 async function processBook(id) {
   try {
     const bookInfo = await getBookInfo(id);
     const { title, description } = bookInfo;
 
-    // 1. 책 description 내용으로 책 요약문(소개글 작성)
+    // 1. 책 요약문 생성
     const summary = await summarizeText(title, description);
 
-    // 2. 작성된 책 요약문 문장 단위로 나누기
-    const splitSummary = splitTextIntoSentences(summary);
+    // 2. 이미지 생성 프롬프트 수정 (요약문 전달)
+    const modifiedPrompt = await modifyPrompt(summary); // ✅ 수정된 부분
 
-    // 3. splitSummary를 JSON 형태로 변환
-    const jsonSummary = JSON.stringify(splitSummary);
-
-    // 4. 책 요약문으로 이미지 생성 후 다운로드
-    const modifiedPrompt = await modifyPrompt(description);
+    // 3. 이미지 생성 및 저장
     const imagePath = await generateImage(modifiedPrompt);
+
+    // 4. 문장 분할 및 JSON 변환
+    const splitSummary = splitTextIntoSentences(summary);
+    const jsonSummary = JSON.stringify(splitSummary);
 
     return {
       title: title,
@@ -200,5 +201,6 @@ async function processBook(id) {
     throw error;
   }
 }
+
 
 module.exports = { processBook }; // processBook 함수를 내보냄
