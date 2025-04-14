@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
@@ -8,7 +8,6 @@ const ShortBooksPage = () => {
   const [shortBooks, setShortBooks] = useState([]);
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
-  const throttleTimeout = useRef(null);
 
   const handlePrePage = useCallback(() => {
     const currentBook = shortBooks[currentBookIndex];
@@ -49,48 +48,24 @@ const ShortBooksPage = () => {
 
     fetchBooks();
   }, [id]);
-  
-  const currentBookIndexRef = useRef(currentBookIndex);
 
   useEffect(() => {
-    currentBookIndexRef.current = currentBookIndex;
-  }, [currentBookIndex]);
-  
-  const shortBooksLengthRef = useRef(shortBooks.length);
-
-  useEffect(() => {
-    shortBooksLengthRef.current = shortBooks.length;
-  }, [shortBooks.length]);
-
-  useEffect(() => {
-    const timeoutTime = 800;
-
     const handleWheel = (event) => {
-      if (throttleTimeout.current) return;
-
-      throttleTimeout.current = setTimeout(() => {
-        throttleTimeout.current = null;
-      }, timeoutTime);
-
-      const currentIndex = currentBookIndexRef.current;
-      const booksLength = shortBooksLengthRef.current;
-
-      if (event.deltaY > 50 && currentIndex < booksLength - 1) {
+      if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
         setCurrentBookIndex((prevIndex) => prevIndex + 1);
         setCurrentSentenceIndex(0);
-      } else if (event.deltaY < -50 && currentIndex > 0) {
+      } else if (event.deltaY < 0 && currentBookIndex > 0) {
         setCurrentBookIndex((prevIndex) => prevIndex - 1);
         setCurrentSentenceIndex(0);
       }
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: true });
+    window.addEventListener('wheel', handleWheel);
     
     return () => {
-      window.removeEventListener("wheel", handleWheel);
-      if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
+      window.removeEventListener('wheel', handleWheel);
     };
-  }, []);
+  }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
 
   const currentBook = shortBooks[currentBookIndex];
 
