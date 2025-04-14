@@ -57,8 +57,9 @@ const ShortBooksPage = () => {
     fetchBooks();
   }, [id]);
 
+  const throttleTimeout = useRef(null);
+
   useEffect(() => {
-    const throttleTimeout = useRef(null);
     const timeoutTime = 800;
     
     const handleWheel = (event) => {
