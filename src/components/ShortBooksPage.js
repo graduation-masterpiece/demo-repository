@@ -58,7 +58,15 @@ const ShortBooksPage = () => {
   }, [id]);
 
   useEffect(() => {
+    let throttleTimeout = null;
+    const timeoutTime = 800;
+    
     const handleWheel = (event) => {
+      if (throttleTimeout) return;
+      throttleTimeout = setTimeout(() => {
+        throttleTimeout = null;
+      }, timeoutTime);
+      
       if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
         setCurrentBookIndex((prevIndex) => prevIndex + 1);
         setCurrentSentenceIndex(0);
@@ -72,6 +80,7 @@ const ShortBooksPage = () => {
     
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (throttleTimeout) clearTimeout(throttleTimeout);
     };
   }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
 
