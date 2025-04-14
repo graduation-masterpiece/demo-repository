@@ -58,34 +58,18 @@ const ShortBooksPage = () => {
   }, [id]);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-
-          if (currentScrollY > lastScrollY && currentBookIndex < shortBooks.length - 1) {
-            handleNextPage();
-          }
-
-          if (currentScrollY < lastScrollY && currentBookIndex > 0) {
-            handlePrePage();
-          }
-
-          window.scrollTo({ top: 0 });
-          lastScrollY = currentScrollY;
-          ticking = false;
-        });
-
-        ticking = true;
+    const handleWheel = (event) => {
+      if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
+        handleNextPage();
+      } else if (event.deltaY < 0 && currentBookIndex > 0) {
+        handlePrePage();
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('wheel', handleWheel);
+    
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
     };
   }, [handleNextPage, handlePrePage, currentBookIndex, shortBooks.length]);
 
