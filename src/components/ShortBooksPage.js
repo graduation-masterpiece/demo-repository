@@ -49,6 +49,18 @@ const ShortBooksPage = () => {
 
     fetchBooks();
   }, [id]);
+  
+  const currentBookIndexRef = useRef(currentBookIndex);
+
+  useEffect(() => {
+    currentBookIndexRef.current = currentBookIndex;
+  }, [currentBookIndex]);
+  
+  const shortBooksLengthRef = useRef(shortBooks.length);
+
+  useEffect(() => {
+    shortBooksLengthRef.current = shortBooks.length;
+  }, [shortBooks.length]);
 
   useEffect(() => {
     const timeoutTime = 800;
@@ -60,21 +72,25 @@ const ShortBooksPage = () => {
         throttleTimeout.current = null;
       }, timeoutTime);
 
-      if (event.deltaY > 50 && currentBookIndex < shortBooks.length - 1) {
-        setCurrentBookIndex((prev) => prev + 1);
+      const currentIndex = currentBookIndexRef.current;
+      const booksLength = shortBooksLengthRef.current;
+
+      if (event.deltaY > 50 && currentIndex < booksLengthh - 1) {
+        setCurrentBookIndex((prevIndex) => prevIndex + 1);
         setCurrentSentenceIndex(0);
-      } else if (event.deltaY < -50 && currentBookIndex > 0) {
-        setCurrentBookIndex((prev) => prev - 1);
+      } else if (event.deltaY < -50 && currentIndex > 0) {
+        setCurrentBookIndex((prevIndex) => prevIndex - 1);
         setCurrentSentenceIndex(0);
       }
     };
 
     window.addEventListener("wheel", handleWheel, { passive: true });
+    
     return () => {
       window.removeEventListener("wheel", handleWheel);
       if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
-  }, [currentBookIndex, shortBooks.length]);
+  }, []);
 
   const currentBook = shortBooks[currentBookIndex];
 
