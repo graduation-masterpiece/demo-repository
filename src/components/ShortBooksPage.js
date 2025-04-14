@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
@@ -58,14 +58,14 @@ const ShortBooksPage = () => {
   }, [id]);
 
   useEffect(() => {
-    let throttleTimeout = null;
-    const timeoutTime = 1000;
+    const throttleTimeout = useRef(null);
+    const timeoutTime = 800;
     
     const handleWheel = (event) => {
-      if (throttleTimeout) return;
+      if (throttleTimeout.current) return;
       
-      throttleTimeout = setTimeout(() => {
-        throttleTimeout = null;
+      throttleTimeout.current = setTimeout(() => {
+        throttleTimeout.current = null;
       }, timeoutTime);
       
       if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
@@ -81,7 +81,8 @@ const ShortBooksPage = () => {
     
     return () => {
       window.removeEventListener('wheel', handleWheel);
-      if (throttleTimeout) clearTimeout(throttleTimeout);
+      
+      if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
   }, [currentBookIndex, shortBooks.length]);
 
