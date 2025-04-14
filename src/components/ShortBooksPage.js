@@ -93,7 +93,7 @@ const ShortBooksPage = () => {
 
   const handleLinkShare = async () => {
     try {
-      const shareURL = `http://3.38.107.4/book/${currentBook.id}`;
+      const shareURL = `https://bookcard.site/meta/book/${currentBook.id}`;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(shareURL);

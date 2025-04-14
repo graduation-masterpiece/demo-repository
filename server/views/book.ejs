@@ -9,7 +9,7 @@
         <meta property="og:title" content="<%= title %>">
         <meta property="og:description" content="<%= description %>">
         <meta property="og:image" content="<%= imageUrl %>">
-        <meta property="og:url" content="<%= url %>">
+        <meta property="og:url" content="https://bookcard.site/meta/book/<%= bookId %>">
         <meta property="og:type" content="website">
 
         <meta name="twitter:card" content="summary_large_image">
@@ -18,8 +18,6 @@
         <meta name="twitter:image" content="<%= imageUrl %>">
     </head>
     <body>
-        <h1><%= title %></h1>
-        <p><%= description %></p>
-        <img src="<%= imageUrl %>" alt="Book Image">
+	<noscript>스크립트를 지원하지 않는 브라우저입니다.</noscript>
     </body>
 </html>

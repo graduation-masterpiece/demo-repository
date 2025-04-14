@@ -8,9 +8,15 @@ require('dotenv').config(); // .env 파일 로드
 
 const app = express();
 
+console.log("🔥 서버 진입 확인 - 최신 코드 실행됨");
+
 // CORS 설정
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://3.38.107.4'],
+  origin: [
+	'http://localhost:3000',
+	'http://3.38.107.4',
+	'https://bookcard.site',
+	'https://www.bookcard.site'],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
@@ -22,6 +28,36 @@ app.use(express.urlencoded({ extended: true }));
 // EJS 설정
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+
+// SNS 미리보기용 메타 URL
+app.get('/meta/book/:bookId', async (req, res) => {
+  const ua = req.headers['user-agent'] || '';
+  const bookId = req.params.bookId;
+
+  try {
+    const response = await axios.get(`http://localhost:5001/api/book/${bookId}`);
+    const book = response.data;
+
+    const isBot = /facebook|kakao|twitter|Slack|Discord|LinkedIn/i.test(ua);
+
+    if (!isBot) {
+      // 일반 사용자면 React 페이지로 리디렉션
+      return res.redirect(301, `https://bookcard.site/book/${bookId}`);
+    }
+
+    // SNS 크롤러에게는 OG 메타 포함된 HTML 응답
+    res.render('book', {
+      title: book.title,
+      description: book.description || 'My Library Card',
+      imageUrl: book.image_url,
+      bookId: bookId
+    });
+  } catch (error) {
+    console.error('/meta/book/:id 오류:', error.message);
+    res.status(500).send('서버 오류');
+  }
+});
 
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
@@ -216,22 +252,12 @@ app.get('/api/my-library', (req, res) => {
   });
 });
 
-app.get('/book/:bookId', async (req, res) => {
-  try {
-    const bookId = req.params.bookId;
-    const response = await axios.get(`http://localhost:5001/api/book/${bookId}`);
-    const book = response.data;
 
-    res.render('book', {
-      title: book.title,
-      description: book.description || 'My Library Card',
-      imageUrl: book.image_url,
-      url: `http://15.164.227.43/book/${bookId}`,
-    });
-  } catch (error) {
-    console.error('book/:id 오류', error.message);
-    res.status(500).send('서버 오류');
-  }
+// ✅ React fallback 설정 (API, META 제외)
+app.use(express.static(path.join(__dirname, '../build')));
+
+app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
 // 서버 실행
