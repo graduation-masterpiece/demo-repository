@@ -8,6 +8,8 @@ const ShortBooksPage = () => {
   const [shortBooks, setShortBooks] = useState([]);
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const throttleTimeout = useRef(null);
+  const throttleTime = 800;  // 밀리초 단위. 1000ms = 1s
 
   const handlePrePage = useCallback(() => {
     const currentBook = shortBooks[currentBookIndex];
@@ -33,6 +35,42 @@ const ShortBooksPage = () => {
     }
   }, [shortBooks, currentBookIndex, currentSentenceIndex]);
 
+  const handleWheel = useCallback ((event) => {
+    console.log("Wheel Event Detected");
+
+    if (throttleTimeout.current) {
+      console.log("Throttle is active, ignoring scroll");
+      
+      return;
+    }
+
+    throttleTimeout.current = setTimeout(() => {
+      throttleTimeout.current = null;
+      
+      console.log("Throttle cleared");
+    }, throttleTime);
+
+    if (event.deltaY > 0) {
+      if (currentBookIndex < shortBooks.length - 1) {
+        setCurrentBookIndex((prevIndex) => prevIndex + 1);
+        setCurrentSentenceIndex(0);
+        
+        console.log("Moving to the next book");
+      } else {
+        console.log("Reached to the last book");
+      }
+    } else if (event.deltaY < 0) {
+      if (currentBookIndex > 0) {
+        setCurrentBookIndex((prevIndex) => prevIndex - 1);
+        setCurrentSentenceIndex(0);
+
+        console.log("Moving to the previous book");
+      } else {
+        console.log("Reached to the first book");
+      }
+    }
+  }, [currentBookIndex, shortBooks.length]);
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -48,35 +86,19 @@ const ShortBooksPage = () => {
 
     fetchBooks();
   }, [id]);
-
-  const throttleTimeout = useRef(null);
-  const throttleTime = 800;  // 밀리초 단위. 1000ms = 1s
   
   useEffect(() => {
-    const handleWheel = (event) => {
-      if (throttleTimeout.current) return;
-
-      throttleTimeout.current = setTimeout(() => {
-        throttleTimeout.current = null;
-      }, throttleTime);
-      
-      if (event.deltaY > 0 && currentBookIndex < shortBooks.length - 1) {
-        setCurrentBookIndex((prevIndex) => prevIndex + 1);
-        setCurrentSentenceIndex(0);
-      } else if (event.deltaY < 0 && currentBookIndex > 0) {
-        setCurrentBookIndex((prevIndex) => prevIndex - 1);
-        setCurrentSentenceIndex(0);
-      }
-    };
-
     window.addEventListener('wheel', handleWheel);
+    console.log("Wheel event listener attached");
     
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      
+      console.log("Wheel event listener removed");
 
       if (throttleTimeout.current) clearTimeout(throttleTimeout.current);
     };
-  }, [currentBookIndex, shortBooks.length]);
+  }, [handleWheel]);
 
   const currentBook = shortBooks[currentBookIndex];
 
