@@ -58,23 +58,23 @@ const ShortBooksPage = () => {
         return;
       }
 
-      debounceTimeout.current = setTimeout(() => {
-        setShortBooks((prevBooks) => {
-          setCurrentBookIndex((prevIndex) => {
-            if (event.deltaY > 0 && prevIndex < prevBooks.length - 1) {
-              setCurrentSentenceIndex(0);
+      setShortBooks((prevBooks) => {
+        setCurrentBookIndex((prevIndex) => {
+          if (event.deltaY > 0 && prevIndex < prevBooks.length - 1) {
+            setCurrentSentenceIndex(0);
   
-              return prevIndex + 1;
-            } else if (event.deltaY < 0 && prevIndex > 0) {
-              setCurrentSentenceIndex(0);
+            return prevIndex + 1;
+          } else if (event.deltaY < 0 && prevIndex > 0) {
+            setCurrentSentenceIndex(0);
   
-              return prevIndex - 1;
-            } else return prevIndex;
-          });
-  
-          return prevBooks;
+            return prevIndex - 1;
+          } else return prevIndex;
         });
+  
+        return prevBooks;
+      });
 
+      debounceTimeout.current = setTimeout(() => {
         debounceTimeout.current = null;
       }, timeoutTime);
     };
