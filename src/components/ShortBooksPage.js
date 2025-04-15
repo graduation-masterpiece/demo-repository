@@ -49,59 +49,43 @@ const ShortBooksPage = () => {
     fetchBooks();
   }, [id]);
   
-  const throttleTimeout = useRef(null);
-  const throttleTime = 800;  // 밀리초 단위. 1000ms = 1s
+  const debounceTimeout = useRef(null);
+  const timeoutTime = 800;  // 밀리초 단위. 1000ms = 1s
   
   useEffect(() => {
     const wheelHandler = (event) => {
-      console.log("Wheel event triggered");
 
-      if (throttleTimeout.current) {
-        console.log("Throttle is active, ignoring scroll");
+      if (debounceTimeout.current) {
         return;
       }
 
-      throttleTimeout.current = setTimeout(() => {
-        throttleTimeout.current = null;
-
-        console.log("Throttle Cleared");
-      }, throttleTime);
-
-      setShortBooks((prevBooks) => {
-        setCurrentBookIndex((prevIndex) => {
-          if (event.deltaY > 0 && prevIndex < prevBooks.length - 1) {
-            setCurrentSentenceIndex(0);
-
-            console.log("Moving to the next book");
-            return prevIndex + 1;
-          } else if (event.deltaY < 0 && prevIndex > 0) {
-            setCurrentSentenceIndex(0);
-
-            console.log("Moving to the previous book");
-            return prevIndex - 1;
-          } else {
-            console.log("Reached book boundary");
-            return prevIndex;
-          }
+      debounceTimeout.current = setTimeout(() => {
+        setShortBooks((prevBooks) => {
+          setCurrentBookIndex((prevIndex) => {
+            if (event.deltaY > 0 && prevIndex < prevBooks.length - 1) {
+              setCurrentSentenceIndex(0);
+  
+              return prevIndex + 1;
+            } else if (event.deltaY < 0 && prevIndex > 0) {
+              setCurrentSentenceIndex(0);
+  
+              return prevIndex - 1;
+            } else return prevIndex;
+          });
+  
+          return prevBooks;
         });
-
-        return prevBooks;
-      });
+      }, timeoutTime);
     };
     
     window.addEventListener('wheel', wheelHandler);
-    console.log("Wheel event listener attached");
     
     return () => {
       window.removeEventListener('wheel', wheelHandler);
-      
-      console.log("Wheel event listener removed");
 
-      if (throttleTimeout.current) {
-        clearTimeout(throttleTimeout.current);
-        throttleTimeout.current = null;
-
-        console.log("Throttle manually cleared on unmount");
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+        debounceTimeout.current = null;
       }
     };
   }, []);
