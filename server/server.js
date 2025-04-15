@@ -19,7 +19,7 @@ const app = express();
 // CORS 설정
 app.use(cors({
   origin: ['http://localhost:3000', 'http://3.38.107.4'],
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
 
@@ -155,6 +155,75 @@ app.post('/api/book', async (req, res) => {
     res.status(500).send('책 처리 중 오류 발생');
   }
 });
+
+// 책 삭제 API
+app.delete('/api/book/:id', (req, res) => {
+  const bookId = req.params.id;
+
+  // book_card 테이블에서 먼저 삭제
+  const deleteBookCardQuery = `DELETE FROM book_card WHERE book_info_id = ?`;
+  db.query(deleteBookCardQuery, [bookId], (err) => {
+    if (err) {
+      console.error('book_card 삭제 중 오류 발생:', err);
+      return res.status(500).json({ error: 'book_card 삭제 중 오류가 발생했습니다.' });
+    }
+
+    // book_info 테이블에서 삭제
+    const deleteBookInfoQuery = `DELETE FROM book_info WHERE id = ?`;
+    db.query(deleteBookInfoQuery, [bookId], (err) => {
+      if (err) {
+        console.error('book_info 삭제 중 오류 발생:', err);
+        return res.status(500).json({ error: 'book_info 삭제 중 오류가 발생했습니다.' });
+      }
+
+      res.status(200).json({ message: '책이 성공적으로 삭제되었습니다.' });
+    });
+  });
+});
+
+const requestIp = require('request-ip');
+
+app.patch('/api/book/:id/like', async (req, res) => {
+  const bookId = req.params.id;
+  const clientIp = requestIp.getClientIp(req); // IP 추출
+
+  try {
+    // 1. 중복 좋아요 체크
+    const isLiked = await redisClient.get(`liked:${bookId}:${clientIp}`);
+    if (isLiked) {
+      return res.status(400).json({ error: '24시간 내 1회만 가능합니다' });
+    }
+
+    // 2. 좋아요 수 증가
+    const updateLikeQuery = `
+      UPDATE book_card
+      SET likes = likes + 1
+      WHERE book_info_id = ?
+    `;
+    const [result] = await db.promise().query(updateLikeQuery, [bookId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: '책을 찾을 수 없습니다' });
+    }
+
+    // 3. Redis에 기록 (24시간 유지)
+    await redisClient.set(`liked:${bookId}:${clientIp}`, '1', { EX: 86400 });
+    
+    // 4. 새로운 좋아요 수 반환
+    const [rows] = await db.promise().query(
+      'SELECT likes FROM book_card WHERE book_info_id = ?',
+      [bookId]
+    );
+    
+    res.status(200).json({ likes: rows[0].likes });
+  } catch (error) {
+    console.error('좋아요 처리 오류:', error);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+
+
 
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
