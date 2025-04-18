@@ -50,7 +50,7 @@ const ShortBooksPage = () => {
   }, [id]);
   
   const debounceTimeout = useRef(null);
-  const timeoutTime = 500;  // 밀리초 단위. 1000ms = 1s
+  const timeoutTime = 300;  // 밀리초 단위. 1000ms = 1s
   
   useEffect(() => {
     const wheelHandler = (event) => {
