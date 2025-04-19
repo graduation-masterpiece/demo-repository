@@ -36,7 +36,7 @@ const SearchBar = ({ onSearch }) => {
 
   const fetchSuggestions = async () => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/autocomplete?prefix=${query}`);
+      const response = await axios.get(`/api/autocomplete?prefix=${query}`);
       setSuggestions(response.data.suggestions || []);
       setShowSuggestions(true);
     } catch (error) {
@@ -59,7 +59,7 @@ const SearchBar = ({ onSearch }) => {
     try {
       // 검색 기록 저장과 실제 검색을 병렬로 처리
       await Promise.all([
-        axios.post('http://localhost:5001/api/search-history', { query: searchTerm }),
+        axios.post('/api/search-history', { query: searchTerm }),
         onSearch(searchTerm) // 부모 컴포넌트의 검색 함수 실행
       ]);
     } catch (error) {

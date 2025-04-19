@@ -14,7 +14,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
     e.stopPropagation();
     if (window.confirm(`${title}을(를) 정말 삭제하시겠습니까?`)) {
       try {
-        const response = await fetch(`http://localhost:5001/api/book/${id}`, {
+        const response = await fetch(`/api/book/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
@@ -34,7 +34,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
   const handleLike = async (e) => {
     e.stopPropagation();
     try {
-      const response = await fetch(`http://localhost:5001/api/book/${id}/like`, {
+      const response = await fetch(`/api/book/${id}/like`, {
         method: 'PATCH',
       });
       const data = await response.json();
