@@ -43,7 +43,7 @@ app.get('/meta/book/:bookId', async (req, res) => {
   const bookId = req.params.bookId;
 
   try {
-    const response = await axios.get(`http://localhost:5001/api/book/${bookId}`);
+    const response = await axios.get(`https://bookcard.site/api/book/${bookId}`);
     const book = response.data;
 
     const isBot = /facebook|kakao|twitter|Slack|Discord|LinkedIn/i.test(ua);
