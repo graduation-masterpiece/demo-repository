@@ -1,10 +1,10 @@
 const dotenv = require('dotenv'); // dotenv 모듈 불러오기
-dotenv.config(); // 환경 변수 로드
 const OpenAI = require('openai'); // OpenAI 모듈 불러오기
 const fs = require('fs'); // 파일 시스템 모듈 불러오기
 const path = require('path'); // 경로 모듈 불러오기
 const db = require('./db'); // db.js에서 db 객체 가져오기
 const axios = require('axios'); // axios 모듈 불러오기
+dotenv.config(); // 환경 변수 로드
 
 // AWS s3 클라이언트
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
@@ -44,29 +44,43 @@ async function getBookInfo(id) {
 
 // 텍스트 요약 함수
 async function summarizeText(title, text) {
-  const summaryPrompt = 
-  `다음 텍스트는 소설 "${title}"의 책 설명이야. 
-  이 서평을 바탕으로 독자의 흥미를 끄는 간결한 소설 소개글을 작성해줘. 
-  소개글은 독자가 이 책을 꼭 읽고 싶어지도록 핵심 갈등이나 분위기를 암시하는 문장을 포함하며, 강렬한 질문이나 인상적인 문장으로 시작해줘. 
-  최종 글은 최대 500자 이내로 작성해줘. 
-  그리고 생성된 글에서 소설의 분위기를 대표하는 핵심 단어는 *단어* 형식으로 표시해줘. 
-  예를 들어, 핵심 단어가 사랑이라면, *사랑* 이런 식으로 표시해줘. 
-  핵심 단어는 한 문장에 하나만 있고, 전체적으로 2~3개로 제한해줘.
-  추가적인 설명이나 코드 블록은 포함하지 마. `
-  ;
+  const prompt = `
+    다음 텍스트는 소설 "${title}"의 책 설명이야.
+    
+    1. 이 소설의 핵심 갈등과 분위기를 2~3문장으로 간결하게 요약해 줘.
+    2. 이 요약을 바탕으로 독자의 흥미를 끌 수 있는 감각적인 소개글을 작성해 줘.
+       - 첫 문장은 강렬한 질문이나 인상적인 문장으로 시작해 줘.
+       - 이야기의 갈등이나 분위기를 자연스럽게 드러내야 해.
+       - 전체 글은 500자 이내여야 해.
+       - *사랑*, *절망* 등 소설 분위기를 대표하는 핵심 단어를 *형식*으로 2~3개만 사용해 줘 (한 문장에 하나씩).
+    
+    추가적인 설명이나 코드 블록은 포함하지 마.
+  `;
 
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: summaryPrompt }
+        {
+          role: 'system',
+          content: `
+            You are a literary assistant specializing in summarizing novels in a compelling and concise way.
+
+            Your tasks:
+            1. Extract the core conflict and atmosphere of the novel based on the user-provided description.
+            2. Create a short summary (2–3 sentences), then write a book teaser that:
+               - Starts with a powerful question or striking sentence.
+               - Conveys the novel’s tone and conflict naturally.
+               - Does not exceed 500 characters.
+               - Highlights 2 to 3 thematic keywords (like *love*, *betrayal*) in *italic* format, one per sentence.
+            3. Do not add extra comments, explanations, or code blocks.`
+        },
+        { role: 'user', content: `${text}\n\n${prompt}` }
       ],
-      max_tokens: 500
+      max_tokens: 600
     });
 
     return response.choices[0].message.content.trim();
-
   } catch (error) {
     console.error('Summarization error:', error);
     throw error;
@@ -86,37 +100,43 @@ function splitTextIntoSentences(text) {
 
 // 이미지 생성 프롬프트 수정 함수
 async function modifyPrompt(summary) {
-  const prompt = summary +
-    `
-    위 내용은 소설의 설명문이야. 이 설명을 바탕으로 소설의 분위기, 시대, 등장인물을 분석하여 카테고리별 결과를 출력하고, 해당 분석을 토대로 이미지를 생성할 수 있는 상세한 이미지 프롬프트를 작성해줘.
-
-    요청 사항:
-    1. 소설의 분위기, 시대, 등장인물을 분석하여 각각의 카테고리 결과를 출력해 줘.
-       - 분위기: 예시 - 고요함, 희망적, 긴장감 등
-       - 시대: 예시 - 1970년대 한국, 미래, 판타지 세계 등
-       - 등장인물: 예시 - 20대 여성, 30대 남성 주인공 1명 등
-         (등장인물의 인종에 대한 정보가 부족하면 소설의 출처가 되는 나라를 참고)
-    2. 카테고리 분석을 기반으로 이미지를 생성할 수 있는 프롬프트를 작성해 줘.
-       - 분위기, 시대, 등장인물, 배경, 색감, 상징적인 요소들을 포함한 이미지 프롬프트
-       - 이미지에는 텍스트가 전혀 없어야 해. 
-       - 폭력적이거나 불쾌함을 주는 요소가 없어야 해. 
-       - 이미지는 해당 소설의 분위기와 세계관을 잘 반영하도록 해 줘.
-
+  const prompt = `${summary}
+  
+    다음 소설 설명을 바탕으로 분위기, 시대, 등장인물의 카테고리를 간단히 분석해 주세요.
+    그리고 분석을 바탕으로 이미지 생성에 사용할 구체적인 프롬프트를 작성해 주세요.
+    
     출력 형식:
     1. 카테고리 분석 결과:
-       - 분위기: [분석된 분위기]
-       - 시대: [분석된 시대]
-       - 등장인물: [분석된 등장인물]
-
+     - 분위기: [분석된 분위기]
+     - 시대: [분석된 시대]
+     - 등장인물: [분석된 등장인물]
+    
     2. 이미지 생성 프롬프트:
-       [생성된 이미지 프롬프트] 
+      [생성된 이미지 프롬프트]
     `;
 
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
+        {
+          role: 'system',
+          content:
+            `You are a creative assistant skilled at analyzing fictional texts and generating rich, descriptive prompts for image generation.
+            
+            Your task:
+            1. Analyze the provided novel description to identify:
+               - Mood (e.g., peaceful, hopeful, tense)
+               - Time period (e.g., 1970s Korea, futuristic, fantasy world)
+               - Characters (e.g., a woman in her 20s, a man in his 30s; infer ethnicity based on country of origin if unclear)
+            2. Generate an image prompt based on your analysis.
+               - Include mood, time period, characters, background, color scheme, and symbolic elements.
+               - Do not include any text in the image.
+               - Avoid violent or disturbing content.
+               - The image should reflect the story’s atmosphere and world.
+            
+            Respond only in the format specified by the user.`
+        },
         { role: 'user', content: prompt }
       ],
       max_tokens: 2000
@@ -163,8 +183,8 @@ async function generateImage(prompt, size = '1024x1024') {
 
     // S3에 업로드된 이미지 URL 구성
     const s3Url = `https://${bucketName}.s3.ap-northeast-2.amazonaws.com/${s3Key}`;
+    
     return s3Url;
-
   } catch (error) {
     console.error('Image generation error:', error);
     throw error;
