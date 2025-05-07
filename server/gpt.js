@@ -45,16 +45,16 @@ async function getBookInfo(id) {
 // 텍스트 요약 함수
 async function summarizeText(title, text) {
   const prompt = `
-    다음 텍스트는 소설 "${title}"의 책 설명이야.
+    다음 텍스트는 책 "${title}"의 책 설명이야.
     
-    1. 이 소설의 핵심 갈등과 분위기를 2~3문장으로 간결하게 요약해 줘.
+    1. 이 소설의 핵심 갈등과 분위기를 한국어로 2~3문장으로 간결하게 요약해 줘.
     2. 이 요약을 바탕으로 독자의 흥미를 끌 수 있는 감각적인 소개글을 작성해 줘.
        - 첫 문장은 강렬한 질문이나 인상적인 문장으로 시작해 줘.
        - 이야기의 갈등이나 분위기를 자연스럽게 드러내야 해.
        - 전체 글은 500자 이내여야 해.
        - *사랑*, *절망* 등 소설 분위기를 대표하는 핵심 단어를 *형식*으로 2~3개만 사용해 줘 (한 문장에 하나씩).
     
-    추가적인 설명이나 코드 블록은 포함하지 마.
+    줄바꿈이나 추가적인 설명, 코드 블록은 포함하지 마.
   `;
 
   try {
@@ -67,7 +67,7 @@ async function summarizeText(title, text) {
             You are a literary assistant specializing in summarizing novels in a compelling and concise way.
 
             Your tasks:
-            1. Extract the core conflict and atmosphere of the novel based on the user-provided description.
+            1. Extract the core conflict and atmosphere of the novel based on the user-provided description in Korean.
             2. Create a short summary (2–3 sentences), then write a book teaser that:
                - Starts with a powerful question or striking sentence.
                - Conveys the novel’s tone and conflict naturally.
