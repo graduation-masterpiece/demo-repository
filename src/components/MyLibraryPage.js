@@ -61,7 +61,7 @@ const MyLibraryPage = () => {
       <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
         {/* 타이틀 + 드롭다운 */}
         <div className="flex flex-row justify-between items-center">
-          <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
+          <p className="text-[50px] font-bold border-b-gray-800 px-4">
             My Library
           </p>
           <div className="mt-4">
@@ -80,7 +80,7 @@ const MyLibraryPage = () => {
         </div>
 
         {/* 카드 컨테이너 */}
-        <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto">
+        <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto border-t-4 border-black ">
           <div className="grid grid-cols-3 gap-4 p-4">
             {books.map((book) => (
               <MyLibraryCard 
