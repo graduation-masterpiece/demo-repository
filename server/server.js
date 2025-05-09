@@ -140,13 +140,13 @@ app.get('/api/naver-search', async (req, res) => {
 
 // 책 정보 저장 API
 app.post('/api/book', async (req, res) => {
-
   console.log('요청 본문: ', req.body);
   const { isbn, title, author, publisher, pubdate, description, book_cover } = req.body;
 
   const cleanTitle = title.replace(/\s*\(.*?\)/, '');
 
   try {
+    // 1. book_info 저장
     const insertBookInfoQuery = `
       INSERT INTO book_info (id, title, author, publisher, published_date, description, book_cover) 
       VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -159,10 +159,12 @@ app.post('/api/book', async (req, res) => {
       }
 
       try {
+        // 2. 이미지 및 요약 생성
         const imageResult = await processBook(isbn);
         const imagePath = imageResult.imagePath;
         const summary = imageResult.summary;
 
+        // 3. book_card 저장 (generate_date는 생략, 자동 기록)
         const insertBookCardQuery = `
           INSERT INTO book_card (image_url, summary, book_info_id, likes) 
           VALUES (?, ?, ?, ?)`;
@@ -189,6 +191,7 @@ app.post('/api/book', async (req, res) => {
     res.status(500).send('책 처리 중 오류 발생');
   }
 });
+
 
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
@@ -410,7 +413,7 @@ app.get('/api/my-library', (req, res) => {
 
   let orderBy = 'bi.id ASC'; // 기본순
   if (sort === 'latest') {
-    orderBy = 'bi.published_date DESC'; // 최신순 (published_date 컬럼 사용)
+    orderBy = 'bc.generate_date DESC'; // 생성순
   } else if (sort === 'likes') {
     orderBy = 'bc.likes DESC'; // 좋아요순
   }
@@ -450,6 +453,7 @@ app.get('/api/my-library', (req, res) => {
     });
   });
 });
+
 
 
 

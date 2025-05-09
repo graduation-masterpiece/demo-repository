@@ -5,7 +5,7 @@ import axios from "axios";
 
 const FILTER_OPTIONS = [
   { value: "default", label: "기본순" },
-  { value: "latest", label: "최신순" },
+  { value: "latest", label: "생성순" },
   { value: "likes", label: "좋아요순" },
 ];
 
@@ -20,7 +20,6 @@ const MyLibraryPage = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        // page, itemsPerPage, sort 모두 params로 전달!
         const response = await axios.get('/api/my-library', {
           params: {
             page,
@@ -37,10 +36,8 @@ const MyLibraryPage = () => {
     fetchBooks();
   }, [page, sort]);
 
-  // 전체 페이지 수는 서버에서 받은 total로 계산
   const totalPages = Math.ceil(total / itemsPerPage);
 
-  // 페이지 이동 함수
   const handlePrevPage = () => {
     if (page > 0) setPage(page - 1);
   };
@@ -49,7 +46,6 @@ const MyLibraryPage = () => {
     if (page < totalPages - 1) setPage(page + 1);
   };
 
-  // 필터링 변경 시 페이지 0으로
   const handleSortChange = (e) => {
     setSort(e.target.value);
     setPage(0);
@@ -61,7 +57,7 @@ const MyLibraryPage = () => {
       <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
         {/* 타이틀 + 드롭다운 */}
         <div className="flex flex-row justify-between items-center">
-          <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
+          <p className="text-[50px] font-bold px-4">
             My Library
           </p>
           <select
@@ -77,18 +73,20 @@ const MyLibraryPage = () => {
           </select>
         </div>
 
-        {/* 카드 컨테이너 */}
-        <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto">
-          <div className="grid grid-cols-3 gap-4 p-4">
-            {books.map((book) => (
-              <MyLibraryCard 
-                key={book.id}
-                id={book.id}
-                title={book.title}
-                likes={book.likes}
-                image={book.image_url}
-              />
-            ))}
+        {/* 카드 컨테이너 외부 상단에 검정색 선 */}
+        <div className="w-full border-t-4 border-black rounded-t-md mt-2">
+          <div className="bg-white p-4 rounded-b-md shadow-md h-auto overflow-y-auto">
+            <div className="grid grid-cols-3 gap-4 p-4">
+              {books.map((book) => (
+                <MyLibraryCard 
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  likes={book.likes}
+                  image={book.image_url}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
