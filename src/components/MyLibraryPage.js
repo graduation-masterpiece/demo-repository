@@ -14,30 +14,33 @@ const itemsPerPage = 12;
 const MyLibraryPage = () => {
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
   const [sort, setSort] = useState("default");
+  const [total, setTotal] = useState(0);
 
-  // 데이터 fetch
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get("/api/my-library", {
+        // page, itemsPerPage, sort 모두 params로 전달!
+        const response = await axios.get('/api/my-library', {
           params: {
             page,
             itemsPerPage,
             sort,
           },
         });
-        setBooks(response.data.books); // 백엔드에서 { books: [...], total: n } 형태로 반환 추천
-        setTotalPages(Math.ceil(response.data.total / itemsPerPage));
+        setBooks(response.data.books);
+        setTotal(response.data.total);
       } catch (error) {
-        console.error("책 정보를 가져오는 중 오류 발생:", error);
+        console.error('책 정보를 가져오는 중 오류 발생:', error);
       }
     };
     fetchBooks();
   }, [page, sort]);
 
-  // 페이지 이동
+  // 전체 페이지 수는 서버에서 받은 total로 계산
+  const totalPages = Math.ceil(total / itemsPerPage);
+
+  // 페이지 이동 함수
   const handlePrevPage = () => {
     if (page > 0) setPage(page - 1);
   };
@@ -46,17 +49,18 @@ const MyLibraryPage = () => {
     if (page < totalPages - 1) setPage(page + 1);
   };
 
-  // 필터 변경
+  // 필터링 변경 시 페이지 0으로
   const handleSortChange = (e) => {
     setSort(e.target.value);
-    setPage(0); // 필터 바뀌면 첫 페이지로 이동
+    setPage(0);
   };
 
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
       <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
-        <div className="flex justify-between items-center">
+        {/* 타이틀 + 드롭다운 */}
+        <div className="flex flex-row justify-between items-center">
           <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
             My Library
           </p>
@@ -77,7 +81,7 @@ const MyLibraryPage = () => {
         <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto">
           <div className="grid grid-cols-3 gap-4 p-4">
             {books.map((book) => (
-              <MyLibraryCard
+              <MyLibraryCard 
                 key={book.id}
                 id={book.id}
                 title={book.title}
@@ -85,16 +89,10 @@ const MyLibraryPage = () => {
                 image={book.image_url}
               />
             ))}
-            {/* 12개 미만이면 빈 카드로 채우기 */}
-            {Array.from({ length: itemsPerPage - books.length }).map(
-              (_, idx) => (
-                <div key={`empty-${idx}`} />
-              )
-            )}
           </div>
         </div>
 
-        {/* 페이지네이션 */}
+        {/* 페이지네이션 버튼 */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center mt-4 space-x-4">
             <button

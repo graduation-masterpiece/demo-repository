@@ -410,14 +410,22 @@ app.get('/api/my-library', (req, res) => {
 
   let orderBy = 'bi.id ASC'; // 기본순
   if (sort === 'latest') {
-    orderBy = 'bi.created_at DESC'; // 최신순 (created_at 컬럼이 있어야 함)
+    orderBy = 'bi.published_date DESC'; // 최신순 (published_date 컬럼 사용)
   } else if (sort === 'likes') {
     orderBy = 'bc.likes DESC'; // 좋아요순
   }
 
   const offset = page * itemsPerPage;
 
-  const query = `
+  // 1. 전체 개수 쿼리
+  const countQuery = `
+    SELECT COUNT(*) AS total
+    FROM book_info bi
+    LEFT JOIN book_card bc ON bi.id = bc.book_info_id
+  `;
+
+  // 2. 페이지 데이터 쿼리
+  const dataQuery = `
     SELECT bi.id, bi.title, bc.image_url, bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
@@ -425,14 +433,24 @@ app.get('/api/my-library', (req, res) => {
     LIMIT ? OFFSET ?
   `;
 
-  db.query(query, [itemsPerPage, offset], (err, results) => {
+  db.query(countQuery, (err, countResults) => {
     if (err) {
       console.error('MySQL 쿼리 실행 중 오류 발생:', err);
       return res.status(500).send('서버 오류');
     }
-    res.status(200).json(results);
+    const total = countResults[0].total;
+
+    db.query(dataQuery, [itemsPerPage, offset], (err, dataResults) => {
+      if (err) {
+        console.error('MySQL 쿼리 실행 중 오류 발생:', err);
+        return res.status(500).send('서버 오류');
+      }
+      // books와 total을 함께 반환
+      res.status(200).json({ books: dataResults, total });
+    });
   });
 });
+
 
 
 
