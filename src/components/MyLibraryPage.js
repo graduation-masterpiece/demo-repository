@@ -58,37 +58,41 @@ const MyLibraryPage = () => {
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
-      <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
+      <div className="flex flex-col w-full max-w-5xl h-[90vh] mx-auto mt-[3em] px-2 sm:px-4">
         {/* 타이틀 + 드롭다운 */}
         <div className="flex flex-row justify-between items-center">
-          <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
+          <p className="text-[7vw] sm:text-[50px] font-bold border-b-gray-800 px-4">
             My Library
           </p>
-          <select
-            className="text-lg border border-gray-400 rounded px-3 py-1 bg-white"
-            value={sort}
-            onChange={handleSortChange}
-          >
-            {FILTER_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2">
+            <select
+              className="text-lg border border-gray-400 rounded px-3 py-1 bg-white"
+              value={sort}
+              onChange={handleSortChange}
+            >
+              {FILTER_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        {/* 카드 컨테이너 */}
-        <div className="bg-white p-4 rounded-md shadow-md h-auto overflow-y-auto">
-          <div className="grid grid-cols-3 gap-4 p-4">
-            {books.map((book) => (
-              <MyLibraryCard 
-                key={book.id}
-                id={book.id}
-                title={book.title}
-                likes={book.likes}
-                image={book.image_url}
-              />
-            ))}
+        {/* 카드 컨테이너 외부 상단에 검정색 선 */}
+        <div className="w-full border-t-4 border-black rounded-t-md mt-2">
+          <div className="bg-white p-4 rounded-b-md shadow-md h-auto overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+              {books.map((book) => (
+                <MyLibraryCard 
+                  key={book.id}
+                  id={book.id}
+                  title={book.title}
+                  likes={book.likes}
+                  image={book.image_url}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
