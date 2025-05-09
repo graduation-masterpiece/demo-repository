@@ -235,16 +235,6 @@ app.get('/api/book-cards', (req, res) => {
         };
       });
 
-      /*const formattedData = results.map(book => ({
-        id: book.id,
-        title: book.title,
-        author: book.author,
-        image_url: book.image_url,
-        book_cover: book.book_cover,
-        summary: book.summary ? JSON.parse(book.summary) : null,
-        likes: book.likes
-      }));*/
-
       res.status(200).json(formattedData);
     } catch (error) {
       console.error('데이터 변환 중 오류 발생:', error);
@@ -413,15 +403,29 @@ app.get('/api/book/:id', (req, res) => {
   });
 });
 
-// 라이브러리 페이지
 app.get('/api/my-library', (req, res) => {
+  const page = parseInt(req.query.page) || 0;
+  const itemsPerPage = parseInt(req.query.itemsPerPage) || 12;
+  const sort = req.query.sort || 'default';
+
+  let orderBy = 'bi.id ASC'; // 기본순
+  if (sort === 'latest') {
+    orderBy = 'bi.created_at DESC'; // 최신순 (created_at 컬럼이 있어야 함)
+  } else if (sort === 'likes') {
+    orderBy = 'bc.likes DESC'; // 좋아요순
+  }
+
+  const offset = page * itemsPerPage;
+
   const query = `
     SELECT bi.id, bi.title, bc.image_url, bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
+    ORDER BY ${orderBy}
+    LIMIT ? OFFSET ?
   `;
 
-  db.query(query, (err, results) => {
+  db.query(query, [itemsPerPage, offset], (err, results) => {
     if (err) {
       console.error('MySQL 쿼리 실행 중 오류 발생:', err);
       return res.status(500).send('서버 오류');
@@ -429,6 +433,7 @@ app.get('/api/my-library', (req, res) => {
     res.status(200).json(results);
   });
 });
+
 
 
 // ✅ React fallback 설정 (API, META 제외)
