@@ -30,6 +30,7 @@ jobs:
             git pull origin develop # 브랜치 이름 확인
 
             npm install
+            npx update-browserslist-db@latest --yes # caniuse-lite 데이터 업데이트
             npm run build
 
             cd server
