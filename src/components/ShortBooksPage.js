@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import ErrorReportModal from "./ErrorReportModal";
 import axios from "axios";
 
 const ShortBooksPage = () => {
@@ -113,6 +114,28 @@ const ShortBooksPage = () => {
     }
   };
 
+  const [showErrorModal, setShowErrorModal] = useState(false);
+
+  const handleErrorReportSubmit = async (selectedError) => {
+    try {
+      await axios.post("/api/error-report", {
+        book_info_id: currentBook.id,
+        error_type: selectedError
+        report_time: new Date().toISOString(),
+      });
+  
+      alert("Error Report Complete.");
+      setShowErrorModal(false);
+    } catch (error) {
+      console.error("Error Report Failed: ", error);
+      alert("An error has occurred during the error reporting.");
+    }
+  };
+
+  const handleErrorReport = () => {
+    setShowErrorModal(true);
+  };
+
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
       <Sidebar />
@@ -164,6 +187,11 @@ const ShortBooksPage = () => {
         <div onClick={handleLinkShare} className="fixed top-[74vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
           <button className="bg-[#424141] rounded-xl p-4">
             <img src="/images/share.png" alt="share" className="w-4 h-4" />
+          </button>
+        </div>
+        <div onClick={handleErrorReport} className="fixed top-[84vh] right-[11vw] p-2 bg-[#C4D0B3] rounded-xl border-[2px] border-gray-600">
+          <button className="bg-[#424141] rounded-xl p-4">
+            <img src="/images/report.png" alt="report" className="w-4 h-4" />
           </button>
         </div>
       </div>
