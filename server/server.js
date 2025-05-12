@@ -400,7 +400,7 @@ app.get('/api/my-library', (req, res) => {
 app.post('/api/error-report', async (req, res) => {
   const { book_info_id, error_type, report_time } = req.body;
 
-  const reportQuery = `insert into error_report (book_info_id, error_type, report_time) values (?, ?, ?)`;
+  const reportQuery = `insert into error_reports (book_info_id, error_type, report_time) values (?, ?, ?)`;
 
   db.query(reportQuery, [book_info_id, error_type, report_time], (err) => {
     if (err) {
