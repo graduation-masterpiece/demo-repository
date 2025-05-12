@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ErrorReportModal = ({ onClose, onSubmit }) => {
-  const [selectedError, setSelectedError] = React.useState("");
+  const [selectedError, setSelectedError] = useState("");
 
   const errorOptions = [
     "Content is weird.",
@@ -21,9 +21,19 @@ const ErrorReportModal = ({ onClose, onSubmit }) => {
     onSubmit(selectedError);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl shadow-md w-[300px]">
+    <div onClick={onClose} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white p-6 rounded-xl shadow-md w-[300px]">
         <h2 className="text-xl font-bold mb-4">Please Select An Error Type</h2>
         <select
           value={selectedError}
@@ -39,7 +49,7 @@ const ErrorReportModal = ({ onClose, onSubmit }) => {
         </select>
         <div className="flex justify-end space-x-2">
           <button onClick={onClose} className="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-          <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">Report</button>
+          <button onClick={handleSubmit} disabled={!selectedError} className="bg-blue-500 text-white px-4 py-2 rounded">Report</button>
         </div>
       </div>
     </div>
