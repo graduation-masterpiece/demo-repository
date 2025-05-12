@@ -15,7 +15,7 @@ redisClient.connect();
 
 const app = express();
 
-console.log("🔥 서버 진입 확인 - 최신 코드 실행됨");
+console.log("🔥 Server Access Detected - Latest Code Executed");
 
 // CORS 설정
 app.use(cors({
@@ -35,7 +35,6 @@ app.use(express.urlencoded({ extended: true }));
 // EJS 설정
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
 
 // SNS 미리보기용 메타 URL
 app.get('/meta/book/:bookId', async (req, res) => {
@@ -61,8 +60,8 @@ app.get('/meta/book/:bookId', async (req, res) => {
       bookId: bookId
     });
   } catch (error) {
-    console.error('/meta/book/:id 오류:', error.message);
-    res.status(500).send('서버 오류');
+    console.error('/meta/book/:id Error:', error.message);
+    res.status(500).send('Server Error - Meta');
   }
 });
 
@@ -133,14 +132,14 @@ app.get('/api/naver-search', async (req, res) => {
     });
     res.json(response.data);
   } catch (error) {
-    console.error('네이버 API 요청 실패:', error);
-    res.status(500).json({ error: '네이버 API 요청 실패', details: error.response ? error.response.data : error.message });
+    console.error('Naver API Request Failed: ', error);
+    res.status(500).json({ error: 'Naver API Request Failed.', details: error.response ? error.response.data : error.message });
   }
 });
 
 // 책 정보 저장 API
 app.post('/api/book', async (req, res) => {
-  console.log('요청 본문: ', req.body);
+  console.log('Request Body: ', req.body);
   const { isbn, title, author, publisher, pubdate, description, book_cover } = req.body;
 
   const cleanTitle = title.replace(/\s*\(.*?\)/, '');
@@ -154,8 +153,8 @@ app.post('/api/book', async (req, res) => {
 
     db.query(insertBookInfoQuery, bookInfoValues, async (err, result) => {
       if (err) {
-        console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-        return res.status(500).send('서버 오류');
+        console.error('An Error has occurred during MySQL Query execution: ', err);
+        return res.status(500).send('Server Error - Book Info Saving');
       }
 
       try {
@@ -172,26 +171,25 @@ app.post('/api/book', async (req, res) => {
 
         db.query(insertBookCardQuery, bookCardValues, (err) => {
           if (err) {
-            console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-            return res.status(500).send('서버 오류');
+            console.error('An Error has occurred during MySQL Query execution:', err);
+            return res.status(500).send('Server Error - Book Card Saving');
           }
           res.status(200).send({
-            message: '책 정보와 이미지, 요약본이 성공적으로 저장되었습니다.',
+            message: 'Book information, image, summary have been saved successfully.',
             imageUrl: imagePath,
             summary: summary
           });
         });
       } catch (imageError) {
-        console.error('이미지 생성 중 오류 발생:', imageError);
-        res.status(500).send('이미지 생성 중 오류 발생');
+        console.error('An error has occurred during generating image: ', imageError);
+        res.status(500).send('An error has occurred during generating image.');
       }
     });
   } catch (error) {
-    console.error('Book processing error:', error);
-    res.status(500).send('책 처리 중 오류 발생');
+    console.error('An error has occurred during processing the book: ', error);
+    res.status(500).send('An error has occurred during processing the book.');
   }
 });
-
 
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
@@ -203,12 +201,12 @@ app.get('/api/book-cards', (req, res) => {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-      return res.status(500).send('서버 오류');
+      console.error('An Error has occurred during MySQL Query execution:', err);
+      return res.status(500).send('Server Error - Loading All Book Cards');
     }
 
     if (results.length === 0) {
-      return res.status(404).send('책을 찾을 수 없습니다.');
+      return res.status(404).send('Cannot fine the book.');
     }
 
     try {
@@ -219,7 +217,7 @@ app.get('/api/book-cards', (req, res) => {
           try {
             parsedSummary = JSON.parse(book.summary); // 배열로 복원
           } catch (parseErr) {
-            console.error('JSON 파싱 오류:', parseErr);
+            console.error('JSON Parsing Error: ', parseErr);
             // 파싱 실패 시 빈 배열로 처리 (또는 원본 유지)
             parsedSummary = [];
           }
@@ -240,8 +238,8 @@ app.get('/api/book-cards', (req, res) => {
 
       res.status(200).json(formattedData);
     } catch (error) {
-      console.error('데이터 변환 중 오류 발생:', error);
-      res.status(500).send('데이터 변환 중 오류가 발생했습니다.');
+      console.error('An error has occurred during formatting the data:', error);
+      res.status(500).send('An error has occurred during formatting the data.');
     }
   });
 });
@@ -254,19 +252,19 @@ app.delete('/api/book/:id', (req, res) => {
   const deleteBookCardQuery = `DELETE FROM book_card WHERE book_info_id = ?`;
   db.query(deleteBookCardQuery, [bookId], (err) => {
     if (err) {
-      console.error('book_card 삭제 중 오류 발생:', err);
-      return res.status(500).json({ error: 'book_card 삭제 중 오류가 발생했습니다.' });
+      console.error('An error has occurred during deletion in book_card: ', err);
+      return res.status(500).json({ error: 'An error has occurred during deletion in book_card.' });
     }
 
     // book_info 테이블에서 삭제
     const deleteBookInfoQuery = `DELETE FROM book_info WHERE id = ?`;
     db.query(deleteBookInfoQuery, [bookId], (err) => {
       if (err) {
-        console.error('book_info 삭제 중 오류 발생:', err);
-        return res.status(500).json({ error: 'book_info 삭제 중 오류가 발생했습니다.' });
+        console.error('An error has occurred during deletion in book_info: ', err);
+        return res.status(500).json({ error: 'An error has occurred during deletion in book_info.' });
       }
 
-      res.status(200).json({ message: '책이 성공적으로 삭제되었습니다.' });
+      res.status(200).json({ message: 'The book has deleted successfully.' });
     });
   });
 });
@@ -281,7 +279,7 @@ app.patch('/api/book/:id/like', async (req, res) => {
     // 1. 중복 좋아요 체크
     const isLiked = await redisClient.get(`liked:${bookId}:${clientIp}`);
     if (isLiked) {
-      return res.status(400).json({ error: '24시간 내 1회만 가능합니다' });
+      return res.status(400).json({ error: 'Can only do it once within 24 hours.' });
     }
 
     // 2. 좋아요 수 증가
@@ -293,7 +291,7 @@ app.patch('/api/book/:id/like', async (req, res) => {
     const [result] = await db.promise().query(updateLikeQuery, [bookId]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: '책을 찾을 수 없습니다' });
+      return res.status(404).json({ error: 'Cannot find the book.' });
     }
 
     // 3. Redis에 기록 (24시간 유지)
@@ -307,65 +305,9 @@ app.patch('/api/book/:id/like', async (req, res) => {
     
     res.status(200).json({ likes: rows[0].likes });
   } catch (error) {
-    console.error('좋아요 처리 오류:', error);
-    res.status(500).json({ error: '서버 오류' });
+    console.error('Likes processing error: ', error);
+    res.status(500).json({ error: 'Server Error - Likes Increment' });
   }
-});
-
-
-
-
-// 전체 책 정보 가져오기
-app.get('/api/book-cards', (req, res) => {
-  const query = `
-    SELECT bi.id, bi.title, bi.author, bi.book_cover, bc.image_url, bc.summary, bc.likes
-    FROM book_info bi
-    LEFT JOIN book_card bc ON bi.id = bc.book_info_id
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-      return res.status(500).send('서버 오류');
-    }
-
-    if (results.length === 0) {
-      return res.status(404).send('책을 찾을 수 없습니다.');
-    }
-
-    try {
-      const formattedData = results.map(book => {
-        let parsedSummary;
-        // summary가 있으면 JSON.parse 시도
-        if (typeof book.summary === 'string') {
-          try {
-            parsedSummary = JSON.parse(book.summary); // 배열로 복원
-          } catch (parseErr) {
-            console.error('JSON 파싱 오류:', parseErr);
-            // 파싱 실패 시 빈 배열로 처리 (또는 원본 유지)
-            parsedSummary = [];
-          }
-        } else {
-          parsedSummary = book.summary;
-        }
-
-        return {
-          id: book.id,
-          title: book.title,
-          author: book.author,
-          book_cover: book.book_cover,
-          image_url: book.image_url,
-          likes: book.likes,
-          summary: parsedSummary  // 배열 형태
-        };
-      });
-
-      res.status(200).json(formattedData);
-    } catch (error) {
-      console.error('데이터 변환 중 오류 발생:', error);
-      res.status(500).send('데이터 변환 중 오류가 발생했습니다.');
-    }
-  });
 });
 
 // 특정 책 정보 가져오기
@@ -380,12 +322,12 @@ app.get('/api/book/:id', (req, res) => {
 
   db.query(query, [bookId], (err, results) => {
     if (err) {
-      console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-      return res.status(500).send('서버 오류');
+      console.error('An Error has occurred during MySQL Query execution: ', err);
+      return res.status(500).send('Server Error - Loading Specific Book Info');
     }
 
     if (results.length === 0) {
-      return res.status(404).send('책을 찾을 수 없습니다.');
+      return res.status(404).send('Cannot find the book.');
     }
 
     const book = results[0];
@@ -400,8 +342,8 @@ app.get('/api/book/:id', (req, res) => {
         likes: book.likes
       });
     } catch (error) {
-      console.error('데이터 변환 중 오류 발생:', error);
-      res.status(500).send('데이터 변환 중 오류가 발생했습니다.');
+      console.error('An error has occurred during formatting the data: ', error);
+      res.status(500).send('An error has occurred during formatting the data.');
     }
   });
 });
@@ -438,15 +380,15 @@ app.get('/api/my-library', (req, res) => {
 
   db.query(countQuery, (err, countResults) => {
     if (err) {
-      console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-      return res.status(500).send('서버 오류');
+      console.error('An error has occurred during MySQL Query execution: ', err);
+      return res.status(500).send('Server Error - CountQuery');
     }
     const total = countResults[0].total;
 
     db.query(dataQuery, [itemsPerPage, offset], (err, dataResults) => {
       if (err) {
-        console.error('MySQL 쿼리 실행 중 오류 발생:', err);
-        return res.status(500).send('서버 오류');
+        console.error('An error has occurred during MySQL Query execution: ', err);
+        return res.status(500).send('Server Error - DataQuery');
       }
       // books와 total을 함께 반환
       res.status(200).json({ books: dataResults, total });
@@ -454,9 +396,21 @@ app.get('/api/my-library', (req, res) => {
   });
 });
 
+// 오류 신고 API
+app.post('/api/error-report', async (req, res) => {
+  const { book_info_id, report_time } = req.body;
 
+  const reportQuery = `insert into error_report (book_info_id, report_time) values (?, ?)`;
 
-
+  db.query(reportQuery, [book_info_id, report_time], (err) => {
+    if (err) {
+      console.error('Failed to report the error: ', err);
+      return res.status(500).json({ error: 'Failed to report the error.' });
+    }
+    
+    res.status(200).json({ message: 'Reporting error complete.' });
+  });
+});
 
 // ✅ React fallback 설정 (API, META 제외)
 app.use(express.static(path.join(__dirname, '../build')));
@@ -468,5 +422,5 @@ app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
 // 서버 실행
 const PORT = 5001;
 app.listen(PORT, () => {
-  console.log(`서버가 http://localhost:${PORT}에서 실행 중입니다.`);
+  console.log(`The server is running at: http://localhost:${PORT}`);
 });
