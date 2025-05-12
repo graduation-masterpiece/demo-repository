@@ -422,5 +422,5 @@ app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
 // 서버 실행
 const PORT = 5001;
 app.listen(PORT, () => {
-  console.log(`The server is running at: http://localhost:${PORT}`);
+  console.log(`The server is running at: https://bookcard.site/`);
 });
