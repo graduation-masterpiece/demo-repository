@@ -120,7 +120,7 @@ const ShortBooksPage = () => {
     try {
       await axios.post("/api/error-report", {
         book_info_id: currentBook.id,
-        error_type: selectedError
+        error_type: selectedError,
         report_time: new Date().toISOString(),
       });
   
