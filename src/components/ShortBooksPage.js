@@ -138,6 +138,12 @@ const ShortBooksPage = () => {
 
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden mx-auto my-auto">
+      {showErrorModal && (
+        <ErrorReportModal
+          onClose={() => setShowErrorModal(false)}
+          onSubmit={handleErrorReportSubmit}
+        />
+      )}
       <Sidebar />
       <div className="flex flex-col w-[64vw] h-[90vh] mx-[18em] mt-[3em]">
         <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">Short Books</p>
