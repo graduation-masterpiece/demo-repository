@@ -29,8 +29,7 @@ jobs:
             cd /home/ubuntu/demo-repository
             if [ ! -d .git ]; then
               rm -rf demo-repository
-              git clone
-            git@github.com:graduation-masterpiece/demo-repository.git
+              git clone git@github.com:graduation-masterpiece/demo-repository.git
               cd demo-repository
             fi
             git checkout develop
