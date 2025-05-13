@@ -264,7 +264,16 @@ app.delete('/api/book/:id', (req, res) => {
         return res.status(500).json({ error: 'An error has occurred during deletion in book_info.' });
       }
 
-      res.status(200).json({ message: 'The book has deleted successfully.' });
+			// error_reports 테이블에서 삭제
+	  	const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_card_id = ?`;
+			db.query(deleteErrorReportQuery, [bookId], (err) => {
+				if (err) {
+					console.error('An error has occurred during deletion in error_reports: ', err);
+					return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
+				}
+
+      	res.status(200).json({ message: 'The book has deleted successfully.' });
+			});
     });
   });
 });
