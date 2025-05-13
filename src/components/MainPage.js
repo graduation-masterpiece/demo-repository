@@ -21,8 +21,8 @@ const MainPage = () => {
       });
       setResults(response.data.items); // 검색 결과 상태 업데이트
     } catch (error) {
-      console.error("API 요청 실패:", error);
-      alert("책 정보를 불러오는 데 실패했습니다.");
+      console.error("API Request Failed:", error);
+      alert("Failed loading the book info.");
     }
   };
 
