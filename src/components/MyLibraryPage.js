@@ -4,9 +4,9 @@ import Sidebar from "./Sidebar";
 import axios from "axios";
 
 const FILTER_OPTIONS = [
-  { value: "default", label: "기본순" },
-  { value: "latest", label: "생성순" },
-  { value: "likes", label: "좋아요순" },
+  { value: "default", label: "Default" },
+  { value: "latest", label: "Latest" },
+  { value: "likes", label: "Likes" },
 ];
 
 const itemsPerPage = 12;
@@ -31,7 +31,7 @@ const MyLibraryPage = () => {
         setBooks(response.data.books);
         setTotal(response.data.total);
       } catch (error) {
-        console.error('책 정보를 가져오는 중 오류 발생:', error);
+        console.error('An error has occurred during loading the book data: ', error);
       }
     };
     fetchBooks();

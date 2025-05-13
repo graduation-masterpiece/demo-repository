@@ -36,7 +36,7 @@ async function getBookInfo(id) {
       if (results.length > 0) {
         resolve(results[0]);
       } else {
-        reject(new Error('책 정보를 찾을 수 없습니다.'));
+        reject(new Error('Cannot find the book info.'));
       }
     });
   });
@@ -216,7 +216,7 @@ async function processBook(id) {
       imagePath: imagePath
     };
   } catch (error) {
-    console.error('Book processing error:', error);
+    console.error('Book processing error: ', error);
     throw error;
   }
 }
