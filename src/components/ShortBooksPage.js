@@ -43,7 +43,7 @@ const ShortBooksPage = () => {
         setCurrentBookIndex(0);
         setCurrentSentenceIndex(0);
       } catch (error) {
-        console.error("Error Occurred During Loading Book Info:", error);
+        console.error("An error has occurred during loading the book data: ", error);
       }
     };
 
@@ -99,7 +99,7 @@ const ShortBooksPage = () => {
       const shareURL = `https://bookcard.site/meta/book/${currentBook.id}`;
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareURL);
-        alert("URL Has Been Copied.");
+        alert("URL has been copied.");
       } else {
         const tempInput = document.createElement("input");
         tempInput.value = shareURL;
@@ -107,10 +107,10 @@ const ShortBooksPage = () => {
         tempInput.select();
         document.execCommand("copy");
         document.body.removeChild(tempInput);
-        alert("URL Has Been Copied.");
+        alert("URL has been copied.");
       }
     } catch (err) {
-      console.error("Share URL Copy Failed: ", err);
+      console.error("Share URL copy failed: ", err);
     }
   };
 
@@ -124,10 +124,10 @@ const ShortBooksPage = () => {
         report_time: new Date().toISOString(),
       });
   
-      alert("Error Report Complete.");
+      alert("Error report completed.");
       setShowErrorModal(false);
     } catch (error) {
-      console.error("Error Report Failed: ", error);
+      console.error("Error report failed: ", error);
       alert("An error has occurred during the error reporting.");
     }
   };

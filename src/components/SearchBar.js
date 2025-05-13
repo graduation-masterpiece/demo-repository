@@ -40,7 +40,7 @@ const SearchBar = ({ onSearch }) => {
       setSuggestions(response.data.suggestions || []);
       setShowSuggestions(true);
     } catch (error) {
-      console.error("자동완성 오류:", error);
+      console.error("Autocompletion Error: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ const SearchBar = ({ onSearch }) => {
   // 검색 실행 함수 (자동완성 저장과 검색을 한 번에 처리)
   const executeSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
-      alert("검색어를 입력하세요!");
+      alert("Enter a keyword!");
       return;
     }
 
@@ -63,7 +63,7 @@ const SearchBar = ({ onSearch }) => {
         onSearch(searchTerm) // 부모 컴포넌트의 검색 함수 실행
       ]);
     } catch (error) {
-      console.error("검색 오류:", error);
+      console.error("Search Error: ", error);
     } finally {
       setIsLoading(false);
     }

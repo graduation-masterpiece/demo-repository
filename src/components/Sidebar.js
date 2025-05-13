@@ -16,7 +16,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    alert("로그아웃 되었습니다.");
+    alert("You have been logged out.");
     setIsLoggedIn(false);
   };
 

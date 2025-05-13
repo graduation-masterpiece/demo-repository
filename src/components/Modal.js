@@ -15,7 +15,7 @@ const Modal = ({ message, onClose, showSpinner, children }) => {
                     onClick={onClose}
                     className="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
                 >
-                    닫기
+                    Close
                 </button>
             </div>
         </div>

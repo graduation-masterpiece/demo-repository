@@ -11,22 +11,22 @@ const SearchResults = ({ results }) => {
     const [isCompleted, setIsCompleted] = useState(false);
 
     if (!results || results.length === 0) {
-        return <p className="text-gray-500">검색 결과가 없습니다.</p>;
+        return <p className="text-gray-500">No Search Results.</p>;
     }
 
     const handleBookButtonClick = async (book) => {
-        console.log("선택한 책:", book);
+        console.log("Selected Book: ", book);
     
         if (!book.isbn) {
-            console.error("ISBN이 없습니다:", book);
-            alert("ISBN 정보가 없는 책입니다.");
+            console.error("There is no ISBN: ", book);
+            alert("This book has no ISBN info.");
             return;
         }
     
         setIsLoading(true);
         setIsCompleted(false);
         setCurrentIsbn(book.isbn);
-        setModalContent("카드뉴스를 생성중입니다...");
+        setModalContent("Creating Book Cards...");
         setIsModalOpen(true);
     
         try {
@@ -54,22 +54,22 @@ const SearchResults = ({ results }) => {
                 data = await response.json();
             } else {
                 const text = await response.text();
-                throw new Error(text || "서버에서 잘못된 형식의 응답을 반환했습니다.");
+                throw new Error(text || "Server returned an invalid response format.");
             }
             
             if (!response.ok) {
-                throw new Error(data.message || data.error || "서버 전송 실패");
+                throw new Error(data.message || data.error || "Server error");
             }
     	    setIsCompleted(true);
-            setModalContent("카드뉴스가 생성되었습니다!");
+            setModalContent("Book Card has been created!");
 
 	    if(!isModalOpen){
 		setTimeout(() => setIsModalOpen(true), 100);
 	    }
 
         } catch (error) {
-            console.error("서버 전송 오류:", error);
-            setModalContent(error.message || "서버에 책 정보를 전송하는 데 실패했습니다.");
+            console.error("Server error: ", error);
+            setModalContent(error.message || "Failed to send book information to the server.");
         } finally {
             setIsLoading(false);
         }
@@ -97,7 +97,7 @@ const SearchResults = ({ results }) => {
                             onClick={handleNavigateToCard}
                             className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                         >
-                            카드뉴스 보기
+                            See Book Card
                         </button>
                     )}
                 </Modal>
@@ -121,7 +121,7 @@ const SearchResults = ({ results }) => {
                         onClick={() => handleBookButtonClick(item)}
                         disabled={isLoading}
                     >
-                        {isLoading ? "처리 중..." : "요약하기"}
+                        {isLoading ? "In progress..." : "Summerize"}
                     </button>
                 </div>
             ))}

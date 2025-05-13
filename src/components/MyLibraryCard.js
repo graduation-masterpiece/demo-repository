@@ -12,21 +12,21 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
 
   const handleDelete = async (e) => {
     e.stopPropagation();
-    if (window.confirm(`${title}을(를) 정말 삭제하시겠습니까?`)) {
+    if (window.confirm(`Are you sure to delete ${title}?`)) {
       try {
         const response = await fetch(`/api/book/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
-          alert('책이 성공적으로 삭제되었습니다.');
+          alert('The book has been successfully deleted.');
           window.location.reload();
         } else {
           const errorData = await response.json();
-          alert(`삭제 실패: ${errorData.error}`);
+          alert(`Deletion Failed: ${errorData.error}`);
         }
       } catch (error) {
-        console.error('삭제 요청 중 오류 발생:', error);
-        alert('서버 오류로 인해 삭제할 수 없습니다.');
+        console.error('An error has occurred during deletion request: ', error);
+        alert('Cannot delete due to server error.');
       }
     }
   };
@@ -39,13 +39,13 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
       });
       const data = await response.json();
       if (!response.ok) {
-        alert(data.error || '이미 좋아요를 눌렀습니다');
+        alert(data.error || 'You have already liked this book.');
         return;
       }
       setLikeCount(data.likes);
     } catch (error) {
-      console.error('좋아요 요청 실패:', error);
-      alert('서버 연결 실패');
+      console.error('Like request failed: ', error);
+      alert('Server connection failed.');
     }
   };
 
