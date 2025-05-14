@@ -93,7 +93,7 @@ const MainPage = () => {
             
             {/* 헤더 영역 (제목 + 검색창) - 결과에 따라 위치 이동 */}
             <div className={`transition-all duration-700 ease-in-out z-10 ${
-              showResults ? 'mb-4 pt-6' : 'flex-1 flex flex-col justify-center'
+              showResults ? 'transform translate-y-[-10vh]' : 'flex-1 flex flex-col justify-center'
             }`}>
               {/* 제목 부분 - ServiceName 컴포넌트 사용 */}
               <div className={`mb-8 transition-all duration-500 ${
@@ -114,9 +114,9 @@ const MainPage = () => {
               className={`w-full transition-all duration-700 ease-in-out transform overflow-hidden ${
                 showResults 
                   ? 'flex-1 opacity-100 translate-y-0' 
-                  : 'h-0 opacity-0 translate-y-[30vh] pointer-events-none'
+                  : 'h-0 opacity-0 translate-y-[50vh] pointer-events-none'
               }`}
-              style={{ maxHeight: showResults ? 'calc(100vh - 280px)' : '0' }}
+              style={{ maxHeight: showResults ? 'calc(100vh - 220px)' : '0' }}
             >
               <div className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto">
                 {results.length > 0 && <SearchResults results={results} />}
