@@ -18,20 +18,7 @@ const SearchResults = ({ results }) => {
             return;
         }
 
-        // 초기화
-        setRenderedItems([]);
-
-        // 아이템을 하나씩 추가 (시차를 두고)
-        const renderQueue = [...results];
-        const renderNextItem = () => {
-            if (renderQueue.length > 0) {
-                setRenderedItems(prev => [...prev, renderQueue.shift()]);
-                setTimeout(renderNextItem, 50); // 50ms 간격으로 아이템 추가
-            }
-        };
-
-        // 첫 번째 아이템 렌더링 시작
-        setTimeout(renderNextItem, 100);
+        setRenderedItems(results);
     }, [results]);
 
     if (!results || results.length === 0) {
@@ -109,7 +96,7 @@ const SearchResults = ({ results }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 px-3">
             {isModalOpen && (
                 <Modal 
                     message={modalContent} 
@@ -130,16 +117,16 @@ const SearchResults = ({ results }) => {
             {renderedItems.map((item, index) => (
                 <div
                     key={index}
-                    className="bg-white p-4 shadow rounded flex flex-col items-center transform transition-all duration-300 opacity-0 translate-y-8 animate-fadeIn"
+                    className="bg-white p-2 shadow rounded flex flex-col items-center transform transition-all duration-300 opacity-0 translate-y-8 animate-fadeIn"
                     style={{ animationDelay: `${index * 0.05}s` }}
                 >
                     <img
                         src={item.image}
                         alt={item.title}
-                        className="w-32 h-48 object-cover mb-4"
+                        className="w-24 h-36 object-cover mb-4"
                     />
-                    <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-600 mb-4">{item.author}</p>
+                    <h3 className="font-bold text-base mb-2">{item.title}</h3>
+                    <p className="text-xs text-gray-600 mb-4">{item.author}</p>
 
                     <button
                         className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"

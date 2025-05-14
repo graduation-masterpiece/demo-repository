@@ -66,16 +66,15 @@ const MainPage = () => {
         }}
       >
         <div className="flex flex-col items-center h-full">
-          <div className="w-full max-w-[800px] px-4 flex flex-col h-full relative">
+          <div className="w-full max-w-[1000px] px-4 flex flex-col h-full relative">
             {/* 제목 + 검색창 */}
             <div
               className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full ${
                 results.length > 0
-                  ? "top-[4vh]"
+                  ? "top-[1vh]"
                   : "top-1/2 -translate-y-1/2"
               }`}
             >
-              {/* ServiceName만 축소 */}
               <div
                 className={`transition-all duration-700 ease-in-out ${
                   results.length > 0 ? "scale-[0.65]" : "scale-100"
@@ -84,24 +83,24 @@ const MainPage = () => {
                 <ServiceName />
               </div>
 
-              {/* 검색창은 항상 동일한 크기, 여백 확보 */}
-              <div className="mt-6 mb-4 w-full max-w-lg">
+              {/* 검색창은 항상 크기 유지, 바로 아래에 위치 */}
+              <div className="mt-0 w-full max-w-lg">
                 <SearchBar onSearch={handleSearch} />
               </div>
             </div>
 
             {/* 검색 결과창 */}
             <div
-              className={`flex-1 pt-[35vh] transition-all duration-700 ease-in-out transform ${
+              className={`flex-1 pt-[30vh] transition-all duration-700 ease-in-out transform ${
                 results.length > 0
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-[50vh] pointer-events-none"
-              } overflow-hidden`}
+              } overflow-hidden mb-10`}
             >
               <div
                 className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto"
                 style={{
-                  paddingBottom: "4rem", // ✅ 하단 여백 충분히 줌
+                  paddingBottom: "2rem",
                 }}
               >
                 {results.length > 0 && <SearchResults results={results} />}
