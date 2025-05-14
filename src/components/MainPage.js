@@ -12,7 +12,7 @@ const MainPage = () => {
   const mainContentRef = useRef(null);
   const { isVisible: sidebarVisible } = useSidebar();
 
-  // 사이드바 토글 시 레이아웃 조정
+  // 사이드바 레이아웃 조정
   useEffect(() => {
     if (!mainContentRef.current) return;
 
@@ -27,6 +27,7 @@ const MainPage = () => {
     });
   }, [sidebarVisible]);
 
+  // 검색 실행
   const handleSearch = async (query) => {
     if (!query.trim()) {
       setResults([]);
@@ -35,7 +36,6 @@ const MainPage = () => {
     }
 
     setIsSearching(true);
-
     const encodedQuery = encodeURIComponent(query);
     const url = `/api/naver-search?query=${encodedQuery}&display=30&start=1`;
 
@@ -58,7 +58,6 @@ const MainPage = () => {
 
   return (
     <div className="flex w-screen h-screen bg-[#ECE6CC] overflow-hidden">
-      {/* 사이드바 */}
       <Sidebar />
 
       <main
@@ -70,42 +69,34 @@ const MainPage = () => {
           height: "100vh",
         }}
       >
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-[800px] px-4 flex flex-col h-full">
-            {/* 헤더 영역 */}
+            {/* 상단: 서비스 이름 + 검색창 */}
             <div
-              className={`transition-all duration-700 ease-in-out ${
+              className={`flex flex-col items-center justify-center w-full transition-all duration-700 ease-in-out ${
                 results.length > 0
-                  ? "mb-6"
-                  : "flex-1 flex flex-col justify-center"
+                  ? "translate-y-[-5vh] scale-95"
+                  : "translate-y-0 scale-100"
               }`}
             >
-              {/* ServiceName 축소 애니메이션 */}
-              <div
-                className={`mb-8 transition-all duration-500 transform ${
-                  results.length > 0 ? "scale-75" : "scale-100"
-                }`}
-              >
+              <div className="mb-6 transition-all duration-500 transform">
                 <ServiceName />
               </div>
-
-              {/* 검색창 */}
-              <div className="mb-4 w-full">
+              <div className="mb-4 w-full max-w-lg">
                 <SearchBar onSearch={handleSearch} />
               </div>
             </div>
 
-            {/* 검색 결과 영역 */}
+            {/* 결과 박스: 검색 시 부드럽게 등장, 화면 안에서 스크롤 가능 */}
             <div
               className={`w-full transition-all duration-700 ease-in-out transform ${
                 results.length > 0
                   ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-full pointer-events-none"
+                  : "opacity-0 translate-y-[50vh] pointer-events-none"
               }`}
               style={{
                 maxHeight: results.length > 0 ? "calc(100vh - 240px)" : "0",
                 overflow: "hidden",
-                transition: "max-height 0.7s ease-in-out",
               }}
             >
               <div
