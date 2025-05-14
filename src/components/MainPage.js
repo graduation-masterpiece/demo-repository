@@ -61,7 +61,6 @@ const MainPage = () => {
       {/* 사이드바 */}
       <Sidebar />
 
-      {/* 메인 콘텐츠 */}
       <main
         ref={mainContentRef}
         className="flex-1 overflow-y-auto transition-all duration-300"
@@ -72,8 +71,8 @@ const MainPage = () => {
         }}
       >
         <div className="flex flex-col items-center justify-center h-full">
-          <div className="w-full max-w-[800px] px-4 flex flex-col">
-            {/* 헤더 (ServiceName + SearchBar) */}
+          <div className="w-full max-w-[800px] px-4 flex flex-col h-full">
+            {/* 헤더 영역 */}
             <div
               className={`transition-all duration-700 ease-in-out ${
                 results.length > 0
@@ -81,24 +80,38 @@ const MainPage = () => {
                   : "flex-1 flex flex-col justify-center"
               }`}
             >
-              <div className="text-center mb-8 transition-all duration-500">
+              {/* ServiceName 축소 애니메이션 */}
+              <div
+                className={`mb-8 transition-all duration-500 transform ${
+                  results.length > 0 ? "scale-75" : "scale-100"
+                }`}
+              >
                 <ServiceName />
               </div>
 
+              {/* 검색창 */}
               <div className="mb-4 w-full">
                 <SearchBar onSearch={handleSearch} />
               </div>
             </div>
 
-            {/* 검색 결과 */}
+            {/* 검색 결과 영역 */}
             <div
-              className={`w-full flex-1 transition-all duration-700 ease-in-out transform ${
+              className={`w-full transition-all duration-700 ease-in-out transform ${
                 results.length > 0
-                  ? "max-h-[70vh] opacity-100 translate-y-0"
-                  : "max-h-0 opacity-0 translate-y-full overflow-hidden"
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-full pointer-events-none"
               }`}
+              style={{
+                maxHeight: results.length > 0 ? "calc(100vh - 240px)" : "0",
+                overflow: "hidden",
+                transition: "max-height 0.7s ease-in-out",
+              }}
             >
-              <div className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto">
+              <div
+                className="bg-white shadow-lg rounded-lg p-4 overflow-y-auto"
+                style={{ maxHeight: "calc(100vh - 280px)" }}
+              >
                 {results.length > 0 && <SearchResults results={results} />}
               </div>
             </div>
