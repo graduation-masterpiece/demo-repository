@@ -76,16 +76,18 @@ const MyLibraryPage = () => {
       <Sidebar />
       <div 
         ref={contentRef}
-        className="transition-all duration-300 h-screen"
+        className="transition-all duration-300 h-screen overflow-y-auto"
         style={{ 
           marginLeft: sidebarVisible ? '270px' : '0',
           width: sidebarVisible ? 'calc(100% - 270px)' : '100%'
         }}
       >
-        <div className="flex flex-col w-full h-[90vh] max-w-[900px] mx-auto mt-[3em] px-4">
+        <div className={`flex flex-col h-[90vh] max-w-[900px] mx-auto mt-[3em] px-4 transition-all duration-300 ${
+          !sidebarVisible ? 'ml-auto mr-auto' : ''
+        }`}>
           {/* 타이틀 + 드롭다운 */}
           <div className="flex flex-row justify-between items-center">
-            <p className="text-[50px] font-bold border-b-gray-800 px-4">
+            <p className="text-[50px] font-bold border-b-gray-800 border-b-[6px] px-4">
               My Library
             </p>
             <div className="mt-4">

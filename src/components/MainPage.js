@@ -12,6 +12,7 @@ const MainPage = () => {
   const mainContentRef = useRef(null); // 메인 콘텐츠 참조
   const [showResults, setShowResults] = useState(false); // 검색 결과 표시 상태
   const { isVisible: sidebarVisible } = useSidebar(); // 전역 사이드바 상태 사용
+  const resultsContainerRef = useRef(null); // 검색 결과 컨테이너 참조
 
   // 사이드바 상태가 변경될 때마다 적용되는 효과
   useEffect(() => {
@@ -71,7 +72,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="flex w-screen h-screen bg-[#ECE6CC]">
+    <div className="flex w-screen h-screen bg-[#ECE6CC] overflow-hidden">
       {/* 사이드바 컴포넌트 */}
       <Sidebar />
 
@@ -86,17 +87,17 @@ const MainPage = () => {
         }}
       >
         {/* 전체 컨텐츠 래퍼 */}
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-start h-full">
           {/* 메인 컨텐츠 컨테이너 */}
-          <div className="w-full max-w-[800px] px-4 flex flex-col">
+          <div className="w-full max-w-[800px] px-4 flex flex-col h-full">
             
             {/* 헤더 영역 (제목 + 검색창) - 결과에 따라 위치 이동 */}
-            <div className={`transition-all duration-700 ease-in-out ${
-              showResults ? 'mb-6 translate-y-[-5vh]' : 'flex-1 flex flex-col justify-center'
+            <div className={`transition-all duration-700 ease-in-out z-10 ${
+              showResults ? 'mb-4 pt-6' : 'flex-1 flex flex-col justify-center'
             }`}>
               {/* 제목 부분 - ServiceName 컴포넌트 사용 */}
               <div className={`mb-8 transition-all duration-500 ${
-                showResults ? 'transform scale-75 mt-10' : ''
+                showResults ? 'transform scale-75' : ''
               }`}>
                 <ServiceName />
               </div>
@@ -108,11 +109,15 @@ const MainPage = () => {
             </div>
 
             {/* 검색 결과 박스 - 결과 있을 때만 표시 (애니메이션으로 아래에서 위로 밀어올림) */}
-            <div className={`w-full flex-1 transition-all duration-700 ease-in-out transform ${
-              showResults 
-                ? 'max-h-[70vh] opacity-100 translate-y-0 mt-8' 
-                : 'max-h-0 opacity-0 translate-y-[50vh] pointer-events-none overflow-hidden'
-            }`}>
+            <div 
+              ref={resultsContainerRef}
+              className={`w-full transition-all duration-700 ease-in-out transform overflow-hidden ${
+                showResults 
+                  ? 'flex-1 opacity-100 translate-y-0' 
+                  : 'h-0 opacity-0 translate-y-[30vh] pointer-events-none'
+              }`}
+              style={{ maxHeight: showResults ? 'calc(100vh - 280px)' : '0' }}
+            >
               <div className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto">
                 {results.length > 0 && <SearchResults results={results} />}
               </div>
