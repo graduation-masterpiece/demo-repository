@@ -264,27 +264,15 @@ app.delete('/api/book/:id', (req, res) => {
         return res.status(500).json({ error: 'An error has occurred during deletion in book_info.' });
       }
 
-      // error_reports 테이블에서 삭제 (데이터가 있는 지 확인 후 존재 시에만 삭제)
-      const checkQuery = `SELECT 1 FROM error_reports WHERE book_card_id = ? LIMIT 1`;
-      db.query(checkQuery, [bookId], (err, results) => {
+      // error_reports 테이블에서 삭제
+      const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_info_id = ?`;
+      db.query(deleteErrorReportQuery, [bookId], (err) => {
         if (err) {
-    	  console.error('An error has occurred during checking for existing error report: ', err);
-    	  return res.status(500).json({ error: 'An error has occurred during checking for existing error report.' });
-  	}
-
-	if (results.length === 0) {
-    	  return res.status(200).json({ message: 'The book data has deleted successfully.' });
-  	}
+	  console.error('An error has occurred during deletion in error_reports: ', err);
+	  return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
+	}
 	
-      	const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_card_id = ?`;
-      	db.query(deleteErrorReportQuery, [bookId], (err) => {
-          if (err) {
-	    console.error('An error has occurred during deletion in error_reports: ', err);
-	    return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
-	  }
-	  
-      	  res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
-	});
+      	res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
       });
     });
   });
