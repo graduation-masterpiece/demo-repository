@@ -4,29 +4,14 @@ import SearchBar from "./SearchBar";
 import Sidebar from "./Sidebar";
 import SearchResults from "./SearchResults";
 import axios from "axios";
+import { useSidebar } from "../SidebarContext";
 
 const MainPage = () => {
   const [results, setResults] = useState([]); // 검색 결과 상태
-  const [sidebarVisible, setSidebarVisible] = useState(false); // 사이드바 상태 기본값을 false로 변경 (닫힌 상태)
   const [isSearching, setIsSearching] = useState(false); // 검색 진행 상태
   const mainContentRef = useRef(null); // 메인 콘텐츠 참조
   const [showResults, setShowResults] = useState(false); // 검색 결과 표시 상태
-
-  // 커스텀 이벤트 리스너를 사용하여 사이드바 상태 직접 연결
-  useEffect(() => {
-    // 사이드바 토글 이벤트를 위한 핸들러
-    const handleSidebarChange = (e) => {
-      setSidebarVisible(e.detail.isVisible);
-    };
-
-    // 전역 이벤트 리스너 등록
-    window.addEventListener('sidebarToggled', handleSidebarChange);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener('sidebarToggled', handleSidebarChange);
-    };
-  }, []);
+  const { isVisible: sidebarVisible } = useSidebar(); // 전역 사이드바 상태 사용
 
   // 사이드바 상태가 변경될 때마다 적용되는 효과
   useEffect(() => {
@@ -88,13 +73,7 @@ const MainPage = () => {
   return (
     <div className="flex w-screen h-screen bg-[#ECE6CC]">
       {/* 사이드바 컴포넌트 */}
-      <Sidebar onToggle={(isVisible) => {
-        // 커스텀 이벤트 발생
-        const event = new CustomEvent('sidebarToggled', {
-          detail: { isVisible }
-        });
-        window.dispatchEvent(event);
-      }} />
+      <Sidebar />
 
       {/* 메인 컨텐츠 - 사이드바 상태에 따라 조정 */}
       <main 
@@ -113,11 +92,11 @@ const MainPage = () => {
             
             {/* 헤더 영역 (제목 + 검색창) - 결과에 따라 위치 이동 */}
             <div className={`transition-all duration-700 ease-in-out ${
-              showResults ? 'mb-6 translate-y-[-20vh]' : 'flex-1 flex flex-col justify-center'
+              showResults ? 'mb-6 translate-y-[-5vh]' : 'flex-1 flex flex-col justify-center'
             }`}>
               {/* 제목 부분 - ServiceName 컴포넌트 사용 */}
               <div className={`mb-8 transition-all duration-500 ${
-                showResults ? 'transform scale-75 -mt-4' : ''
+                showResults ? 'transform scale-75 mt-10' : ''
               }`}>
                 <ServiceName />
               </div>
@@ -131,7 +110,7 @@ const MainPage = () => {
             {/* 검색 결과 박스 - 결과 있을 때만 표시 (애니메이션으로 아래에서 위로 밀어올림) */}
             <div className={`w-full flex-1 transition-all duration-700 ease-in-out transform ${
               showResults 
-                ? 'max-h-[70vh] opacity-100 translate-y-0' 
+                ? 'max-h-[70vh] opacity-100 translate-y-0 mt-8' 
                 : 'max-h-0 opacity-0 translate-y-[50vh] pointer-events-none overflow-hidden'
             }`}>
               <div className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto">

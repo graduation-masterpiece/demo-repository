@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Link 추가
+import { useSidebar } from "../SidebarContext";
 
 const Sidebar = ({ onToggle }) => {
-  const [isVisible, setIsVisible] = useState(false); // 초기 상태를 닫힌 상태로 유지
+  const { isVisible, toggleSidebar: toggleSidebarGlobal } = useSidebar(); // 전역 상태 사용
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState("Nickname");
 
-  // 토글 사이드바 함수 업데이트 - 상태 변경 시 콜백 호출
+  // 토글 사이드바 함수 업데이트 - 전역 상태 변경 및 콜백 호출
   const toggleSidebar = () => {
-    const newVisibleState = !isVisible;
-    setIsVisible(newVisibleState);
+    toggleSidebarGlobal(); // 전역 상태 업데이트
     
-    // 부모 컴포넌트에 상태 변경 알림
+    // 부모 컴포넌트에 상태 변경 알림 (이전 코드와의 호환성 유지)
     if (onToggle) {
-      onToggle(newVisibleState);
+      onToggle(!isVisible);
     }
   };
 
   // 초기 로딩 시 상태 알림
-  useEffect(() => {
+  React.useEffect(() => {
     if (onToggle) {
-      onToggle(isVisible); // 초기 상태(닫힘)를 부모에게 전달
+      onToggle(isVisible); // 현재 상태를 부모에게 전달
     }
-  }, []); // 빈 배열로 설정하여 초기에만 실행
+  }, [isVisible, onToggle]); // isVisible이 변경될 때마다 실행
 
   const handleLogin = () => {
     setNickname("Nickname");

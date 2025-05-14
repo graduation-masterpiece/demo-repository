@@ -4,19 +4,22 @@ import MainPage from "./components/MainPage";
 import MyLibraryPage from "./components/MyLibraryPage";
 import ShortBooksPage from "./components/ShortBooksPage";
 import SettingsPage from "./components/SettingsPage";
+import { SidebarProvider } from "./SidebarContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Define the paths for MainPage and LibraryPage */}
-        <Route path="/" element={<MainPage />} />
-        <Route path="/MyLibrary" element={<MyLibraryPage />} />
-        <Route path="/ShortBooks" element={<ShortBooksPage/>} />
-        <Route path="/Settings" element={<SettingsPage/>}/>
-        <Route path="/book/:id" element={<ShortBooksPage/>} />
-      </Routes>
-    </BrowserRouter>
+    <SidebarProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Define the paths for MainPage and LibraryPage */}
+          <Route path="/" element={<MainPage />} />
+          <Route path="/MyLibrary" element={<MyLibraryPage />} />
+          <Route path="/ShortBooks" element={<ShortBooksPage/>} />
+          <Route path="/Settings" element={<SettingsPage/>}/>
+          <Route path="/book/:id" element={<ShortBooksPage/>} />
+        </Routes>
+      </BrowserRouter>
+    </SidebarProvider>
   );
 }
 
