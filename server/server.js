@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
-const { processBook } = require('./gpt');
+const db = require('./models/db');
+const { processBook } = require('./controllers/gptController');
 const path = require('path');
 const axios = require('axios');
 require('dotenv').config(); // .env 파일 로드
