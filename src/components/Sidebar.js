@@ -1,38 +1,24 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Link 추가
+import React from "react";
+import { Link } from "react-router-dom";
 import { useSidebar } from "../SidebarContext";
 
 const Sidebar = ({ onToggle }) => {
-  const { isVisible, toggleSidebar: toggleSidebarGlobal } = useSidebar(); // 전역 상태 사용
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [nickname, setNickname] = useState("Nickname");
+  const { isVisible, toggleSidebar: toggleSidebarGlobal } = useSidebar();
 
-  // 토글 사이드바 함수 업데이트 - 전역 상태 변경 및 콜백 호출
+  // 토글 사이드바
   const toggleSidebar = () => {
-    toggleSidebarGlobal(); // 전역 상태 업데이트
-    
-    // 부모 컴포넌트에 상태 변경 알림 (이전 코드와의 호환성 유지)
+    toggleSidebarGlobal();
     if (onToggle) {
       onToggle(!isVisible);
     }
   };
 
-  // 초기 로딩 시 상태 알림
+  // 초기 상태 부모에게 전달
   React.useEffect(() => {
     if (onToggle) {
-      onToggle(isVisible); // 현재 상태를 부모에게 전달
+      onToggle(isVisible);
     }
-  }, [isVisible, onToggle]); // isVisible이 변경될 때마다 실행
-
-  const handleLogin = () => {
-    setNickname("Nickname");
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    alert("You have been logged out.");
-    setIsLoggedIn(false);
-  };
+  }, [isVisible, onToggle]);
 
   return (
     <div>
@@ -43,64 +29,32 @@ const Sidebar = ({ onToggle }) => {
       >
         <div>
           <div className="flex items-center justify-between mt-10">
-            <Link to="/" className="flex items-center justify-center space-x-2 px-2 py-2 bg-[#ECE6CC] rounded-r-lg border-[2.5px] border-black active:text-white">
+            <Link
+              to="/"
+              className="flex items-center justify-center space-x-2 px-2 py-2 bg-[#ECE6CC] rounded-r-lg border-[2.5px] border-black active:text-white"
+            >
               <img
                 src="/images/sidebar_search.png"
                 alt="Library"
                 className="h-7 w-7 ml-[-1px]"
               />
-
-              <div to="/" className="text-[24px] font-medium">
-                Home
-              </div>
+              <div className="text-[24px] font-medium">Home</div>
             </Link>
+
             <button
               onClick={toggleSidebar}
               className="p-2 bg-white border-gray-500 border-[2px] rounded-l-lg sidebar-toggle-btn"
             >
               <img
                 src="/images/sidebar_left.png"
-                alt="pic1"
+                alt="toggle"
                 className="w-[32px] h-[28px]"
               />
             </button>
           </div>
 
-          {isLoggedIn && (
-            <div className="flex justify-center items-center space-x-3 mt-14 mb-6 px-5 py-1 bg-white w-[230px] rounded-r-lg border-[2.5px] border-black">
-              <img
-                src="/images/sidebar_user.png"
-                alt="User Icon"
-                className="h-6 w-6 mt-1"
-              />
-              <span className="text-[26px] font-semibold mt-1 overflow-hidden">
-                {nickname}
-              </span>
-            </div>
-          )}
-
           <nav>
-            <ul className="space-y-5">
-              {!isLoggedIn && (
-                <li
-                  className="flex justify-center items-center mt-14 mb-6 px-2 py-1 bg-white w-[230px] rounded-r-lg border-[2.5px] border-black"
-                  onClick={handleLogin}
-                >
-                  <div className="flex flex-row space-x-3 mr-[70px] cursor-pointer">
-                    <img
-                      src="/images/sidebar_login.png"
-                      alt="login"
-                      className="h-6 w-6 mt-3"
-                    />
-                    <span className="text-[26px] font-semibold mt-1">
-                      Login
-                    </span>
-                  </div>
-                </li>
-              )}
-
-              <hr className="border-[2px] border-[#777777] w-[230px]" />
-
+            <ul className="space-y-5 mt-14">
               <Link
                 to="/ShortBooks"
                 className="flex items-center justify-center px-2 py-2 bg-[#FEABAB] w-[230px] rounded-r-lg border-[2.5px] border-black active:text-white"
@@ -125,7 +79,6 @@ const Sidebar = ({ onToggle }) => {
                     alt="My Library"
                     className="h-6 w-6 mt-1"
                   />
-                  {/* Link to LibraryPage */}
                   <p className="text-[20px] font-semibold">My Library</p>
                 </div>
               </Link>
@@ -140,31 +93,15 @@ const Sidebar = ({ onToggle }) => {
                     alt="Settings"
                     className="h-6 w-6 mt-1"
                   />
-                  {/* Link to LibraryPage */}
                   <p className="text-[20px] font-semibold">Settings</p>
                 </div>
               </Link>
             </ul>
           </nav>
         </div>
-
-        {isLoggedIn && (
-          <div className="mb-6">
-            <li
-              className="flex items-end justify-between w-[130px] px-3 py-1 space-x-2 cursor-pointer active:white bg-white border-[2px] border-black rounded-l-lg ml-auto"
-              onClick={handleLogout}
-            >
-              <span className="text-[20px] font-medium">Logout</span>
-              <img
-                src="/images/sidebar_logout.png"
-                alt="Logout"
-                className="h-6 w-6 mb-0.5"
-              />
-            </li>
-          </div>
-        )}
       </div>
 
+      {/* 열기 버튼 */}
       {!isVisible && (
         <button
           onClick={toggleSidebar}
@@ -172,7 +109,7 @@ const Sidebar = ({ onToggle }) => {
         >
           <img
             src="/images/sidebar_open.png"
-            alt="pic1"
+            alt="open"
             className="w-[35px] h-[30px]"
           />
         </button>

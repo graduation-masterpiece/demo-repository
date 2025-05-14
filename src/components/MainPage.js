@@ -15,7 +15,6 @@ const MainPage = () => {
   // 사이드바 레이아웃 조정
   useEffect(() => {
     if (!mainContentRef.current) return;
-
     requestAnimationFrame(() => {
       if (sidebarVisible) {
         mainContentRef.current.style.marginLeft = "270px";
@@ -27,7 +26,6 @@ const MainPage = () => {
     });
   }, [sidebarVisible]);
 
-  // 검색 실행
   const handleSearch = async (query) => {
     if (!query.trim()) {
       setResults([]);
@@ -69,14 +67,14 @@ const MainPage = () => {
           height: "100vh",
         }}
       >
-        <div className="flex flex-col items-center h-full">
-          <div className="w-full max-w-[800px] px-4 flex flex-col h-full">
-            {/* 상단: 서비스 이름 + 검색창 */}
+        <div className="flex flex-col items-center h-full w-full">
+          <div className="w-full max-w-[800px] px-4 flex flex-col h-full relative">
+            {/* 중앙 정렬 컨테이너 */}
             <div
-              className={`flex flex-col items-center justify-center w-full transition-all duration-700 ease-in-out ${
+              className={`flex flex-col items-center w-full transition-all duration-700 ease-in-out absolute left-1/2 transform -translate-x-1/2 ${
                 results.length > 0
-                  ? "translate-y-[-5vh] scale-95"
-                  : "translate-y-0 scale-100"
+                  ? "top-[5vh] scale-95"
+                  : "top-1/2 -translate-y-1/2 scale-100"
               }`}
             >
               <div className="mb-6 transition-all duration-500 transform">
@@ -87,9 +85,9 @@ const MainPage = () => {
               </div>
             </div>
 
-            {/* 결과 박스: 검색 시 부드럽게 등장, 화면 안에서 스크롤 가능 */}
+            {/* 검색 결과 박스 */}
             <div
-              className={`w-full transition-all duration-700 ease-in-out transform ${
+              className={`w-full mt-[35vh] transition-all duration-700 ease-in-out transform ${
                 results.length > 0
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-[50vh] pointer-events-none"
