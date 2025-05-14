@@ -67,27 +67,30 @@ const MainPage = () => {
       >
         <div className="flex flex-col items-center h-full">
           <div className="w-full max-w-[800px] px-4 flex flex-col h-full relative">
-            {/* 제목 + 검색바 (중앙에서 위로 이동 애니메이션) */}
+            {/* 제목 + 검색창 */}
             <div
               className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full ${
                 results.length > 0
-                  ? "top-[5vh]"
+                  ? "top-[4vh]"
                   : "top-1/2 -translate-y-1/2"
               }`}
             >
+              {/* ServiceName만 축소 */}
               <div
-                className={`transition-all duration-700 ease-in-out mb-6 ${
-                  results.length > 0 ? "scale-[0.5]" : "scale-100"
+                className={`transition-all duration-700 ease-in-out ${
+                  results.length > 0 ? "scale-[0.65]" : "scale-100"
                 }`}
               >
                 <ServiceName />
               </div>
-              <div className="mb-4 w-full max-w-lg">
+
+              {/* 검색창은 항상 동일한 크기, 여백 확보 */}
+              <div className="mt-6 mb-4 w-full max-w-lg">
                 <SearchBar onSearch={handleSearch} />
               </div>
             </div>
 
-            {/* 검색 결과 영역 */}
+            {/* 검색 결과창 */}
             <div
               className={`flex-1 pt-[35vh] transition-all duration-700 ease-in-out transform ${
                 results.length > 0
@@ -98,7 +101,7 @@ const MainPage = () => {
               <div
                 className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto"
                 style={{
-                  paddingBottom: "2rem",
+                  paddingBottom: "4rem", // ✅ 하단 여백 충분히 줌
                 }}
               >
                 {results.length > 0 && <SearchResults results={results} />}
