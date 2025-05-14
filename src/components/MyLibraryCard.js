@@ -12,7 +12,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
 
   const handleDelete = async (e) => {
     e.stopPropagation();
-    if (window.confirm(`Are you sure to delete ${title}?`)) {
+    if (window.confirm(`Are you sure you want to delete ${title}?`)) {
       try {
         const response = await fetch(`/api/book/${id}`, {
           method: 'DELETE',
