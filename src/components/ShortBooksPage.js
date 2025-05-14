@@ -66,7 +66,6 @@ const ShortBooksPage = () => {
     fetchBooks();
   }, [id]);
 
-
   const debounceTimeout = useRef(null);
   const timeoutTime = 300;  // 밀리초 단위. 1000ms = 1s
   
