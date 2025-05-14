@@ -12,7 +12,7 @@ const MainPage = () => {
   const mainContentRef = useRef(null);
   const { isVisible: sidebarVisible } = useSidebar();
 
-  // 사이드바 레이아웃 조정
+  // 사이드바 반응형 조정
   useEffect(() => {
     if (!mainContentRef.current) return;
     requestAnimationFrame(() => {
@@ -69,11 +69,12 @@ const MainPage = () => {
       >
         <div className="flex flex-col items-center h-full w-full">
           <div className="w-full max-w-[800px] px-4 flex flex-col h-full relative">
-            {/* 중앙 정렬 컨테이너 */}
+
+            {/* 중앙에 있다가 검색되면 위로 올라가는 애니메이션 */}
             <div
               className={`flex flex-col items-center w-full transition-all duration-700 ease-in-out absolute left-1/2 transform -translate-x-1/2 ${
                 results.length > 0
-                  ? "top-[5vh] scale-95"
+                  ? "top-[5vh] scale-[0.5]"
                   : "top-1/2 -translate-y-1/2 scale-100"
               }`}
             >
@@ -87,7 +88,7 @@ const MainPage = () => {
 
             {/* 검색 결과 박스 */}
             <div
-              className={`w-full mt-[35vh] transition-all duration-700 ease-in-out transform ${
+              className={`w-full mt-[40vh] transition-all duration-700 ease-in-out transform ${
                 results.length > 0
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-[50vh] pointer-events-none"
@@ -99,7 +100,10 @@ const MainPage = () => {
             >
               <div
                 className="bg-white shadow-lg rounded-lg p-4 overflow-y-auto"
-                style={{ maxHeight: "calc(100vh - 280px)" }}
+                style={{
+                  maxHeight: "calc(100vh - 280px)",
+                  paddingBottom: "2rem", // 하단 여백
+                }}
               >
                 {results.length > 0 && <SearchResults results={results} />}
               </div>
