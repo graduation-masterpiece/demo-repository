@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,30 @@ const SearchResults = ({ results }) => {
     const [currentIsbn, setCurrentIsbn] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [renderedItems, setRenderedItems] = useState([]);
+
+    // 결과가 변경될 때마다 애니메이션 효과를 위한 지연 렌더링
+    useEffect(() => {
+        if (!results || results.length === 0) {
+            setRenderedItems([]);
+            return;
+        }
+
+        // 초기화
+        setRenderedItems([]);
+
+        // 아이템을 하나씩 추가 (시차를 두고)
+        const renderQueue = [...results];
+        const renderNextItem = () => {
+            if (renderQueue.length > 0) {
+                setRenderedItems(prev => [...prev, renderQueue.shift()]);
+                setTimeout(renderNextItem, 50); // 50ms 간격으로 아이템 추가
+            }
+        };
+
+        // 첫 번째 아이템 렌더링 시작
+        setTimeout(renderNextItem, 100);
+    }, [results]);
 
     if (!results || results.length === 0) {
         return <p className="text-gray-500">No Search Results.</p>;
@@ -103,10 +127,11 @@ const SearchResults = ({ results }) => {
                 </Modal>
             )}
             
-            {results.map((item, index) => (
+            {renderedItems.map((item, index) => (
                 <div
                     key={index}
-                    className="bg-white p-4 shadow rounded flex flex-col items-center"
+                    className="bg-white p-4 shadow rounded flex flex-col items-center transform transition-all duration-300 opacity-0 translate-y-8 animate-fadeIn"
+                    style={{ animationDelay: `${index * 0.05}s` }}
                 >
                     <img
                         src={item.image}

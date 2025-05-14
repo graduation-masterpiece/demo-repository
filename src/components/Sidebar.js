@@ -1,14 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Link 추가
 
-const Sidebar = () => {
-  const [isVisible, setIsVisible] = useState(true);
+const Sidebar = ({ onToggle }) => {
+  const [isVisible, setIsVisible] = useState(false); // 초기 상태를 닫힌 상태로 유지
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [nickname, setNickname] = useState("Nickname");
 
+  // 토글 사이드바 함수 업데이트 - 상태 변경 시 콜백 호출
   const toggleSidebar = () => {
-    setIsVisible(!isVisible);
+    const newVisibleState = !isVisible;
+    setIsVisible(newVisibleState);
+    
+    // 부모 컴포넌트에 상태 변경 알림
+    if (onToggle) {
+      onToggle(newVisibleState);
+    }
   };
+
+  // 초기 로딩 시 상태 알림
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(isVisible); // 초기 상태(닫힘)를 부모에게 전달
+    }
+  }, []); // 빈 배열로 설정하여 초기에만 실행
 
   const handleLogin = () => {
     setNickname("Nickname");
@@ -25,7 +39,7 @@ const Sidebar = () => {
       <div
         className={`h-screen w-[270px] bg-[#424141] text-black fixed top-0 ${
           isVisible ? "left-0" : "-left-[270px]"
-        } z-50 shadow-lg transition-all duration-300 flex flex-col justify-between`}
+        } z-50 shadow-lg transition-all duration-300 flex flex-col justify-between sidebar-container`}
       >
         <div>
           <div className="flex items-center justify-between mt-10">
@@ -42,7 +56,7 @@ const Sidebar = () => {
             </Link>
             <button
               onClick={toggleSidebar}
-              className="p-2 bg-white border-gray-500 border-[2px] rounded-l-lg"
+              className="p-2 bg-white border-gray-500 border-[2px] rounded-l-lg sidebar-toggle-btn"
             >
               <img
                 src="/images/sidebar_left.png"
@@ -154,7 +168,7 @@ const Sidebar = () => {
       {!isVisible && (
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-50 h-12 w-12 flex items-center justify-center focus:outline-none border-[2px] border-black rounded-lg bg-[#C4D0B3]"
+          className="fixed top-4 left-4 z-50 h-12 w-12 flex items-center justify-center focus:outline-none border-[2px] border-black rounded-lg bg-[#C4D0B3] sidebar-toggle-btn"
         >
           <img
             src="/images/sidebar_open.png"
