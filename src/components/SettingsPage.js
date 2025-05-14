@@ -35,7 +35,7 @@ const SettingsPage = () => {
            Settings
           </p>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <p className="text-xl text-gray-700">설정 페이지는 아직 개발 중입니다.</p>
+            <p className="text-xl text-gray-700">Setting Page is in develop.</p>
           </div>
         </div>
       </div>
