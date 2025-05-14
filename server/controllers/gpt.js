@@ -2,7 +2,7 @@ const dotenv = require('dotenv'); // dotenv 모듈 불러오기
 const OpenAI = require('openai'); // OpenAI 모듈 불러오기
 const fs = require('fs'); // 파일 시스템 모듈 불러오기
 const path = require('path'); // 경로 모듈 불러오기
-const db = require('../models/db'); // db.js에서 db 객체 가져오기
+const db = require('./db'); // db.js에서 db 객체 가져오기
 const axios = require('axios'); // axios 모듈 불러오기
 dotenv.config(); // 환경 변수 로드
 
