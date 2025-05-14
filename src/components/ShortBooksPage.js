@@ -186,7 +186,7 @@ const ShortBooksPage = () => {
                     <>
                       <img src={currentBook.image_url} alt="card_book" className="w-full h-full object-cover opacity-50" />
                       <div className="absolute inset-0 bg-white opacity-70 z-10" />
-                      <div className="text-black text-xl md:text-3xl lg:text-4xl font-bold break-words flex flex-col justify-center items-center w-[90%] h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                      <div className="text-black text-xl md:text-4xl lg:text-5xl font-bold break-words flex flex-col justify-center items-center w-[90%] h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
                         <div className="inline whitespace-normal break-keep text-center">
                           {currentBook.summary[currentSentenceIndex - 1]?.split("*").map((part, index) => (
                             <span key={index} className={index % 2 === 1 ? "text-orange-500" : ""}>
@@ -204,8 +204,8 @@ const ShortBooksPage = () => {
                         <img src={currentBook.book_cover} alt="cover_image" className="w-auto h-auto max-w-[90%] max-h-[90%] object-contain" />
                       </div>
                       <div className="w-1/2 h-full flex flex-col items-center justify-center p-8 z-20">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-center">{currentBook.title || "No Title"}</h1>
-                        <p className="text-2xl md:text-3xl lg:text-4xl text-center">{currentBook.author || "Writer Unknown"}</p>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center">{currentBook.title || "No Title"}</h1>
+                        <p className="text-3xl md:text-4xl lg:text-5xl text-center">{currentBook.author || "Writer Unknown"}</p>
                       </div>
                     </div>
                   )}
