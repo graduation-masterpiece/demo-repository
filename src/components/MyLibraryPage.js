@@ -115,17 +115,15 @@ const MyLibraryPage = () => {
             {/* 카드 컨테이너 */}
             <div className="flex-1 mx-auto w-full max-w-full mt-4 mb-8 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-4">
-                {books
-                  .slice(page * itemsPerPage, (page + 1) * itemsPerPage)
-                  .map((book) => (
-                    <MyLibraryCard
-                      key={book.id}
-                      id={book.id}
-                      title={book.title}
-                      likes={book.likes}
-                      image={book.image_url}
-                    />
-                  ))}
+                {books.map((book) => (
+                  <MyLibraryCard
+                    key={book.id}
+                    id={book.id}
+                    title={book.title}
+                    likes={book.likes}
+                    image={book.image_url}
+                  />
+                ))}
               </div>
             </div>
           </div>
