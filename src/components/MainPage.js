@@ -72,7 +72,7 @@ const MainPage = () => {
               className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full ${
                 results.length > 0
                   ? "top-[1vh]"
-                  : "top-1/2 -translate-y-1/2"
+                  : "top-[40%] -translate-y-1/2"
               }`}
             >
               <div

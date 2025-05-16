@@ -1,15 +1,21 @@
+// MyLibraryCard 컴포넌트: 내 라이브러리의 개별 도서 카드 표시
+
+// React 훅(useState)과 라우터 훅(useNavigate) 불러오기
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const MyLibraryCard = ({ id, title, likes, image }) => {
+  // 카드 클릭 시 상세 페이지로 이동 처리
   const navigate = useNavigate()
   const [likeCount, setLikeCount] = useState(likes)
   const [isHovered, setIsHovered] = useState(false)
 
+  // 함수: 카드 클릭 핸들러 (도서 상세로 이동)
   const handleClick = () => {
     navigate(`/book/${id}`)
   }
 
+  // 함수: 삭제 버튼 클릭 시 도서 삭제 요청 및 UI 갱신
   const handleDelete = async (e) => {
     e.stopPropagation()
     if (window.confirm(`Are you sure you want to delete ${title}?`)) {
@@ -31,6 +37,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
     }
   }
 
+  // 함수: 좋아요 버튼 클릭 시 좋아요 수 서버 업데이트
   const handleLike = async (e) => {
     e.stopPropagation()
     try {
@@ -56,7 +63,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Book cover image with overlay on hover */}
+      {/* 책 표지 이미지 영역 (호버 시 확대 효과) */}
       <div className="relative aspect-[5/6] overflow-hidden bg-[#2c3e50]">
         <img
           src={image || "/placeholder.svg"}
@@ -67,7 +74,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
           }}
         />
 
-        {/* Hover overlay with view button */}
+        {/* 호버 시 나타나는 오버레이 (아이콘 등 표시 제거함) */}
         <div
           className={`absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-200 ${
             isHovered ? "opacity-100" : "opacity-0"
@@ -76,11 +83,11 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
         </div>
       </div>
 
-      {/* Book info */}
+      {/* 도서 정보(제목, 액션 버튼) 영역 */}
       <div className="p-4">
         <h3 className="text-[#1B1B1B] text-lg font-medium mb-3 line-clamp-1">{title}</h3>
 
-        {/* Action buttons */}
+        {/* 액션 버튼(삭제, 좋아요) */}
         <div className="flex justify-between items-center">
           <button
             onClick={handleDelete}
@@ -103,7 +110,7 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
               <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
               <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
             </svg>
-            삭제
+            Delete
           </button>
 
           <button

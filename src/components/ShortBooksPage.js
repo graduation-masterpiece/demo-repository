@@ -1,3 +1,5 @@
+// React 훅(useEffect, useState 등)과 라우터(useParams) 불러오기
+// 사이드바 컨텍스트(useSidebar)와 Axios HTTP 클라이언트 불러오기
 import { useEffect, useState, useCallback, useRef } from "react"
 import { useParams } from "react-router-dom"
 import Sidebar from "./Sidebar"
@@ -6,6 +8,8 @@ import axios from "axios"
 import { useSidebar } from "../SidebarContext"
 
 const ShortBooksPage = () => {
+  // ShortBooks 페이지 컴포넌트
+  // 책 요약(Short Books) 뷰어 역할
   const { id } = useParams()
   const [shortBooks, setShortBooks] = useState([])
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
@@ -14,7 +18,7 @@ const ShortBooksPage = () => {
   const { isVisible: sidebarVisible } = useSidebar()
   const contentRef = useRef(null)
 
-  // Sidebar toggle effect
+  // 사이드바 노출 여부에 따라 메인 콘텐츠 마진 조정
   useEffect(() => {
     if (!contentRef.current) return
 
@@ -27,7 +31,7 @@ const ShortBooksPage = () => {
     }
   }, [sidebarVisible])
 
-  // Page transition animation
+  // 페이지 전환 시 텍스트 페이드 효과를 위한 상태 및 함수
   const animateAndChange = (updateFn) => {
     setPageTransition(true)
     setTimeout(() => {
@@ -36,7 +40,7 @@ const ShortBooksPage = () => {
     }, 300)
   }
 
-  // Previous page handler
+  // 이전 페이지(또는 이전 문장/책)로 이동
   const handlePrePage = useCallback(() => {
     animateAndChange(() => {
       const currentBook = shortBooks[currentBookIndex]
@@ -51,7 +55,7 @@ const ShortBooksPage = () => {
     })
   }, [shortBooks, currentBookIndex, currentSentenceIndex])
 
-  // Next page handler
+  // 다음 페이지(또는 다음 문장/책)로 이동
   const handleNextPage = useCallback(() => {
     animateAndChange(() => {
       const currentBook = shortBooks[currentBookIndex]
@@ -66,6 +70,7 @@ const ShortBooksPage = () => {
     })
   }, [shortBooks, currentBookIndex, currentSentenceIndex])
 
+  // 서버에서 책 카드 데이터(fetch) 로드
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -83,7 +88,7 @@ const ShortBooksPage = () => {
   }, [id]);
 
 
-  // Mouse wheel navigation
+  // 마우스 휠로 페이지(책) 이동 기능(디바운스 적용)
   const debounceTimeout = useRef(null)
   const timeoutTime = 300
 
@@ -124,7 +129,7 @@ const ShortBooksPage = () => {
 
   const currentBook = shortBooks[currentBookIndex]
 
-  // Share URL handler
+  // 현재 책 공유 URL을 클립보드에 복사
   const handleLinkShare = async () => {
     try {
       const shareURL = `https://bookcard.site/meta/book/${currentBook.id}`
@@ -145,7 +150,7 @@ const ShortBooksPage = () => {
     }
   }
 
-  // Error report handling
+  // 에러 신고 모달 표시 및 데이터 전송 처리
   const [showErrorModal, setShowErrorModal] = useState(false)
 
   const handleErrorReportSubmit = async (selectedError) => {
@@ -168,15 +173,17 @@ const ShortBooksPage = () => {
   }
 
   return (
+    // 전체 페이지 레이아웃(wrapper) 및 폰트 설정
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden font-['Montserrat']">
-      {/* Error report modal */}
+      {/* 에러 신고 모달 컴포넌트 */}
       {showErrorModal && (
         <ErrorReportModal onClose={() => setShowErrorModal(false)} onSubmit={handleErrorReportSubmit} />
       )}
 
-      {/* Sidebar component */}
+      {/* 사이드바 컴포넌트 렌더링 */}
       <Sidebar />
 
+      {/* 사이드바 노출에 따른 메인 콘텐츠 영역 */}
       <div
         ref={contentRef}
         className="transition-all duration-300 h-screen overflow-y-auto"
@@ -190,13 +197,13 @@ const ShortBooksPage = () => {
             !sidebarVisible ? "ml-auto mr-auto" : ""
           }`}
         >
-          {/* Page title with minimalist styling */}
+          {/* 페이지 제목 영역 */}
           <h1 className="text-[48px] font-normal text-[#1B1B1B] text-left mb-10 relative">
             Short Books
             <div className="w-[500px] h-[2px] bg-[#1B1B1B] absolute bottom-[-10px] left-0"></div>
           </h1>
 
-          {/* 카드 뷰어 중앙 정렬 */}
+          {/* 카드 뷰어 중앙 정렬 영역 */}
           <div className="flex-1 flex items-center justify-center w-full">
             {/* Content viewer with minimalist styling */}
             <div className="relative mx-auto w-full max-w-4xl">
@@ -275,7 +282,7 @@ const ShortBooksPage = () => {
                 )}
               </div>
 
-              {/* Navigation buttons */}
+              {/* 책 카드 내비게이션 버튼(이전, 다음) */}
               <button
                 onClick={handlePrePage}
                 className="absolute left-[-80px] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
@@ -292,7 +299,7 @@ const ShortBooksPage = () => {
                 <span className="text-7xl font-light">»</span>
               </button>
 
-              {/* 카드 액션 버튼 */}
+              {/* 카드 액션 버튼(공유, 오류 신고) */}
               <div className="absolute right-[-70px] bottom-0 flex flex-col space-y-4">
                 <button
                   onClick={handleLinkShare}
