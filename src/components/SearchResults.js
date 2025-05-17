@@ -28,7 +28,6 @@ const SearchResults = ({ results }) => {
     console.log("Selected Book: ", book);
 
     if (!book.isbn) {
-      console.error("There is no ISBN: ", book);
       alert("This book has no ISBN info.");
       return;
     }
@@ -65,19 +64,17 @@ const SearchResults = ({ results }) => {
         throw new Error(text || "Server returned an invalid response format.");
       }
 
-      if (response.status === 409) {
-        // ISBN 이미 존재할 때
-        setModalContent("📚 This book already exists in the database!");
+      if (data && data.alreadyExists) {
+        setModalContent("📚 This book already exists!");
       } else if (response.ok) {
         setModalContent("✅ Book Card has been created successfully!");
       } else {
-        throw new Error(data.message || data.error || "Server error");
+        throw new Error(data?.message || data?.error || "Server error");
       }
 
       setIsCompleted(true);
 
     } catch (error) {
-      console.error("Server error: ", error);
       setModalContent(error.message || "Failed to send book information to the server.");
     } finally {
       setIsLoading(false);

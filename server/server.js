@@ -162,7 +162,9 @@ app.post('/api/book', async (req, res) => {
 
         // ISBN 중복 특별 처리 (ER_DUP_ENTRY 코드 1062)
         if (err.code === 'ER_DUP_ENTRY') {
-          return res.status(409).json({
+          // 이미 존재하는 경우에도 200 OK로 응답
+          return res.status(200).json({
+            alreadyExists: true,
             message: "Book already exists in database"
           });
         }
@@ -194,7 +196,8 @@ app.post('/api/book', async (req, res) => {
             });
           }
           
-          res.status(201).json({
+          res.status(200).json({
+            alreadyExists: false,
             message: 'Book created successfully',
             imageUrl: imagePath,
             summary: summary
@@ -218,6 +221,7 @@ app.post('/api/book', async (req, res) => {
     });
   }
 });
+
 
 
 // 전체 책 정보 가져오기
