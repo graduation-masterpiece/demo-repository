@@ -158,8 +158,19 @@ app.post('/api/book', async (req, res) => {
 
     db.query(insertBookInfoQuery, bookInfoValues, async (err, result) => {
       if (err) {
-        console.error('An Error has occurred during MySQL Query execution: ', err);
-        return res.status(500).send('Server Error - Book Info Saving');
+        console.error('MySQL Error:', err);
+
+        // ISBN 중복 특별 처리 (ER_DUP_ENTRY 코드 1062)
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({
+            message: "Book already exists in database"
+          });
+        }
+
+        return res.status(500).json({
+          error: 'Book Info Saving Error',
+          details: err.message
+        });
       }
 
       try {
@@ -168,7 +179,7 @@ app.post('/api/book', async (req, res) => {
         const imagePath = imageResult.imagePath;
         const summary = imageResult.summary;
 
-        // 3. book_card 저장 (generate_date는 생략, 자동 기록)
+        // 3. book_card 저장
         const insertBookCardQuery = `
           INSERT INTO book_card (image_url, summary, book_info_id, likes) 
           VALUES (?, ?, ?, ?)`;
@@ -176,25 +187,38 @@ app.post('/api/book', async (req, res) => {
 
         db.query(insertBookCardQuery, bookCardValues, (err) => {
           if (err) {
-            console.error('An Error has occurred during MySQL Query execution:', err);
-            return res.status(500).send('Server Error - Book Card Saving');
+            console.error('MySQL Error:', err);
+            return res.status(500).json({
+              error: 'Book Card Saving Error',
+              details: err.message
+            });
           }
-          res.status(200).send({
-            message: 'Book information, image, summary have been saved successfully.',
+          
+          res.status(201).json({
+            message: 'Book created successfully',
             imageUrl: imagePath,
             summary: summary
           });
         });
+
       } catch (imageError) {
-        console.error('An error has occurred during generating image: ', imageError);
-        res.status(500).send('An error has occurred during generating image.');
+        console.error('Image Processing Error:', imageError);
+        res.status(500).json({
+          error: 'Image Processing Failed',
+          details: imageError.message
+        });
       }
     });
+
   } catch (error) {
-    console.error('An error has occurred during processing the book: ', error);
-    res.status(500).send('An error has occurred during processing the book.');
+    console.error('Server Error:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      details: error.message
+    });
   }
 });
+
 
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
