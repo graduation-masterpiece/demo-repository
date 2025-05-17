@@ -7,6 +7,7 @@ const SearchBar = ({ onSearch }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef(null);
+  const inputRef = useRef(null); // input에 포커스 주기 위한 ref
 
   // 외부 클릭 감지
   useEffect(() => {
@@ -50,6 +51,8 @@ const SearchBar = ({ onSearch }) => {
   const executeSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
       alert("Enter a keyword!");
+      // 검색 실패 시에도 포커스 복구
+      if (inputRef.current) inputRef.current.focus();
       return;
     }
 
@@ -57,15 +60,16 @@ const SearchBar = ({ onSearch }) => {
     setShowSuggestions(false);
 
     try {
-      // 검색 기록 저장과 실제 검색을 병렬로 처리
       await Promise.all([
         axios.post('/api/search-history', { query: searchTerm }),
-        onSearch(searchTerm) // 부모 컴포넌트의 검색 함수 실행
+        Promise.resolve(onSearch(searchTerm))
       ]);
     } catch (error) {
       console.error("Search Error: ", error);
     } finally {
       setIsLoading(false);
+      // 검색이 끝나면 항상 input에 포커스
+      if (inputRef.current) inputRef.current.focus();
     }
   };
 
@@ -89,18 +93,18 @@ const SearchBar = ({ onSearch }) => {
             {/* 입력 필드 */}
             <div className="w-full flex items-center pl-2 pr-4">
               <input
+                ref={inputRef}
                 className="w-full h-full bg-transparent text-black border-none outline-none placeholder-gray-400 ml-3"
                 placeholder="Please enter a book name"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => setShowSuggestions(true)}
-                // onKeyDown 제거 (form이 엔터를 처리)
               />
             </div>
 
             {/* 검색 버튼 */}
             <button
-              type="submit" // submit으로 변경
+              type="submit"
               className="px-4"
               disabled={isLoading}
             >
