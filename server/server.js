@@ -65,53 +65,80 @@ app.get('/meta/book/:bookId', async (req, res) => {
   }
 });
 
-// 검색어 저장 및 자동완성 API
+// 검색어 저장 API (최적화 버전)
 app.post('/api/search-history', async (req, res) => {
   const { query } = req.body;
-  
-  if (!query) {
-    return res.status(400).json({ error: 'Query is required' });
-  }
+  if (!query) return res.status(400).json({ error: 'Query is required' });
+
+  const normalizedQuery = query.toLowerCase().trim();
+  if (normalizedQuery.length < 2) return res.status(200).end();
 
   try {
-    // 검색어를 Redis에 저장 (ZSET 사용)
-    await redisClient.zAdd('searchTerms', [
-      { score: Date.now(), value: query.toLowerCase() }
-    ]);
-    
-    // 오래된 검색어 제거 (최근 100개만 유지)
-    await redisClient.zRemRangeByRank('searchTerms', 0, -101);
-    
-    res.status(200).json({ success: true });
+    // 1. 빈도수 업데이트 (점수 1 증가)
+    await redisClient.zIncrBy('searchFreq', 1, normalizedQuery);
+
+    // 2. 최근 검색어 저장 (중복 방지)
+    await redisClient.zAdd('searchTerms', {
+      score: Date.now(),
+      value: normalizedQuery
+    });
+
+    // 3. 데이터 관리 (30일 이상된 데이터 삭제)
+    const oneMonthAgo = Date.now() - 2592000000;
+    await redisClient.zRemRangeByScore('searchTerms', 0, oneMonthAgo);
+
+    res.status(200).end();
   } catch (error) {
     console.error('Redis error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).end();
   }
 });
 
-// 자동완성 API
+// 자동완성 API (고도화 버전)
 app.get('/api/autocomplete', async (req, res) => {
   const { prefix } = req.query;
-  
-  if (!prefix) {
-    return res.status(400).json({ error: 'Prefix is required' });
-  }
+  if (!prefix) return res.status(400).json({ error: 'Prefix is required' });
+
+  const normalizedPrefix = prefix.toLowerCase().trim();
+  if (normalizedPrefix.length < 2) return res.json({ suggestions: [] });
 
   try {
-    // Redis에서 검색어 조회
-    const allTerms = await redisClient.zRange('searchTerms', 0, -1);
-    
-    // 접두사로 필터링
-    const suggestions = allTerms
-      .filter(term => term.startsWith(prefix.toLowerCase()))
-      .slice(0, 10); // 상위 10개만 반환
-      
-    res.status(200).json({ suggestions });
+    // 1. 최근 검색어 조회 (접두사 일치)
+    const recentTerms = await redisClient.sendCommand([
+      'ZRANGEBYLEX',
+      'searchTerms',
+      `[${normalizedPrefix}`,
+      `[${normalizedPrefix}\xff`,
+      'LIMIT',
+      '0',
+      '15'
+    ]);
+
+    // 2. 인기 검색어 조회 (상위 15개)
+    const freqTerms = await redisClient.zRange('searchFreq', 0, 14, {
+      BY: 'SCORE',
+      REV: true
+    });
+
+    // 3. 통합 결과 처리
+    const merged = [...new Set([...recentTerms, ...freqTerms])]
+      .filter(term => term.startsWith(normalizedPrefix))
+      .slice(0, 10);
+
+    // 4. 가중치 부여 정렬 (최근 70% + 인기 30%)
+    const weightedTerms = merged.sort((a, b) => {
+      const recentA = recentTerms.includes(a) ? 0.7 : 0.3;
+      const recentB = recentTerms.includes(b) ? 0.7 : 0.3;
+      return recentB - recentA;
+    });
+
+    res.status(200).json({ suggestions: weightedTerms });
   } catch (error) {
     console.error('Redis error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ suggestions: [] });
   }
 });
+
 
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
