@@ -39,7 +39,7 @@ const MainPage = () => {
 
     try {
       const response = await axios.get(url, {
-        headers: { // 'header' → 'headers'로 수정
+        headers: {
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           "Accept-Charset": "utf-8",
         },
@@ -70,7 +70,7 @@ const MainPage = () => {
           <div className="w-full max-w-[1000px] px-4 flex flex-col h-full relative">
             {/* 제목 + 검색창 */}
             <div
-              className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full ${
+              className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full z-20 ${
                 results.length > 0
                   ? "top-[1vh]"
                   : "top-[40%] -translate-y-1/2"
@@ -94,9 +94,9 @@ const MainPage = () => {
             <div
               className={`flex-1 pt-[30vh] transition-all duration-700 ease-in-out transform ${
                 results.length > 0
-                  ? "opacity-100 translate-y-0"
+                  ? "opacity-100 translate-y-0 pointer-events-auto"
                   : "opacity-0 translate-y-[50vh] pointer-events-none"
-              } overflow-hidden mb-10`}
+              } overflow-hidden mb-10 z-10`}
             >
               <div
                 className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto"
