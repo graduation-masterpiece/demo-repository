@@ -69,27 +69,26 @@ app.get('/meta/book/:bookId', async (req, res) => {
 app.post('/api/search-history', async (req, res) => {
   const { query } = req.body;
   
-  if (!query) {
-    return res.status(400).json({ error: 'Query is required' });
-  }
-
   try {
-    // 검색어를 Redis에 저장 (ZSET 사용)
-    await redisClient.zAdd('searchTerms', [
-      { score: Date.now(), value: query.toLowerCase() }
-    ]);
+    // 기존 검색어 삭제 후 재등록 (중복 방지)
+    await redisClient.zRem('searchTerms', query.toLowerCase());
+    await redisClient.zAdd('searchTerms', {
+      score: Date.now(), 
+      value: `${query.toLowerCase()}:${Date.now()}` // 타임스탬프 추가 저장
+    });
     
-    // 오래된 검색어 제거 (최근 100개만 유지)
-    await redisClient.zRemRangeByRank('searchTerms', 0, -101);
+    // 최대 200개 유지
+    await redisClient.zRemRangeByRank('searchTerms', 0, -201);
     
-    res.status(200).json({ success: true });
+    res.status(200).end();
   } catch (error) {
     console.error('Redis error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).end();
   }
 });
 
-// 자동완성 API
+
+// 자동완성 API (1글자 지원 버전)
 app.get('/api/autocomplete', async (req, res) => {
   const { prefix } = req.query;
   
@@ -100,15 +99,17 @@ app.get('/api/autocomplete', async (req, res) => {
   const normalizedPrefix = prefix.toLowerCase();
   
   try {
-    // Redis에서 직접 접두사 검색 (성능 개선)
-    const suggestions = await redisClient.sendCommand([
-      'ZRANGEBYLEX',
-      'searchTerms',
-      `[${normalizedPrefix}`, // 시작 범위
-      `[${normalizedPrefix}\xff`, // 끝 범위 (모든 문자 포함)
-      'LIMIT', '0', '10' // 상위 10개만
-    ]);
+    // 최근 검색어 200개만 조회 (성능 최적화)
+    const recentTerms = await redisClient.zRange('searchTerms', 0, 199, { REV: true });
+    
+    // 1글자 검색 필터링 로직
+    const suggestions = recentTerms
+      .map(term => term.split(':')[0]) // 타임스탬프 제거
+      .filter(term => term.startsWith(normalizedPrefix))
+      .filter((value, index, self) => self.indexOf(value) === index) // 중복 제거
+      .slice(0, 10);
 
+    res.setHeader('Cache-Control', 'no-store'); // 304 에러 방지
     res.status(200).json({ suggestions });
   } catch (error) {
     console.error('Redis error:', error);
