@@ -130,7 +130,7 @@ const Sidebar = ({ onToggle }) => {
                 >
                   <path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
                 </svg>
-                <span className="text-lg font-normal">My Library</span>
+                <span className="text-lg font-normal">Library</span>
               </Link>
             </li>
 
