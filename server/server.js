@@ -97,21 +97,25 @@ app.get('/api/autocomplete', async (req, res) => {
     return res.status(400).json({ error: 'Prefix is required' });
   }
 
+  const normalizedPrefix = prefix.toLowerCase();
+  
   try {
-    // Redis에서 검색어 조회
-    const allTerms = await redisClient.zRange('searchTerms', 0, -1);
-    
-    // 접두사로 필터링
-    const suggestions = allTerms
-      .filter(term => term.startsWith(prefix.toLowerCase()))
-      .slice(0, 10); // 상위 10개만 반환
-      
+    // Redis에서 직접 접두사 검색 (성능 개선)
+    const suggestions = await redisClient.sendCommand([
+      'ZRANGEBYLEX',
+      'searchTerms',
+      `[${normalizedPrefix}`, // 시작 범위
+      `[${normalizedPrefix}\xff`, // 끝 범위 (모든 문자 포함)
+      'LIMIT', '0', '10' // 상위 10개만
+    ]);
+
     res.status(200).json({ suggestions });
   } catch (error) {
     console.error('Redis error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
