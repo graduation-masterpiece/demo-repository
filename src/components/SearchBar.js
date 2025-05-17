@@ -58,8 +58,13 @@ const SearchBar = ({ onSearch }) => {
   setShowSuggestions(false);
 
   try {
-    // search-history 요청이 끝난 뒤 naver-search 요청
-    await axios.post('/api/search-history', { query: searchTerm });
+    // 1. 검색 기록 저장 요청 (비동기 처리 but 결과 기다리지 않음)
+    axios.post('/api/search-history', { query: searchTerm })
+      .catch((error) => {
+        console.error("Search history save failed:", error);
+      });
+
+    // 2. 메인 검색 요청 (이 결과만 기다림)
     await onSearch(searchTerm);
   } catch (error) {
     console.error("Search Error: ", error);
