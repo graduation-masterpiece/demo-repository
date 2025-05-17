@@ -6,8 +6,9 @@ const SearchBar = ({ onSearch }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isComposing, setIsComposing] = useState(false); // 한글 조합 상태 관리
   const searchRef = useRef(null);
-  const inputRef = useRef(null); // input에 포커스 주기 위한 ref
+  const inputRef = useRef(null);
 
   // 외부 클릭 감지
   useEffect(() => {
@@ -47,11 +48,10 @@ const SearchBar = ({ onSearch }) => {
     }
   };
 
-  // 검색 실행 함수 (자동완성 저장과 검색을 한 번에 처리)
+  // 검색 실행 함수
   const executeSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
       alert("Enter a keyword!");
-      // 검색 실패 시에도 포커스 복구
       if (inputRef.current) inputRef.current.focus();
       return;
     }
@@ -68,29 +68,33 @@ const SearchBar = ({ onSearch }) => {
       console.error("Search Error: ", error);
     } finally {
       setIsLoading(false);
-      // 검색이 끝나면 항상 input에 포커스
       if (inputRef.current) inputRef.current.focus();
     }
   };
 
-  // 폼 제출 핸들러 (엔터, 버튼 클릭 모두 이 함수로 통합)
+  // 폼 제출 핸들러
   const handleSubmit = (e) => {
     e.preventDefault();
+    // 조합 중이면 무시 (한글 입력 완료 후만 검색)
+    if (isComposing) return;
     executeSearch(query);
   };
 
+  // 자동완성 클릭
   const handleSuggestionClick = (suggestion) => {
     setQuery(suggestion);
     executeSearch(suggestion);
   };
 
+  // 한글 조합 상태 관리
+  const handleCompositionStart = () => setIsComposing(true);
+  const handleCompositionEnd = () => setIsComposing(false);
+
   return (
     <div className="flex justify-center" ref={searchRef}>
       <div className="relative w-[650px]">
-        {/* form으로 감싸고 onSubmit 사용 */}
         <form onSubmit={handleSubmit}>
           <div className="h-[50px] items-center bg-[#fff] rounded-full overflow-hidden border border-gray-300 flex justify-between mt-10">
-            {/* 입력 필드 */}
             <div className="w-full flex items-center pl-2 pr-4">
               <input
                 ref={inputRef}
@@ -99,10 +103,10 @@ const SearchBar = ({ onSearch }) => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => setShowSuggestions(true)}
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
               />
             </div>
-
-            {/* 검색 버튼 */}
             <button
               type="submit"
               className="px-4"
@@ -116,8 +120,6 @@ const SearchBar = ({ onSearch }) => {
             </button>
           </div>
         </form>
-
-        {/* 자동완성 드롭다운 */}
         {showSuggestions && suggestions.length > 0 && (
           <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
             {suggestions.map((suggestion, index) => (
