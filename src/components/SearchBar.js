@@ -69,49 +69,49 @@ const SearchBar = ({ onSearch }) => {
     }
   };
 
-  const handleSearchClick = () => executeSearch(query);
+  // 폼 제출 핸들러 (엔터, 버튼 클릭 모두 이 함수로 통합)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    executeSearch(query);
+  };
 
   const handleSuggestionClick = (suggestion) => {
     setQuery(suggestion);
     executeSearch(suggestion);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      executeSearch(query);
-    }
-  };
-
   return (
     <div className="flex justify-center" ref={searchRef}>
       <div className="relative w-[650px]">
-        <div className="h-[50px] items-center bg-[#fff] rounded-full overflow-hidden border border-gray-300 flex justify-between mt-10">
-          {/* 입력 필드 */}
-          <div className="w-full flex items-center pl-2 pr-4">
-            <input
-              className="w-full h-full bg-transparent text-black border-none outline-none placeholder-gray-400 ml-3"
-              placeholder="Please enter a book name"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
+        {/* form으로 감싸고 onSubmit 사용 */}
+        <form onSubmit={handleSubmit}>
+          <div className="h-[50px] items-center bg-[#fff] rounded-full overflow-hidden border border-gray-300 flex justify-between mt-10">
+            {/* 입력 필드 */}
+            <div className="w-full flex items-center pl-2 pr-4">
+              <input
+                className="w-full h-full bg-transparent text-black border-none outline-none placeholder-gray-400 ml-3"
+                placeholder="Please enter a book name"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => setShowSuggestions(true)}
+                // onKeyDown 제거 (form이 엔터를 처리)
+              />
+            </div>
 
-          {/* 검색 버튼 */}
-          <button 
-            type="button" 
-            onClick={handleSearchClick}
-            className="px-4"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <div className="background-magnifier w-[40px] h-[36px] bg-contain bg-no-repeat" />
-            )}
-          </button>
-        </div>
+            {/* 검색 버튼 */}
+            <button
+              type="submit" // submit으로 변경
+              className="px-4"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <div className="background-magnifier w-[40px] h-[36px] bg-contain bg-no-repeat" />
+              )}
+            </button>
+          </div>
+        </form>
 
         {/* 자동완성 드롭다운 */}
         {showSuggestions && suggestions.length > 0 && (
