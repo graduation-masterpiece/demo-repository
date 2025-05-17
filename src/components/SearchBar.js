@@ -48,28 +48,27 @@ const SearchBar = ({ onSearch }) => {
 
   // 검색 실행 함수 (search-history와 naver-search를 동시에)
   const executeSearch = async (searchTerm) => {
-    if (!searchTerm.trim()) {
-      alert("Enter a keyword!");
-      if (inputRef.current) inputRef.current.focus();
-      return;
-    }
+  if (!searchTerm.trim()) {
+    alert("Enter a keyword!");
+    if (inputRef.current) inputRef.current.focus();
+    return;
+  }
 
-    setIsLoading(true);
-    setShowSuggestions(false);
+  setIsLoading(true);
+  setShowSuggestions(false);
 
-    try {
-      // search-history와 naver-search를 동시에 요청
-      await Promise.all([
-        axios.post('/api/search-history', { query: searchTerm }),
-        onSearch(searchTerm)
-      ]);
-    } catch (error) {
-      console.error("Search Error: ", error);
-    } finally {
-      setIsLoading(false);
-      if (inputRef.current) inputRef.current.focus();
-    }
-  };
+  try {
+    // search-history 요청이 끝난 뒤 naver-search 요청
+    await axios.post('/api/search-history', { query: searchTerm });
+    await onSearch(searchTerm);
+  } catch (error) {
+    console.error("Search Error: ", error);
+  } finally {
+    setIsLoading(false);
+    if (inputRef.current) inputRef.current.focus();
+  }
+};
+
 
   // 폼 제출 핸들러
   const handleSubmit = (e) => {
