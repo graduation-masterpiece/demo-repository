@@ -25,7 +25,6 @@ const SearchBar = ({ onSearch }) => {
   // 자동완성 요청 (디바운싱 적용)
   useEffect(() => {
     if (query.length > 1) {
-      setIsLoading(true);
       const timer = setTimeout(() => {
         fetchSuggestions();
       }, 300);
@@ -34,6 +33,7 @@ const SearchBar = ({ onSearch }) => {
     } else {
       setSuggestions([]);
     }
+    // eslint-disable-next-line
   }, [query]);
 
   const fetchSuggestions = async () => {
@@ -43,12 +43,10 @@ const SearchBar = ({ onSearch }) => {
       setShowSuggestions(true);
     } catch (error) {
       console.error("Autocompletion Error: ", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // 검색 실행 함수
+  // 검색 실행 함수 (search-history와 naver-search를 동시에)
   const executeSearch = async (searchTerm) => {
     if (!searchTerm.trim()) {
       alert("Enter a keyword!");
@@ -60,9 +58,10 @@ const SearchBar = ({ onSearch }) => {
     setShowSuggestions(false);
 
     try {
+      // search-history와 naver-search를 동시에 요청
       await Promise.all([
         axios.post('/api/search-history', { query: searchTerm }),
-        Promise.resolve(onSearch(searchTerm))
+        onSearch(searchTerm)
       ]);
     } catch (error) {
       console.error("Search Error: ", error);
@@ -75,8 +74,7 @@ const SearchBar = ({ onSearch }) => {
   // 폼 제출 핸들러
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 조합 중이면 무시 (한글 입력 완료 후만 검색)
-    if (isComposing) return;
+    if (isComposing) return; // 한글 조합 중이면 무시
     executeSearch(query);
   };
 
@@ -93,7 +91,7 @@ const SearchBar = ({ onSearch }) => {
   return (
     <div className="flex justify-center" ref={searchRef}>
       <div className="relative w-[650px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className="h-[50px] items-center bg-[#fff] rounded-full overflow-hidden border border-gray-300 flex justify-between mt-10">
             <div className="w-full flex items-center pl-2 pr-4">
               <input
@@ -105,6 +103,7 @@ const SearchBar = ({ onSearch }) => {
                 onFocus={() => setShowSuggestions(true)}
                 onCompositionStart={handleCompositionStart}
                 onCompositionEnd={handleCompositionEnd}
+                autoComplete="off"
               />
             </div>
             <button

@@ -25,6 +25,7 @@ const MainPage = () => {
     });
   }, [sidebarVisible]);
 
+  // search-history는 SearchBar에서 처리되므로 여기서는 naver-search만!
   const handleSearch = async (query) => {
     if (!query.trim()) {
       setResults([]);
@@ -38,7 +39,7 @@ const MainPage = () => {
 
     try {
       const response = await axios.get(url, {
-        header: {
+        headers: { // 'header' → 'headers'로 수정
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           "Accept-Charset": "utf-8",
         },
