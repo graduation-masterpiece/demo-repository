@@ -234,6 +234,12 @@ const ShortBooksPage = () => {
                                 transition-opacity duration-500 ease-in-out
                                 ${pageTransition ? "opacity-0" : "opacity-100"}
                               `}
+                              style={{
+                                wordBreak: "keep-all",    // 단어 줄바꿈 방지 (한글)
+                                overflowWrap: "break-word", // 단어가 너무 길면 줄바꿈
+                                lineHeight: "1.8",        // 줄 간격 늘리기
+                                whiteSpace: "pre-line"    // 줄바꿈 문자 유지
+                              }}
                             >
                               {currentBook.summary[currentSentenceIndex - 1]?.split("*").map((part, index) => (
                                 <span key={index} className={index % 2 === 1 ? "text-orange-500 font-medium" : ""}>
