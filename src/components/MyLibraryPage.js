@@ -15,7 +15,7 @@ const itemsPerPage = 12;
 const MyLibraryPage = () => {
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
-  const [sort, setSort] = useState("default");
+  const [sort, setSort] = useState("latest");
   const [total, setTotal] = useState(0);
   const { isVisible: sidebarVisible } = useSidebar(); // 전역 사이드바 상태 사용
   const contentRef = useRef(null);
