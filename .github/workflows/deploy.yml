@@ -12,36 +12,57 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: false
 
+      - name: Remove broken submodules
+        run: |
+          rm -rf .gitmodules .nvm
+          git rm --cached .nvm demo-repository || true
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          
       - name: Add EC2 to known hosts
         run: |
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          
       - name: SSH to EC2 and deploy
         run: |
-          ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+          
             cd /home/ubuntu/demo-repository
-            if [ ! -d .git ]; then
-              rm -rf demo-repository
-              git clone git@github.com:graduation-masterpiece/demo-repository.git
-              cd demo-repository
+            git pull origin develop
+            
+            if [ -d client ]; then
+              cd client
             fi
-            git checkout develop
-            git pull origin develop # 브랜치 이름 확인
+          
             npm install
-            npx update-browserslist-db@latest --yes # caniuse-lite 데이터 업데이트
             npm run build
-            sudo cp -r build/* /var/www/html/
-            cd server
+          
+            if [ -d build ]; then
+              sudo cp -r build/* /var/www/html/
+            fi
+            
+            if [ -d ../server ]; then
+              cd ../server
+            elif [ -d server ]; then
+              cd server
+            else
+              exit 1
+            fi
+          
             npm install
+          
             if pm2 list | grep -q bookcard; then
               pm2 restart bookcard
             else
               pm2 start server.js --name bookcard
             fi
+          
             pm2 save
           EOF
