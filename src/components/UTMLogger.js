@@ -10,10 +10,11 @@ function useUTMLogger() {
       medium: urlParams.get('utm_medium'),
       campaign: urlParams.get('utm_campaign'),
       content: urlParams.get('utm_content'),
+      access_time: new Date().toISOString(),
     };
 
     // 만약 링크 직접 입력 또는 메인 페이지로 들어왔을 때
-    const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content;
+    const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content && !utmData.access_time;
 
     if (isEmpty) {
       utmData = {
@@ -21,6 +22,7 @@ function useUTMLogger() {
         medium: 'none',
         campaign: 'direct-access',
         content: '0',
+        access_time: new Date().toISOString(),
       };
     }
 
@@ -31,23 +33,19 @@ function useUTMLogger() {
     if (isValid && !sessionStorage.getItem('utm_logged')) {
       console.log('Sending UTM: ', utmData);
 
-      try {
-        await axios.post('/api/log-utm', {
-          source: utmData.source,
-          medium: utmData.medium,
-          campaign: utmData.campaign,
-          content: utmData.content,
-          access_time: new Date().toISOString(),
-        });
-        
+      fetch('/api/log-utm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(utmData),
+      }).then(() => {
         sessionStorage.setItem('utm_logged', 'true');
         sessionStorage.setItem('utm_source', utmData.source || '');
         sessionStorage.setItem('utm_medium', utmData.medium || '');
         sessionStorage.setItem('utm_campaign', utmData.campaign || '');
         sessionStorage.setItem('utm_content', utmData.content || '');
-      } catch (err) {
+      }).catch((err) => {
         console.error("UTM Logging Failed: ", err);
-      }
+      });
     }
   }, []);
 }
