@@ -65,5 +65,4 @@ jobs:
             fi
           
             pm2 save
-            pm2 logs
           EOF
