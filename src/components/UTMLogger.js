@@ -23,11 +23,13 @@ function useUTMLogger() {
       };
     }
 
-    // UTM 기록이 있는지 확인
-    const alreadyLogged = sessionStorage.getItem('utm_logged');
+    // null 값 거르기
+    const isValid = Object.values(utmData).every(val => typeof val === 'string' && val.length > 0);
 
     // UTM 기록이 없을 경우에만 백엔드로 전송
-    if (!alreadyLogged) {
+    if (isValid && !sessionStorage.getItem('utm_logged')) {
+      console.log('Sending UTM: ', utmData);
+      
       fetch('/api/log-utm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
