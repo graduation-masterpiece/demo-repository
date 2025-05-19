@@ -19,7 +19,6 @@ jobs:
         run: |
           rm -rf .gitmodules .nvm
           git rm --cached .nvm demo-repository || true
-
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
@@ -38,18 +37,26 @@ jobs:
             cd /home/ubuntu/demo-repository
           
             git pull origin develop
+            
+            if [ -d client ]; then
+              cd client
+            fi
           
-            cd client
             npm install
             npm run build
           
             if [ -d build ]; then
               sudo cp -r build/* /var/www/html/
+            fi
+            
+            if [ -d ../server ]; then
+              cd ../server
+            elif [ -d server ]; then
+              cd server
             else
-              echo "⚠️ Build directory not found. Skipping copy step."
+              exit 1
             fi
           
-            cd ../server
             npm install
           
             if pm2 list | grep -q bookcard; then
