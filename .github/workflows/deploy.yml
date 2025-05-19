@@ -18,7 +18,7 @@ jobs:
       - name: Remove broken submodules
         run: |
           rm -rf .gitmodules .nvm
-          git rm --cached .nvm || true
+          git rm --cached .nvm demo-repository || true
 
       - name: Setup SSH key
         run: |
