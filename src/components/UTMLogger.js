@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import axios from "axios";
 
 function useUTMLogger() {
   useEffect(() => {
@@ -29,20 +30,24 @@ function useUTMLogger() {
     // UTM 기록이 없을 경우에만 백엔드로 전송
     if (isValid && !sessionStorage.getItem('utm_logged')) {
       console.log('Sending UTM: ', utmData);
-      
-      fetch('/api/log-utm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(utmData),
-      }).then(() => {
+
+      try {
+        await axios.post('/api/log-utm', {
+          source: utmData.source,
+          medium: utmData.medium,
+          campaign: utmData.campaign,
+          content: utmData.content,
+          access_time: new Date().toISOString(),
+        });
+        
         sessionStorage.setItem('utm_logged', 'true');
         sessionStorage.setItem('utm_source', utmData.source || '');
         sessionStorage.setItem('utm_medium', utmData.medium || '');
         sessionStorage.setItem('utm_campaign', utmData.campaign || '');
         sessionStorage.setItem('utm_content', utmData.content || '');
-      }).catch((err) => {
+      } catch (err) {
         console.error("UTM Logging Failed: ", err);
-      });
+      }
     }
   }, []);
 }
