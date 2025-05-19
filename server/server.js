@@ -20,10 +20,10 @@ console.log("🔥 Server Access Detected - Latest Code Executed");
 // CORS 설정
 app.use(cors({
   origin: [
-		'http://localhost:3000',
-		'http://3.38.107.4',
-		'https://bookcard.site',
-		'https://www.bookcard.site'],
+    'http://localhost:3000',
+    'http://3.38.107.4',
+    'https://bookcard.site',
+    'https://www.bookcard.site'],
   methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
@@ -131,7 +131,7 @@ app.get('/api/naver-search', async (req, res) => {
       headers: {
         'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
         'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
-	      'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0'
       }
     });
     res.json(response.data);
@@ -298,9 +298,9 @@ app.delete('/api/book/:id', (req, res) => {
       const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_info_id = ?`;
       db.query(deleteErrorReportQuery, [bookId], (err) => {
         if (err) {
-	  			console.error('An error has occurred during deletion in error_reports: ', err);
-	  			return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
-				}
+          console.error('An error has occurred during deletion in error_reports: ', err);
+          return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
+        }
 	
       	res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
       });
@@ -453,20 +453,21 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', async (req, res) => {
-  let { source, medium, campaign, content } = req.body || {};
+  let { source, medium, campaign, content, access_time } = req.body || {};
 
   if (!req.body) {
     source = 'direct';
     medium = 'none';
     campaign = 'direct-access';
     content = 'null';
+    access_time = new Date().toISOString();
   }
   
-  console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}`);
+  console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}, access_time=${access_time}`);
 
   const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
 
-  db.query(utmLogQuery, [source, medium, campaign, content, new Date().toISOString()], (err) => {
+  db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
       console.error('Failed to log the utm: ', err);
       return res.status(500).json({ error: 'Failed to log the utm.' });
