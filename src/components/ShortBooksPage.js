@@ -132,7 +132,14 @@ const ShortBooksPage = () => {
   // 현재 책 공유 URL을 클립보드에 복사
   const handleLinkShare = async () => {
     try {
-      const shareURL = `https://bookcard.site/meta/book/${currentBook.id}`
+      const url = new URL(`https://bookcard.site/meta/book/${currentBook.id}`)
+     
+      url.searchParams.set('utm_source', 'internal_share')
+      url.searchParams.set('utm_medium', 'share')
+      url.searchParams.set('utm_campaign', 'share_button')
+
+      const shareURL = url.toString()
+      
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(shareURL)
         alert("URL has been copied.")
