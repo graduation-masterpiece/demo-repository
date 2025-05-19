@@ -5,12 +5,15 @@ import Sidebar from "./Sidebar";
 import SearchResults from "./SearchResults";
 import axios from "axios";
 import { useSidebar } from "../SidebarContext";
+import useUTMLogger from "./UTMLogger";
 
 const MainPage = () => {
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const mainContentRef = useRef(null);
   const { isVisible: sidebarVisible } = useSidebar();
+
+  useUTMLogger();
 
   useEffect(() => {
     if (!mainContentRef.current) return;
