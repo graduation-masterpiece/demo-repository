@@ -12,7 +12,7 @@ function useUTMLogger() {
     };
 
     // 만약 링크 직접 입력 또는 메인 페이지로 들어왔을 때
-    const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utm.Data.content;
+    const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content;
 
     if (isEmpty) {
       utmData = {
