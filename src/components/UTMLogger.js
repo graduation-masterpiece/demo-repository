@@ -19,15 +19,15 @@ function useUTMLogger() {
         source: 'direct',
         medium: 'none',
         campaign: 'direct-access',
-        content: 'null',
+        content: '0',
       };
     }
 
-    // UTM 기록이 있는 지 확인
+    // UTM 기록이 있는지 확인
     const alreadyLogged = sessionStorage.getItem('utm_logged');
 
-    // UTM이 있을 경우에만 백엔드로 전송
-    if ((utmData.source || utmData.medium || utmData.campaign || utmData.content) && !alreadyLogged) {
+    // UTM 기록이 없을 경우에만 백엔드로 전송
+    if (!alreadyLogged) {
       fetch('/api/log-utm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
