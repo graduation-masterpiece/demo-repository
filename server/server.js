@@ -452,7 +452,7 @@ app.post('/api/error-report', async (req, res) => {
 });
 
 // UTM 로깅
-app.post('/api/log-utm', (req, res) => {
+app.post('/api/log-utm', async (req, res) => {
   let { source, medium, campaign, content } = req.body || {};
 
   if (!req.body) {
