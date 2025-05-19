@@ -38,6 +38,7 @@ jobs:
             npm install
             npx update-browserslist-db@latest --yes # caniuse-lite 데이터 업데이트
             npm run build
+            sudo cp -r build/* /var/www/html/
 
             cd server
             npm install
