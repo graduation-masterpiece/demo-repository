@@ -5,8 +5,11 @@ import MyLibraryPage from "./components/MyLibraryPage";
 import ShortBooksPage from "./components/ShortBooksPage";
 import SettingsPage from "./components/SettingsPage";
 import { SidebarProvider } from "./SidebarContext";
+import useUTMLogger from "./components/UTMLogger.js";
 
 function App() {
+  useUTMLogger();
+  
   return (
     <SidebarProvider>
       <BrowserRouter>
