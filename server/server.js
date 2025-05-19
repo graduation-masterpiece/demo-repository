@@ -456,7 +456,14 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
-  const { source, medium, campaign, content } = req.body;
+  let { source, medium, campaign, content } = req.body || {};
+
+  if (!req.body) {
+    source = 'direct';
+    medium = 'none';
+    campaign = 'direct-access';
+    content = 'null';
+  }
   
   console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}`);
 
