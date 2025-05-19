@@ -66,4 +66,5 @@ jobs:
             fi
           
             pm2 save
+            node server.js
           EOF
