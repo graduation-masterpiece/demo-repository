@@ -438,7 +438,7 @@ app.get('/api/my-library', (req, res) => {
   });
 });
 
-// 오류 신고 API
+// 오류 신고
 app.post('/api/error-report', async (req, res) => {
   const { book_info_id, error_type, report_time } = req.body;
 
@@ -451,6 +451,24 @@ app.post('/api/error-report', async (req, res) => {
     }
     
     res.status(200).json({ message: 'Reporting error complete.' });
+  });
+});
+
+// UTM 로깅
+app.post('/api/log-utm', (req, res) => {
+  const { source, medium, campaign, content } = req.body;
+  
+  console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}`);
+
+  const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
+
+  db.query(utmLogQuery, [source, medium, campaign, content, new Date().toISOString()], (err) => {
+    if (err) {
+      console.error('Failed to log the utm: ', err);
+      return res.status(500).json({ error: 'Failed to log the utm.' });
+    }
+
+    res.status(200).json({ message: 'Logging the UTM complete.' });
   });
 });
 
