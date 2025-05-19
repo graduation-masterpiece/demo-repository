@@ -476,10 +476,10 @@ app.post('/api/log-utm', (req, res) => {
 });
 
 // ✅ React fallback 설정 (API, META 제외)
-app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
 // 서버 실행
