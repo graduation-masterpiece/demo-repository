@@ -20,10 +20,10 @@ console.log("🔥 Server Access Detected - Latest Code Executed");
 // CORS 설정
 app.use(cors({
   origin: [
-	'http://localhost:3000',
-	'http://3.38.107.4',
-	'https://bookcard.site',
-	'https://www.bookcard.site'],
+		'http://localhost:3000',
+		'http://3.38.107.4',
+		'https://bookcard.site',
+		'https://www.bookcard.site'],
   methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
@@ -132,7 +132,6 @@ app.get('/api/naver-search', async (req, res) => {
         'X-Naver-Client-Id': process.env.NAVER_CLIENT_ID,
         'X-Naver-Client-Secret': process.env.NAVER_CLIENT_SECRET,
 	      'User-Agent': 'Mozilla/5.0'
-
       }
     });
     res.json(response.data);
@@ -222,8 +221,6 @@ app.post('/api/book', async (req, res) => {
   }
 });
 
-
-
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
   const query = `
@@ -301,9 +298,9 @@ app.delete('/api/book/:id', (req, res) => {
       const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_info_id = ?`;
       db.query(deleteErrorReportQuery, [bookId], (err) => {
         if (err) {
-	  console.error('An error has occurred during deletion in error_reports: ', err);
-	  return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
-	}
+	  			console.error('An error has occurred during deletion in error_reports: ', err);
+	  			return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
+				}
 	
       	res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
       });
