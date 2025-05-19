@@ -87,7 +87,6 @@ app.post('/api/search-history', async (req, res) => {
   }
 });
 
-
 // 자동완성 API (1글자 지원 버전)
 app.get('/api/autocomplete', async (req, res) => {
   const { prefix } = req.query;
@@ -116,7 +115,6 @@ app.get('/api/autocomplete', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
@@ -452,7 +450,7 @@ app.post('/api/error-report', async (req, res) => {
 });
 
 // UTM 로깅
-app.post('/api/log-utm', async (req, res) => {
+app.post('/api/log-utm', (req, res) => {
   let { source, medium, campaign, content, access_time } = req.body || {};
 
   if (!req.body) {
@@ -478,10 +476,10 @@ app.post('/api/log-utm', async (req, res) => {
 });
 
 // ✅ React fallback 설정 (API, META 제외)
-app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'));
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 // 서버 실행
