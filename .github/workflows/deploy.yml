@@ -32,38 +32,29 @@ jobs:
       - name: SSH to EC2 and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-          
-            cd /home/ubuntu/demo-repository
-          
-            git pull origin develop
+            set -e # 오류 발생 시 즉시 종료
             
-            if [ -d client ]; then
-              cd client
-            fi
-          
+            cd /home/ubuntu
+            rm -rf demo-repository
+            
+            git clone git@github.com:graduation-masterpiece/demo-repository.git
+            cd demo-repository            
+            git checkout develop
+            git pull origin develop # 브랜치 이름 확인
+            
             npm install
+            npx update-browserslist-db@latest --yes # caniuse-lite 데이터 업데이트
             npm run build
-          
-            if [ -d build ]; then
-              sudo cp -r build/* /var/www/html/
-            fi
             
-            if [ -d ../server ]; then
-              cd ../server
-            elif [ -d server ]; then
-              cd server
-            else
-              exit 1
-            fi
-          
+            sudo cp -r build/* /var/www/html/
+            
+            cd server
             npm install
-          
+            
             if pm2 list | grep -q bookcard; then
               pm2 restart bookcard
             else
               pm2 start server.js --name bookcard
             fi
-          
             pm2 save
           EOF
