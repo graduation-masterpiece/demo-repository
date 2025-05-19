@@ -6,6 +6,7 @@ import Sidebar from "./Sidebar"
 import ErrorReportModal from "./ErrorReportModal"
 import axios from "axios"
 import { useSidebar } from "../SidebarContext"
+import useUTMLogger from "./UTMLogger"
 
 const ShortBooksPage = () => {
   // ShortBooks 페이지 컴포넌트
@@ -17,6 +18,10 @@ const ShortBooksPage = () => {
   const [pageTransition, setPageTransition] = useState(false)
   const { isVisible: sidebarVisible } = useSidebar()
   const contentRef = useRef(null)
+
+  useEffect(() => {
+    useUTMLogger()
+  }, [])
 
   // 사이드바 노출 여부에 따라 메인 콘텐츠 마진 조정
   useEffect(() => {
