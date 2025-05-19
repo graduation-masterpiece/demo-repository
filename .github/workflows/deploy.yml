@@ -33,24 +33,26 @@ jobs:
       - name: SSH to EC2 and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e # 오류 발생 시 즉시 종료
+            set -e
             
-            cd /home/ubuntu
-            rm -rf demo-repository
+            cd /home/ubuntu/demo-repository || git clone git@github.com:graduation-masterpiece/demo-repository.git
+            cd demo-repository
+            git fetch origin develop
             
-            git clone git@github.com:graduation-masterpiece/demo-repository.git
-            cd demo-repository            
-            git checkout develop
-            git pull origin develop # 브랜치 이름 확인
+            LATEST_HASH=$(git ls-remote origin develop | awk '{print $1}')
+            LOCAL_HASH=$(git rev-parse HEAD)
             
-            npm install
-            npx update-browserslist-db@latest --yes # caniuse-lite 데이터 업데이트
-            npm run build
-            
-            sudo cp -r build/* /var/www/html/
-            
-            cd server
-            npm install
+            if [ "$LATEST_HASH" != "$LOCAL_HASH" ]; then
+              git checkout develop
+              git pull origin develop
+              
+              npm install
+              npm run build
+              sudo cp -r build/* /var/www/html/
+              
+              cd server
+              npm install
+            fi
             
             if pm2 list | grep -q bookcard; then
               pm2 restart bookcard
