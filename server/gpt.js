@@ -19,7 +19,7 @@ const s3 = new S3Client({
 
 // OpenAI 클라이언트 초기화
 const openai = new OpenAI({
-  apiKey: process.env.GPT_API_KEY
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 // 책 정보를 데이터베이스에서 가져오는 함수

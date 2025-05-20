@@ -1,10 +1,10 @@
+require('dotenv').config(); // .env 파일 로드
 const express = require('express');
 const cors = require('cors');
 const db = require('./db');
 const { processBook } = require('./gpt');
 const path = require('path');
 const axios = require('axios');
-require('dotenv').config(); // .env 파일 로드
 const redis = require('redis');
 
 const redisClient = redis.createClient({
