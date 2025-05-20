@@ -475,6 +475,10 @@ app.post('/api/log-utm', (req, res) => {
   });
 });
 
+app.get('/health', (req, res) =>: {
+  res.send('Server is running');
+});
+
 // ✅ React fallback 설정 (API, META 제외)
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
