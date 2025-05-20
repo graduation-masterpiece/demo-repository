@@ -9,6 +9,7 @@ function useUTMLogger() {
       medium: urlParams.get('utm_medium'),
       campaign: urlParams.get('utm_campaign'),
       content: urlParams.get('utm_content'),
+      access_time: new Date().toISOString(),
     };
 
     // 만약 링크 직접 입력 또는 메인 페이지로 들어왔을 때
@@ -20,24 +21,29 @@ function useUTMLogger() {
         medium: 'none',
         campaign: 'direct-access',
         content: 'null',
+        access_time: new Date().toISOString(),
       };
     }
 
-    // UTM 기록이 있는 지 확인
-    const alreadyLogged = sessionStorage.getItem('utm_logged');
+    // null 값 거르기
+    const isValid = Object.values(utmData).every(val => typeof val === 'string' && val.length > 0);
 
     // UTM이 있을 경우에만 백엔드로 전송
-    if ((utmData.source || utmData.medium || utmData.campaign || utmData.content) && !alreadyLogged) {
+    if (isValid && !sessionStorage.getItem('utm_logged')) {
+      console.log("Sending UTM: ", utmData);
+      
       fetch('/api/log-utm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(utmData),
+        credentials: 'include',
       }).then(() => {
         sessionStorage.setItem('utm_logged', 'true');
         sessionStorage.setItem('utm_source', utmData.source || '');
         sessionStorage.setItem('utm_medium', utmData.medium || '');
         sessionStorage.setItem('utm_campaign', utmData.campaign || '');
         sessionStorage.setItem('utm_content', utmData.content || '');
+        sessionStorage.setItem('utm_access_time', utmData.access_time || '');
       }).catch((err) => {
         console.error("UTM Logging Failed: ", err);
       });
