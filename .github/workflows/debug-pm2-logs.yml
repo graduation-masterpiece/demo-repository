@@ -2,37 +2,3 @@ name: Debug PM2 Logs on EC2
 
 on:
   workflow_dispatch:  # 수동 실행 트리거
-
-jobs:
-  debug:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Add EC2 to known hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: SSH to EC2 and Show PM2 Logs
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            echo "✅ 현재 실행 중인 PM2 프로세스 목록"
-            pm2 list || echo "PM2가 설치되어 있지 않거나 실행 중인 프로세스가 없습니다."
-
-            echo ""
-            echo "📦 bookcard 앱 최근 로그 출력 (100줄)"
-            pm2 logs bookcard --lines 100 || echo "bookcard 앱 로그를 찾을 수 없습니다."
-
-            echo ""
-            echo "📁 현재 서버 디렉토리 확인"
-            pwd && ls -al
-
-            echo ""
-            echo "🌐 현재 실행 중인 포트 확인"
-            sudo lsof -i -P -n | grep LISTEN || echo "포트 열림 정보 없음"
-          EOF
