@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%=title%> - Books in Shortform</title>
-
-        <!-- Open Graph 메타태그 -->
-        <meta property="og:title" content="<%= title %>">
-        <meta property="og:description" content="<%= description %>">
-        <meta property="og:image" content="<%= imageUrl %>">
-        <meta property="og:url" content="https://bookcard.site/meta/book/<%=bookId%>">
-        <meta property="og:type" content="website">
-
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="<%= title %>">
-        <meta name="twitter:description" content="<%= description %>">
-        <meta name="twitter:image" content="<%= imageUrl %>">
-    </head>
-    <body>
-	<noscript>The browser doesn't support Script.</noscript>
-    </body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Books in Shortform</title>
+    
+    <!-- Open Graph 메타태그 -->
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="<%= description %>">
+    <meta property="og:image" content="<%= imageUrl %>">
+    <meta property="og:url" content="https://bookcard.site/book/<%= bookId %>">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= title %>">
+    <meta name="twitter:description" content="<%= description %>">
+    <meta name="twitter:image" content="<%= imageUrl %>">
+  </head>
+  <body>
+		<noscript>The browser doesn't support Script.</noscript>
+	  <script>
+    	const query = window.location.search;
+     	const id = '<%= bookId %>';
+     	window.location.href = `/book/${id}${query}`;
+   	</script>
+  </body>
 </html>
