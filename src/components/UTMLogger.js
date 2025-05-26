@@ -52,7 +52,7 @@ function useUTMLogger() {
         sessionStorage.setItem('utm_content', utmData.content || '');
         sessionStorage.setItem('utm_access_time', utmData.access_time || '');
       } catch(err) {
-        console.error("UTM Logging Failed: ", err);
+        console.error("UTM Logging Failed: ", err.response?.data || err);
       }
     };
 
