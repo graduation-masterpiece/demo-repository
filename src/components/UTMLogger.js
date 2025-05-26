@@ -5,6 +5,8 @@ function useUTMLogger() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const accessTime = new Date().toISOString();
+
+    console.log("Detected URL Params: ", urlParams);
     
     let utmData = {
       source: urlParams.get('utm_source'),
@@ -18,6 +20,8 @@ function useUTMLogger() {
     const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content;
 
     if (isEmpty) {
+      console.log("No UTM Data Detected!");
+      
       utmData = {
         source: 'direct',
         medium: 'none',
