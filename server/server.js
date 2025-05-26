@@ -456,9 +456,11 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
+  console.log("Request Body: ", req.body);
+	
   let { source, medium, campaign, content, access_time } = req.body;
 
-  if (!req.body) {
+  if (!req.body || Object.keys(req.body).length == 0) {
     source = 'direct';
     medium = 'none';
     campaign = 'direct-access';
@@ -472,7 +474,7 @@ app.post('/api/log-utm', (req, res) => {
 
   db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
-      console.error('Failed to log the utm: ', err);
+      console.error('Failed to log the utm: ', err.response?.data || err);
       return res.status(500).json({ error: 'Failed to log the utm.' });
     }
 
