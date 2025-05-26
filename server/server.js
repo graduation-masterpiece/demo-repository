@@ -456,21 +456,21 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
-  let utm { source, medium, campaign, content, access_time } = req.body;
+  let { source, medium, campaign, content, access_time } = req.body;
 
   if (!req.body) {
-    utm.source = 'direct';
-    utm.medium = 'none';
-    utm.campaign = 'direct-access';
-    utm.content = 'null';
-    utm.access_time = new Date().toISOString();
+    source = 'direct';
+    medium = 'none';
+    campaign = 'direct-access';
+    content = 'null';
+    access_time = new Date().toISOString();
   }
   
-  console.log(`[UTM LOG] source=${utm.source}, medium=${utm.medium}, campaign=${utm.campaign}, content=${utm.content}, access_time=${utm.access_time}`);
+  console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}, access_time=${access_time}`);
 
   const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
 
-  db.query(utmLogQuery, [utm.source, utm.medium, utm.campaign, utm.content, utm.access_time], (err) => {
+  db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
       console.error('Failed to log the utm: ', err);
       return res.status(500).json({ error: 'Failed to log the utm.' });
