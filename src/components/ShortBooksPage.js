@@ -6,12 +6,10 @@ import Sidebar from "./Sidebar"
 import ErrorReportModal from "./ErrorReportModal"
 import axios from "axios"
 import { useSidebar } from "../SidebarContext"
-import useUTMLogger from "./UTMLogger"
 
 const ShortBooksPage = () => {
   // ShortBooks 페이지 컴포넌트
   // 책 요약(Short Books) 뷰어 역할
-  useUTMLogger();
   const { id } = useParams()
   const [shortBooks, setShortBooks] = useState([])
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
