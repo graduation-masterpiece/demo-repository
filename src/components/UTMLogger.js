@@ -37,10 +37,17 @@ function useUTMLogger() {
     // UTM이 있을 경우에만 백엔드로 전송
     if (!isValid || sessionStorage.getItem('utm_logged')) return;
     
-    console.log("Sending UTM: ", utmData);
+    console.log("Preparing to send UTM: ", utmData);
 
     const loggingUtm = async () => {
       try {
+        const healthRes = await axios.get('/health');
+
+        if (!healthRes.data?.ready) {
+          console.warn("Server is not ready yet. Skipping UTM logging.");
+          return;
+        }
+        
         await axios.post('/api/log-utm', {
           source: utmData.source,
           medium: utmData.medium,
