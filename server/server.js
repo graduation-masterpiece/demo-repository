@@ -449,9 +449,11 @@ app.get('/api/my-library', (req, res) => {
 app.post('/api/error-report', async (req, res) => {
   const { book_info_id, error_type, report_time } = req.body;
 
+	const mysqlTime = new Date(report_time).toISOString().slice(0, 19).replace('T', ' ');
+
   const reportQuery = `insert into error_reports (book_info_id, error_type, report_time) values (?, ?, ?)`;
 
-  db.query(reportQuery, [book_info_id, error_type, report_time], (err) => {
+  db.query(reportQuery, [book_info_id, error_type, mysqlTime], (err) => {
     if (err) {
       console.error('Failed to report the error: ', err);
       return res.status(500).json({ error: 'Failed to report the error.' });
@@ -463,31 +465,31 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
-  console.log("Request Body: ", req.body);
-  
   let { source, medium, campaign, content, access_time } = req.body;
 
-  if (!req.body || Object.keys(req.body).length == 0) {
+  if (!req.body || Object.keys(req.body).length === 0) {
     source = 'direct';
     medium = 'none';
     campaign = 'direct-access';
-    content = 'null';
+    content = null;
     access_time = new Date().toISOString();
+  } else {
+    const parsedContent = parseInt(content, 10);
+    content = isNaN(parsedContent) ? null : parsedContent;
   }
+
+	const mysqlTime = new Date(access_time).toISOString().slice(0, 19).replace('T', ' ');
   
-  console.log(`[UTM LOG] source=${source}, medium=${medium}, campaign=${campaign}, content=${content}, access_time=${access_time}`);
-  res.status(200).json({ received: req.body });
-  /*
   const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
 
-  db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
+  db.query(utmLogQuery, [source, medium, campaign, content, mysqlTime], (err) => {
     if (err) {
-      console.error('Failed to log the utm: ', err.response?.data || err);
+      console.error('Failed to log the utm: ', err);
       return res.status(500).json({ error: 'Failed to log the utm.' });
     }
 
     res.status(200).json({ message: 'Logging the UTM complete.' });
-  });*/
+  });
 });
 
 // ✅ React fallback 설정 (API, META 제외)
