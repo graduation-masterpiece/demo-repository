@@ -4,14 +4,14 @@ import axios from 'axios';
 function useUTMLogger() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
     
     let utmData = {
-      source: urlParams.get('utm_source'),
-      medium: urlParams.get('utm_medium'),
-      campaign: urlParams.get('utm_campaign'),
-      content: parseInt(urlParams.get('utm_content'), 10),
-      access_time: accessTime,
+      source: urlParams.get('utm_source') || sessionStorage.getItem('utm_source'),
+      medium: urlParams.get('utm_medium') || sessionStorage.getItem('utm_source'),
+      campaign: urlParams.get('utm_campaign') || sessionStorage.getItem('utm_source'),
+      content: parseInt(urlParams.get('utm_content') || sessionStorage.getItem('utm_content'), 10);,
+      access_time: sessionStorage.getItem('utm_access_time') || currentTime,
     };
 
     // 만약 링크 직접 입력 또는 메인 페이지로 들어왔을 때
@@ -23,7 +23,7 @@ function useUTMLogger() {
         medium: 'none',
         campaign: 'direct-access',
         content: -1,
-        access_time: accessTime,
+        access_time: currentTime,
       };
     }
 
@@ -51,18 +51,9 @@ function useUTMLogger() {
           campaign: utmData.campaign,
           content: utmData.content,
           access_time: utmData.access_time,
-        }, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
         });
         
         sessionStorage.setItem('utm_logged', 'true');
-        sessionStorage.setItem('utm_source', utmData.source || '');
-        sessionStorage.setItem('utm_medium', utmData.medium || '');
-        sessionStorage.setItem('utm_campaign', utmData.campaign || '');
-        sessionStorage.setItem('utm_content', utmData.content || '');
-        sessionStorage.setItem('utm_access_time', utmData.access_time || '');
       } catch (err) {
         console.error("UTM Logging Failed: ", err.response?.data || err);
       }
