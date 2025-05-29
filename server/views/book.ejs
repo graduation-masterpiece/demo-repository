@@ -26,7 +26,7 @@
       const source = params.get('utm_source');
       const medium = params.get('utm_medium');
       const campaign = params.get('utm_campaign');
-      const content = params.get('utm_content');
+      const content = parseInt(params.get('utm_content'), 10);
       const accessTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
       
       if (source || medium || campaign || content) {
