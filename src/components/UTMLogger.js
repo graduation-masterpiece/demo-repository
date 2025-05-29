@@ -4,15 +4,13 @@ import axios from 'axios';
 function useUTMLogger() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessTime = new Date().toISOString();
-
-    console.log("Detected URL Params: ", urlParams);
+    const accessTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
     
     let utmData = {
       source: urlParams.get('utm_source'),
       medium: urlParams.get('utm_medium'),
       campaign: urlParams.get('utm_campaign'),
-      content: urlParams.get('utm_content'),
+      content: parseInt(urlParams.get('utm_content'), 10),
       access_time: accessTime,
     };
 
@@ -20,19 +18,17 @@ function useUTMLogger() {
     const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content;
 
     if (isEmpty) {
-      console.log("No UTM Data Detected!");
-      
       utmData = {
         source: 'direct',
         medium: 'none',
         campaign: 'direct-access',
-        content: 'null',
+        content: null,
         access_time: accessTime,
       };
     }
 
     // null 값 거르기
-    const isValid = Object.values(utmData).every(val => typeof val === 'string' && val.length > 0);
+    const isValid = utmData.source != null && medium != null && campaign != null;
 
     // UTM이 있을 경우에만 백엔드로 전송
     if (!isValid || sessionStorage.getItem('utm_logged')) return;
