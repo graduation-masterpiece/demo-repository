@@ -37,6 +37,13 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// 서버 준비 상태 확인
+let isServerReady = false;
+
+app.get('/health', (req, res) => {
+  res.json({ ready: isServerReady });
+});
+
 // SNS 미리보기용 메타 URL
 app.get('/meta/book/:bookId', async (req, res) => {
   const ua = req.headers['user-agent'] || '';
@@ -492,5 +499,6 @@ app.get(/^\/(?!api\/|meta\/).*/, (req, res) => {
 // 서버 실행
 const PORT = 5001;
 app.listen(PORT, () => {
+  isServerReady = true;
   console.log(`The server is running at: https://bookcard.site/`);
 });
