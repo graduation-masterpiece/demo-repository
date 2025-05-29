@@ -27,14 +27,13 @@
       const medium = params.get('utm_medium');
       const campaign = params.get('utm_campaign');
       const content = parseInt(params.get('utm_content'), 10);
-      const accessTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
       
       if (source || medium || campaign || content) {
         sessionStorage.setItem('utm_source', source || '');
         sessionStorage.setItem('utm_medium', medium || '');
         sessionStorage.setItem('utm_campaign', campaign || '');
         sessionStorage.setItem('utm_content', content || '');
-        sessionStorage.setItem('utm_access_time', accessTime);
+        sessionStorage.setItem('utm_access_time', new Date());
       }
       
       const id = '<%= bookId %>';
