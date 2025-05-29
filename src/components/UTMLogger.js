@@ -42,7 +42,7 @@ function useUTMLogger() {
     const loggingUtm = async () => {
       try {
         const healthRes = await axios.get('/health');
-        console.log("Returned healthRes: ", healthRes);
+        console.log("Returned healthRes: ", healthRes.data);
 
         if (!healthRes.data?.ready) {
           console.warn("Server is not ready yet. Skipping UTM logging.");
