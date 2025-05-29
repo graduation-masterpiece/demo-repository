@@ -464,7 +464,7 @@ app.post('/api/error-report', async (req, res) => {
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
   console.log("Request Body: ", req.body);
-	
+  /*
   let { source, medium, campaign, content, access_time } = req.body;
 
   if (!req.body || Object.keys(req.body).length == 0) {
@@ -486,7 +486,7 @@ app.post('/api/log-utm', (req, res) => {
     }
 
     res.status(200).json({ message: 'Logging the UTM complete.' });
-  });
+  });*/
 });
 
 // ✅ React fallback 설정 (API, META 제외)
