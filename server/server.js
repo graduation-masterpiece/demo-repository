@@ -492,7 +492,7 @@ app.post('/api/log-utm', (req, res) => {
 // ✅ React fallback 설정 (API, META 제외)
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
-app.get('*', (req, res) => {
+app.get('*', (req, res, next) => {
   const excludedPaths = ['/api', '/meta'];
   
   if (excludedPaths.some(prefix => req.path.startsWith(prefix)) || req.path === '/health') next();
