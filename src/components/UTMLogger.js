@@ -41,7 +41,7 @@ function useUTMLogger() {
 
     const loggingUtm = async () => {
       try {
-        const healthRes = await axios.get('/health');
+        const healthRes = await axios.get('/api/health');
         console.log("Returned healthRes: ", healthRes.data);
 
         if (!healthRes.data?.ready) {
