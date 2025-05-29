@@ -28,7 +28,7 @@ function useUTMLogger() {
     }
 
     // null 값 거르기
-    const isValid = utmData.source != null && medium != null && campaign != null;
+    const isValid = utmData.source != null && utmData.medium != null && utmData.campaign != null;
 
     // UTM이 있을 경우에만 백엔드로 전송
     if (!isValid || sessionStorage.getItem('utm_logged')) return;
@@ -63,7 +63,7 @@ function useUTMLogger() {
         sessionStorage.setItem('utm_campaign', utmData.campaign || '');
         sessionStorage.setItem('utm_content', utmData.content || '');
         sessionStorage.setItem('utm_access_time', utmData.access_time || '');
-      } catch(err) {
+      } catch (err) {
         console.error("UTM Logging Failed: ", err.response?.data || err);
       }
     };
