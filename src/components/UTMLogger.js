@@ -22,7 +22,7 @@ function useUTMLogger() {
         source: 'direct',
         medium: 'none',
         campaign: 'direct-access',
-        content: null,
+        content: -1,
         access_time: accessTime,
       };
     }
