@@ -120,7 +120,7 @@ app.get('/api/autocomplete', async (req, res) => {
     res.status(200).json({ suggestions });
   } catch (error) {
     console.error('Redis error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
 
@@ -289,7 +289,7 @@ app.delete('/api/book/:id', (req, res) => {
   db.query(deleteBookCardQuery, [bookId], (err) => {
     if (err) {
       console.error('An error has occurred during deletion in book_card: ', err);
-      return res.status(500).json({ error: 'An error has occurred during deletion in book_card.' });
+      return res.status(500).json({ error: 'An error has occurred during deletion in book_card.', details: err.message });
     }
 
     // book_info 테이블에서 삭제
@@ -297,7 +297,7 @@ app.delete('/api/book/:id', (req, res) => {
     db.query(deleteBookInfoQuery, [bookId], (err) => {
       if (err) {
         console.error('An error has occurred during deletion in book_info: ', err);
-        return res.status(500).json({ error: 'An error has occurred during deletion in book_info.' });
+        return res.status(500).json({ error: 'An error has occurred during deletion in book_info.', details: err.message });
       }
 
       // error_reports 테이블에서 삭제
@@ -305,7 +305,7 @@ app.delete('/api/book/:id', (req, res) => {
       db.query(deleteErrorReportQuery, [bookId], (err) => {
         if (err) {
 	  console.error('An error has occurred during deletion in error_reports: ', err);
-	  return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.' });
+	  return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.', details: err.message });
 	}
 	
       	res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
@@ -351,7 +351,7 @@ app.patch('/api/book/:id/like', async (req, res) => {
     res.status(200).json({ likes: rows[0].likes });
   } catch (error) {
     console.error('Likes processing error: ', error);
-    res.status(500).json({ error: 'Server Error - Likes Increment' });
+    res.status(500).json({ error: 'Server Error - Likes Increment', details: error.message });
   }
 });
 
@@ -450,7 +450,7 @@ app.post('/api/error-report', async (req, res) => {
   db.query(reportQuery, [book_info_id, error_type, report_time], (err) => {
     if (err) {
       console.error('Failed to report the error: ', err);
-      return res.status(500).json({ error: 'Failed to report the error.' });
+      return res.status(500).json({ error: 'Failed to report the error.', details: err.message });
     }
     
     res.status(200).json({ message: 'Reporting error complete.' });
@@ -466,7 +466,7 @@ app.post('/api/log-utm', async (req, res) => {
   db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
       console.error('Failed to log the utm: ', err);
-      return res.status(500).json({ error: 'Failed to log the utm.' });
+      return res.status(500).json({ error: 'Failed to log the utm.', details: err.message });
     }
 
     res.status(200).json({ message: 'Logging the UTM complete.' });
