@@ -27,7 +27,7 @@ function useUTMLogger() {
     }
 
     // null 값 거르기
-    const isValid = utmData.source != null && utmData.medium != null && utmData.campaign != null;
+    const isValid = Object.values(utmData).every(val => typeof val === 'string' && val.length > 0);
 
     // UTM이 있을 경우에만 백엔드로 전송
     if (!isValid || sessionStorage.getItem('utm_logged')) return;
@@ -37,20 +37,13 @@ function useUTMLogger() {
     const loggingUtm = async () => {
       try {
         const healthRes = await axios.get('/api/health');
-        console.log("Returned healthRes: ", healthRes.data);
 
         if (!healthRes.data?.ready) {
           console.warn("Server is not ready yet. Skipping UTM logging.");
           return;
         }
         
-        await axios.post('/api/log-utm', {
-          source: utmData.source,
-          medium: utmData.medium,
-          campaign: utmData.campaign,
-          content: utmData.content,
-          access_time: utmData.access_time,
-        });
+        await axios.post('/api/log-utm', utmData);
         
         sessionStorage.setItem('utm_logged', 'true');
       } catch (err) {
