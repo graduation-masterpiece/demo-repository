@@ -95,7 +95,6 @@ app.post('/api/search-history', async (req, res) => {
   }
 });
 
-
 // 자동완성 API (1글자 지원 버전)
 app.get('/api/autocomplete', async (req, res) => {
   const { prefix } = req.query;
@@ -124,7 +123,6 @@ app.get('/api/autocomplete', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // 네이버 API 프록시 엔드포인트
 app.get('/api/naver-search', async (req, res) => {
@@ -228,8 +226,6 @@ app.post('/api/book', async (req, res) => {
     });
   }
 });
-
-
 
 // 전체 책 정보 가져오기
 app.get('/api/book-cards', (req, res) => {
@@ -448,9 +444,7 @@ app.get('/api/my-library', (req, res) => {
 // 오류 신고
 app.post('/api/error-report', async (req, res) => {
   const { book_info_id, error_type, report_time } = req.body;
-
-	const mysqlTime = new Date(report_time).toISOString().slice(0, 19).replace('T', ' ');
-
+  
   const reportQuery = `insert into error_reports (book_info_id, error_type, report_time) values (?, ?, ?)`;
 
   db.query(reportQuery, [book_info_id, error_type, mysqlTime], (err) => {
@@ -465,24 +459,11 @@ app.post('/api/error-report', async (req, res) => {
 
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
-  let { source, medium, campaign, content, access_time } = req.body;
-
-  if (!req.body || Object.keys(req.body).length === 0) {
-    source = 'direct';
-    medium = 'none';
-    campaign = 'direct-access';
-    content = null;
-    access_time = new Date().toISOString();
-  } else {
-    const parsedContent = parseInt(content, 10);
-    content = isNaN(parsedContent) ? null : parsedContent;
-  }
-
-	const mysqlTime = new Date(access_time).toISOString().slice(0, 19).replace('T', ' ');
+  const { source, medium, campaign, content, access_time } = req.body;
   
   const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
 
-  db.query(utmLogQuery, [source, medium, campaign, content, mysqlTime], (err) => {
+  db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
       console.error('Failed to log the utm: ', err);
       return res.status(500).json({ error: 'Failed to log the utm.' });
