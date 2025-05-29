@@ -464,6 +464,7 @@ app.post('/api/error-report', async (req, res) => {
 // UTM 로깅
 app.post('/api/log-utm', (req, res) => {
   console.log("Request Body: ", req.body);
+  res.status(200).json({ received: req.body });
   /*
   let { source, medium, campaign, content, access_time } = req.body;
 
