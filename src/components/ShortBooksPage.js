@@ -166,7 +166,7 @@ const ShortBooksPage = () => {
       await axios.post("/api/error-report", {
         book_info_id: currentBook.id,
         error_type: selectedError,
-        report_time: new Date().toISOString(),
+        report_time: new Date().toISOString().slice(0, 19).replace('T', ' '),
       })
       alert("Error report completed.")
       setShowErrorModal(false)
