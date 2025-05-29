@@ -300,12 +300,12 @@ app.delete('/api/book/:id', (req, res) => {
         return res.status(500).json({ error: 'An error has occurred during deletion in book_info.', details: err.message });
       }
 
-      // error_reports 테이블에서 삭제
-      const deleteErrorReportQuery = `DELETE FROM error_reports WHERE book_info_id = ?`;
+      // error_report 테이블에서 삭제
+      const deleteErrorReportQuery = `DELETE FROM error_report WHERE book_info_id = ?`;
       db.query(deleteErrorReportQuery, [bookId], (err) => {
         if (err) {
-	  console.error('An error has occurred during deletion in error_reports: ', err);
-	  return res.status(500).json({ error: 'An error has occurred during deletion in error_reports.', details: err.message });
+	  console.error('An error has occurred during deletion in error_report: ', err);
+	  return res.status(500).json({ error: 'An error has occurred during deletion in error_report.', details: err.message });
 	}
 	
       	res.status(200).json({ message: 'The book data has deleted successfully, including related error reports.' });
@@ -445,7 +445,7 @@ app.get('/api/my-library', (req, res) => {
 app.post('/api/error-report', async (req, res) => {
   const { book_info_id, error_type, report_time } = req.body;
   
-  const reportQuery = `insert into error_reports (book_info_id, error_type, report_time) values (?, ?, ?)`;
+  const reportQuery = `insert into error_report (book_info_id, error_type, report_time) values (?, ?, ?)`;
 
   db.query(reportQuery, [book_info_id, error_type, report_time], (err) => {
     if (err) {
@@ -461,7 +461,7 @@ app.post('/api/error-report', async (req, res) => {
 app.post('/api/log-utm', async (req, res) => {
   const { source, medium, campaign, content, access_time } = req.body;
   console.log("[UTM TAGS]: source=", source, ", campaign=", campaign, ", content=", content, ", access_time=", access_time);
-  const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
+  const utmLogQuery = `insert into utm_log (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
 
   db.query(utmLogQuery, [source, medium, campaign, content, access_time], (err) => {
     if (err) {
