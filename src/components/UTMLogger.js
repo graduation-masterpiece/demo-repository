@@ -55,6 +55,10 @@ function useUTMLogger() {
           campaign: utmData.campaign,
           content: utmData.content,
           access_time: utmData.access_time,
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
         
         sessionStorage.setItem('utm_logged', 'true');
