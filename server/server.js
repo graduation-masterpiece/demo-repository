@@ -458,7 +458,7 @@ app.post('/api/error-report', async (req, res) => {
 });
 
 // UTM 로깅
-app.post('/api/log-utm', (req, res) => {
+app.post('/api/log-utm', async (req, res) => {
   const { source, medium, campaign, content, access_time } = req.body;
   
   const utmLogQuery = `insert into utm_logs (utm_source, utm_medium, utm_campaign, utm_content, access_time) values (?, ?, ?, ?, ?)`;
