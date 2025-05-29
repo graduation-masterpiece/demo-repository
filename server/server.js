@@ -447,7 +447,7 @@ app.post('/api/error-report', async (req, res) => {
   
   const reportQuery = `insert into error_reports (book_info_id, error_type, report_time) values (?, ?, ?)`;
 
-  db.query(reportQuery, [book_info_id, error_type, mysqlTime], (err) => {
+  db.query(reportQuery, [book_info_id, error_type, report_time], (err) => {
     if (err) {
       console.error('Failed to report the error: ', err);
       return res.status(500).json({ error: 'Failed to report the error.' });
