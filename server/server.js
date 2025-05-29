@@ -40,7 +40,7 @@ app.set("views", path.join(__dirname, "views"));
 // 서버 준비 상태 확인
 let isServerReady = false;
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ ready: isServerReady });
 });
 
