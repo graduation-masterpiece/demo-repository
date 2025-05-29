@@ -9,7 +9,7 @@ const ErrorReportModal = ({ onClose, onSubmit }) => {
     "Content is exceeding the screen.",
     "Some sentence is not written in black.",
     "Numbering is taking a whole page.",
-    "There is an awkward punctuation mark (\*, \", etc.).",
+    "There is an awkward punctuation mark (*, \", etc.).",
     "Other error has occurred."
   ];
 
