@@ -4,7 +4,7 @@ import axios from 'axios';
 function useUTMLogger() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    
+    console.log("URL Parameters: ", urlParams);
     let utmData = {
       source: urlParams.get('utm_source') || sessionStorage.getItem('utm_source'),
       medium: urlParams.get('utm_medium') || sessionStorage.getItem('utm_source'),
@@ -15,7 +15,8 @@ function useUTMLogger() {
 
     // 만약 링크 직접 입력 또는 메인 페이지로 들어왔을 때
     const isEmpty = !utmData.source && !utmData.medium && !utmData.campaign && !utmData.content;
-
+    console.log("UTM Data: ", utmData);
+    console.log("isEmpty: ", isEmpty);
     if (isEmpty) {
       utmData = {
         source: 'direct',
