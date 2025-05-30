@@ -21,6 +21,7 @@
     <noscript>The browser doesn't support Script.</noscript>
     <script>
       (function () {
+        console.log('Before redirection: ', window.location.href);
         const params = new URLSearchParams(window.location.search);
         
         const source = params.get('utm_source');
@@ -35,13 +36,15 @@
           sessionStorage.setItem('utm_content', content || '');
           sessionStorage.setItem('utm_access_time', new Date());
         }
+
+        console.log("Stored utm_source in sessionStorage: ", sessionStorage.getItem('utm_source'));
         
         setTimeout(() => {
           const bookId = '<%= bookId %>';
           const query = window.location.search;
           
           window.location.href = `/book/${bookId}${query}`;
-        }, 100);
+        }, 150);
       })();
     </script>
   </body>
