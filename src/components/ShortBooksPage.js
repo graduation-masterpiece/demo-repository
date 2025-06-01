@@ -133,7 +133,7 @@ const ShortBooksPage = () => {
   const handleLinkShare = async () => {
     gtag('event', 'share', {
       method: 'copy_link',
-      content_type: 'bookcard',
+      content_type: 'book_card',
       item_id: currentBook.id
     });
     
