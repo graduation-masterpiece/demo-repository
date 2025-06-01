@@ -41,7 +41,7 @@ const MainPage = () => {
       const response = await axios.get(url, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "Accept-Charset": "utf-8",
+          // "Accept-Charset": "utf-8",
         },
       });
       setResults(response.data.items || []);
