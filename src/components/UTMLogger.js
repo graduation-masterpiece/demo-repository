@@ -28,7 +28,7 @@ function useUTMLogger() {
     }
     console.log("Processed UTM: ", utmData);
     // null 값 거르기
-    const isValid = [source, medium, campaign, content].every(
+    const isValid = [utmData.source, utmData.medium, utmData.campaign, utmData.content].every(
       val => (typeof val === 'string' || typeof val === 'number') && val !== ''
     );
 
