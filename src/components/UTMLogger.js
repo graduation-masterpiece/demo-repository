@@ -9,7 +9,7 @@ function useUTMLogger() {
       source: urlParams.get('utm_source') || sessionStorage.getItem('utm_source'),
       medium: urlParams.get('utm_medium') || sessionStorage.getItem('utm_source'),
       campaign: urlParams.get('utm_campaign') || sessionStorage.getItem('utm_source'),
-      content: parseInt(urlParams.get('utm_content') || sessionStorage.getItem('utm_content'), 10),
+      content: urlParams.get('utm_content') || sessionStorage.getItem('utm_content'),
       access_time: sessionStorage.getItem('utm_access_time') || new Date(),
     };
 
@@ -21,14 +21,14 @@ function useUTMLogger() {
         source: 'direct',
         medium: 'none',
         campaign: 'direct-access',
-        content: -1,
+        content: '-1',
         access_time: new Date(),
       };
     }
     
     // null 값 거르기
     const isValid = [utmData.source, utmData.medium, utmData.campaign, utmData.content].every(
-      val => (typeof val === 'string' || typeof val === 'number') && val !== ''
+      val => (typeof val === 'string') && val !== ''
     );
 
     // UTM이 있을 경우에만 백엔드로 전송
