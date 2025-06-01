@@ -1,3 +1,5 @@
+/* global gtag */
+
 // React 훅(useEffect, useState 등)과 라우터(useParams) 불러오기
 // 사이드바 컨텍스트(useSidebar)와 Axios HTTP 클라이언트 불러오기
 import { useEffect, useState, useCallback, useRef } from "react"
