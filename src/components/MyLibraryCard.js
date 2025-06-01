@@ -12,6 +12,12 @@ const MyLibraryCard = ({ id, title, likes, image }) => {
 
   // 함수: 카드 클릭 핸들러 (도서 상세로 이동)
   const handleClick = () => {
+    gtag('event', 'select_content', {
+      content_type: 'book_card',
+      item_id: id,
+      item_name: title
+    })
+    
     navigate(`/book/${id}`)
   }
 
