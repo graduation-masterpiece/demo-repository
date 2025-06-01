@@ -25,19 +25,15 @@
         const source = params.get('utm_source');
         const medium = params.get('utm_medium');
         const campaign = params.get('utm_campaign');
-        
-        const pathParts = window.location.pathname.split('/');
-        const content = pathParts[pathParts.length - 1];
+        const bookId = '<%= bookId %>';
         
         if (source || medium || campaign || content) {
           sessionStorage.setItem('utm_source', source || '');
           sessionStorage.setItem('utm_medium', medium || '');
           sessionStorage.setItem('utm_campaign', campaign || '');
-          sessionStorage.setItem('utm_content', content || '');
+          sessionStorage.setItem('utm_content', bookId || '');
           sessionStorage.setItem('utm_access_time', new Date());
-      
-          // 필요할 경우에만 리디렉션
-          const bookId = '<%= bookId %>';
+          
           const cleanUrl = `/book/${bookId}`; // utm 없이 깨끗한 주소로 이동
           if (window.location.pathname + window.location.search !== cleanUrl) {
             window.history.replaceState(null, '', cleanUrl);
