@@ -4,12 +4,13 @@ import axios from 'axios';
 function useUTMLogger() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
+    const pathParts = window.location.pathname.split('/');
     
     let utmData = {
       source: urlParams.get('utm_source') || sessionStorage.getItem('utm_source'),
       medium: urlParams.get('utm_medium') || sessionStorage.getItem('utm_source'),
       campaign: urlParams.get('utm_campaign') || sessionStorage.getItem('utm_source'),
-      content: urlParams.get('utm_content') || sessionStorage.getItem('utm_content'),
+      content: pathParts[pathParts.length - 1] || sessionStorage.getItem('utm_content'),
       access_time: sessionStorage.getItem('utm_access_time') || new Date(),
     };
 
