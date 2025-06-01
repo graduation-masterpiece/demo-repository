@@ -1,5 +1,7 @@
 // MyLibraryCard 컴포넌트: 내 라이브러리의 개별 도서 카드 표시
 
+/* global gtag */
+
 // React 훅(useState)과 라우터 훅(useNavigate) 불러오기
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
