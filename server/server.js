@@ -57,7 +57,10 @@ app.get('/meta/book/:bookId', async (req, res) => {
 
     if (!isBot) {
       // 일반 사용자면 React 페이지로 리디렉션
-      return res.redirect(301, `https://bookcard.site/book/${bookId}`);
+      const originalQuery = req.originalUrl.split('?')[1];
+      const redirectUrl = `https://bookcard.site/book/${bookId}` + (originalQuery ? `?${originalQuery}` : '');
+      
+      return res.redirect(301, redirectUrl);
     }
 
     // SNS 크롤러에게는 OG 메타 포함된 HTML 응답
