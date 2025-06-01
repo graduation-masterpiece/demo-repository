@@ -8,7 +8,7 @@ import { useSidebar } from "../SidebarContext";
 
 const MainPage = () => {
   const [results, setResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [, setIsSearching] = useState(false);
   const mainContentRef = useRef(null);
   const { isVisible: sidebarVisible } = useSidebar();
 
