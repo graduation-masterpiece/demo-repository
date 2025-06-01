@@ -56,7 +56,11 @@ const SearchBar = ({ onSearch }) => {
 
   setIsLoading(true);
   setShowSuggestions(false);
-
+  
+  gtag('event', 'search', {
+    search_term: searchTerm
+  });
+  
   try {
     // 1. 검색 기록 저장 요청 (비동기 처리 but 결과 기다리지 않음)
     axios.post('/api/search-history', { query: searchTerm })
