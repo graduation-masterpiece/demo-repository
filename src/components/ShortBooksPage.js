@@ -137,7 +137,6 @@ const ShortBooksPage = () => {
       url.searchParams.set('utm_source', 'internal_share')
       url.searchParams.set('utm_medium', 'share')
       url.searchParams.set('utm_campaign', 'share_button')
-      url.searchParams.set('utm_content', `${currentBook.id}`)
 
       const shareURL = url.toString()
       
