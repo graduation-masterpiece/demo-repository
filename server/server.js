@@ -236,6 +236,7 @@ app.get('/api/book-cards', (req, res) => {
     SELECT bi.id, bi.title, bi.author, bi.book_cover, bc.image_url, bc.summary, bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
+    WHERE bi.id >= 0
   `;
 
   db.query(query, (err, results) => {
