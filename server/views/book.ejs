@@ -18,6 +18,33 @@
     <meta name="twitter:image" content="<%= imageUrl %>">
   </head>
   <body>
+    <script>
+      (function () {
+        console.log('Before redirection: ', window.location.href);
+        const params = new URLSearchParams(window.location.search);
+        
+        const source = params.get('utm_source');
+        const medium = params.get('utm_medium');
+        const campaign = params.get('utm_campaign');
+        const content = parseInt(params.get('utm_content'), 10);
+        
+        if (source || medium || campaign || content) {
+          sessionStorage.setItem('utm_source', source || '');
+          sessionStorage.setItem('utm_medium', medium || '');
+          sessionStorage.setItem('utm_campaign', campaign || '');
+          sessionStorage.setItem('utm_content', content || '');
+          sessionStorage.setItem('utm_access_time', new Date());
+          console.log("Stored utm_source in sessionStorage: ", sessionStorage.getItem('utm_source'));
+      
+          // 필요할 경우에만 리디렉션
+          const bookId = '<%= bookId %>';
+          const cleanUrl = `/book/${bookId}`; // utm 없이 깨끗한 주소로 이동
+          if (window.location.pathname + window.location.search !== cleanUrl) {
+            window.history.replaceState(null, '', cleanUrl);
+          }
+        }
+      })();
+    </script>
     <noscript>The browser doesn't support Script.</noscript>
   </body>
 </html>
