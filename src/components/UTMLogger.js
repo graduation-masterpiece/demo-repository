@@ -25,7 +25,7 @@ function useUTMLogger() {
         access_time: new Date(),
       };
     }
-    
+    console.log("Processed UTM content: ", utmData.content);
     // null 값 거르기
     const isValid = [utmData.source, utmData.medium, utmData.campaign, utmData.content].every(
       val => (typeof val === 'string') && val !== ''
