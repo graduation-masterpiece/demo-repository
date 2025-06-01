@@ -19,33 +19,5 @@
   </head>
   <body>
     <noscript>The browser doesn't support Script.</noscript>
-    <script>
-      (function () {
-        console.log('Before redirection: ', window.location.href);
-        const params = new URLSearchParams(window.location.search);
-        
-        const source = params.get('utm_source');
-        const medium = params.get('utm_medium');
-        const campaign = params.get('utm_campaign');
-        const content = parseInt(params.get('utm_content'), 10);
-        
-        if (source || medium || campaign || content) {
-          sessionStorage.setItem('utm_source', source || '');
-          sessionStorage.setItem('utm_medium', medium || '');
-          sessionStorage.setItem('utm_campaign', campaign || '');
-          sessionStorage.setItem('utm_content', content || '');
-          sessionStorage.setItem('utm_access_time', new Date());
-        }
-
-        console.log("Stored utm_source in sessionStorage: ", sessionStorage.getItem('utm_source'));
-        
-        setTimeout(() => {
-          const bookId = '<%= bookId %>';
-          const query = window.location.search;
-          
-          window.location.href = `/book/${bookId}${query}`;
-        }, 150);
-      })();
-    </script>
   </body>
 </html>
