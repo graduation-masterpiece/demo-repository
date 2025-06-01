@@ -27,7 +27,7 @@
         const campaign = params.get('utm_campaign');
         
         const pathParts = window.location.pathname.split('/');
-        const content = parseInt(pathParts[pathParts.length - 1], 10);
+        const content = pathParts[pathParts.length - 1];
         
         if (source || medium || campaign || content) {
           sessionStorage.setItem('utm_source', source || '');
