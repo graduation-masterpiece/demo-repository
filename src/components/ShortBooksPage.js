@@ -131,6 +131,12 @@ const ShortBooksPage = () => {
 
   // 현재 책 공유 URL을 클립보드에 복사
   const handleLinkShare = async () => {
+    gtag('event', 'share', {
+      method: 'copy_link',
+      content_type: 'bookcard',
+      item_id: currentBook.id
+    });
+    
     try {
       const url = new URL(`https://bookcard.site/meta/book/${currentBook.id}`)
      
