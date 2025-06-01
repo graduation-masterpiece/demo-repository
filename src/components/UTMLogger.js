@@ -28,7 +28,9 @@ function useUTMLogger() {
     }
     console.log("Processed UTM: ", utmData);
     // null 값 거르기
-    const isValid = Object.values(utmData).every(val => typeof val === 'string' && val.length > 0);
+    const isValid = [source, medium, campaign, content].every(
+      val => (typeof val === 'string' || typeof val === 'number') && val !== ''
+    );
 
     // UTM이 있을 경우에만 백엔드로 전송
     if (!isValid || sessionStorage.getItem('utm_logged')) return;
