@@ -36,39 +36,23 @@
   transition: opacity 200ms;
 }
 
-/* index.css */
-.background-book {
-  background-image: url('../public/images/book.png'); /* 절대 경로 사용 */
-  background-size: cover;
-  background-repeat: no-repeat;
+/* Spotlight Box 효과를 줄 때 자주 사용하는 box-shadow */
+.spotlight {
+  position: absolute;
+  border: 3px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
 }
 
-.background-clip {
-  background-image: url('../public/images/clip.png'); /* 절대 경로 사용 */
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.background-magnifier {
-  background-image: url('../public/images/magnifier.png'); /* 절대 경로 사용 */
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-.background-pic1 {
-  background-image: url('../public/images/pic1.png'); /* 절대 경로 사용 */
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.background-pic2 {
-  background-image: url('../public/images/pic2.png'); /* 절대 경로 사용 */
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.background-pic3 {
-  background-image: url('../public/images/pic3.png'); /* 절대 경로 사용 */
-  background-size: cover;
-  background-repeat: no-repeat;
+/* 툴팁 박스 */
+.tooltip-box {
+  position: absolute;
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 240px;
+  z-index: 999;
 }
