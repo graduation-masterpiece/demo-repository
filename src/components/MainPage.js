@@ -14,15 +14,15 @@ const MainPage = () => {
   const [results, setResults] = useState([]);
   const [, setIsSearching] = useState(false);
 
-  // useLocalStorage 훅을 이용해 'tutorialSeen' 여부를 저장/로드
+  // localStorage에 'tutorialSeen' 플래그를 저장/불러오는 커스텀 훅
   const [tutorialSeen, setTutorialSeen] = useLocalStorage("tutorialSeen", false);
   const showTutorial = !tutorialSeen;
 
-  // 사이드바 상태 관리
+  // 사이드바 상태와 토글 함수
   const { isVisible: sidebarVisible, toggleSidebar } = useSidebar();
   const mainContentRef = useRef(null);
 
-  // Spotlight가 강조할 대상 ref들
+  // Spotlight가 강조할 DOM ref들
   const searchBarWrapperRef = useRef(null);
   const toggleButtonRef     = useRef(null);
   const sidebarWrapperRef   = useRef(null);
@@ -30,7 +30,8 @@ const MainPage = () => {
   const libraryItemRef      = useRef(null);
   const settingsItemRef     = useRef(null);
 
-  // 사이드바 열림/닫힘에 따라 메인 콘텐츠 레이아웃 조정
+  // ────────────────────────────────────────────────────────────────────
+  // 사이드바가 열리거나 닫힐 때 메인 콘텐츠 레이아웃 조정
   useEffect(() => {
     if (!mainContentRef.current) return;
     requestAnimationFrame(() => {
@@ -44,6 +45,7 @@ const MainPage = () => {
     });
   }, [sidebarVisible]);
 
+  // ────────────────────────────────────────────────────────────────────
   // 검색 처리 함수 (기존 로직 그대로)
   const handleSearch = async (query) => {
     if (!query.trim()) {
@@ -70,9 +72,9 @@ const MainPage = () => {
 
   return (
     <div className="flex w-screen h-screen bg-[#ECE6CC] relative">
-      {/* ────────────────────────────────────────────────
+      {/* ────────────────────────────────────────────────────────────────────
           1) 튜토리얼 Spotlight
-         ──────────────────────────────────────────────── */}
+         ──────────────────────────────────────────────────────────────────── */}
       {showTutorial && (
         <TutorialSpotlight
           onFinish={() => {
@@ -90,9 +92,9 @@ const MainPage = () => {
         />
       )}
 
-      {/* ────────────────────────────────────────────────
+      {/* ────────────────────────────────────────────────────────────────────
           2) 사이드바 토글 버튼 (화면 좌측 상단)
-         ──────────────────────────────────────────────── */}
+         ──────────────────────────────────────────────────────────────────── */}
       <div ref={toggleButtonRef} className="absolute top-4 left-4 z-50">
         {sidebarVisible ? (
           <button
@@ -139,19 +141,23 @@ const MainPage = () => {
         )}
       </div>
 
-      {/* ────────────────────────────────────────────────
-          3) 튜토리얼 재시청 버튼 (화면 우측 상단)
-         ──────────────────────────────────────────────── */}
-
+      {/* ────────────────────────────────────────────────────────────────────
+          3) 튜토리얼 다시보기 버튼 (화면 우측 상단)
+         ──────────────────────────────────────────────────────────────────── */}
       <button
-        onClick={() => setTutorialSeen(false)}
-        className="absolute top-4 right-4 z-50 flex items-center justify-center w-12 h-12 bg-transparent text-[#333333] hover:scale-110 transition-transform duration-200"
+        onClick={() => {
+          // 사이드바가 열려 있으면 닫은 뒤에, 튜토리얼을 다시 표시
+          if (sidebarVisible) toggleSidebar();
+          setTutorialSeen(false);
+        }}
+        className="absolute top-4 right-4 z-50 flex items-center justify-center w-10 h-10 rounded-full bg-transparent hover:bg-gray-200 transition-colors"
         aria-label="Replay Tutorial"
       >
+        {/* 물음표 아이콘 (크기를 좀 더 크게 조정) */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
+          width="24"
+          height="24"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -160,14 +166,14 @@ const MainPage = () => {
           strokeLinejoin="round"
         >
           <circle cx="12" cy="12" r="10" />
-          <path d="M9 9a3 3 0 0 1 6 0c0 1.5-1 2.25-1.5 2.75S12 13 12 14" />
-          <line x1="12" y1="17" x2="12" y2="17.01" />
+          <path d="M9.09 9a3 3 0 015.82 1c0 1.5-2 2.25-2 3.5" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
       </button>
 
-      {/* ────────────────────────────────────────────────
+      {/* ────────────────────────────────────────────────────────────────────
           4) 사이드바 전체 래퍼
-         ──────────────────────────────────────────────── */}
+         ──────────────────────────────────────────────────────────────────── */}
       <div ref={sidebarWrapperRef} className="absolute top-0 left-0">
         <Sidebar
           isVisible={sidebarVisible}
@@ -177,9 +183,9 @@ const MainPage = () => {
         />
       </div>
 
-      {/* ────────────────────────────────────────────────
+      {/* ────────────────────────────────────────────────────────────────────
           5) 메인 콘텐츠 영역: 검색창 + 결과
-         ──────────────────────────────────────────────── */}
+         ──────────────────────────────────────────────────────────────────── */}
       <main
         ref={mainContentRef}
         className="flex-1 overflow-auto transition-all duration-300"
