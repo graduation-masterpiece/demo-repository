@@ -477,6 +477,36 @@ app.post('/api/log-utm', async (req, res) => {
   });
 });
 
+app.get('/api/generated', async (req, res) => {
+  const generatedQuery = `
+    select
+      (select count(*) from book_card where generate_date >= now() - interval 1 day) as day,
+      (select count(*) from book_card where generate_date >= now() - interval 1 week) as week,
+      (select count(*) from book_card where generate_date >= now() - interval 1 month) as month;
+  `;
+    
+  db.query(generatedQuery, (err, results) => {
+    if (err) {
+      console.error('An Error has occurred during MySQL Day Query execution: ', err);
+      return res.status(500).json({ error: 'An error has occurred during MySQL Day Query execution.', details: err.message });
+    }
+
+    let dayCount = 0;
+    let weekCount = 0;
+    let monthCount = 0;
+
+    if (result && result[0]) {
+      dayCount = result[0].day ?? 0;
+      weekCount = result[0].week ?? 0;
+      monthCount = result[0].month ?? 0;
+    }
+
+    const counts = { dayCount, weekCount, monthCount };
+
+    return res.status(200).json(counts);
+  });
+});
+
 // ✅ React fallback 설정 (API, META 제외)
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
