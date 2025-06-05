@@ -17,7 +17,7 @@ const MyLibraryPage = () => {
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("latest");
   const [total, setTotal] = useState(0);
-  const { isVisible: sidebarVisible } = useSidebar(); // 전역 사이드바 상태 사용
+  const { isVisible: sidebarVisible, toggleSidebar } = useSidebar(); // 전역 사이드바 상태 사용
   const contentRef = useRef(null);
 
   
@@ -76,6 +76,58 @@ const MyLibraryPage = () => {
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden font-['Montserrat']">
       <Sidebar />
+
+      {/* ─── 사이드바 토글 버튼 ─── */}
+      <div className="absolute top-4 left-4 z-50">
+        {sidebarVisible ? (
+          <button
+            onClick={() => toggleSidebar()}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-[#444444] hover:bg-[#555555] transition-colors"
+            aria-label="Close sidebar"
+          >
+            {/* ← 아이콘: 사이드바 닫기 */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+        ) : (
+          <button
+            onClick={() => toggleSidebar()}
+            className="w-12 h-12 flex items-center justify-center bg-transparent text-[#333333] hover:scale-110 transition-transform duration-200"
+            aria-label="Open sidebar"
+          >
+            {/* ☰ 아이콘: 사이드바 열기 */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12h18" />
+              <path d="M3 6h18" />
+              <path d="M3 18h18" />
+            </svg>
+          </button>
+        )}
+      </div>
+
+
+
       <div 
         ref={contentRef}
         className="transition-all duration-300 h-screen overflow-y-auto pb-16"

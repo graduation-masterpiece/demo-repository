@@ -17,7 +17,7 @@ const ShortBooksPage = () => {
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0)
   const [pageTransition, setPageTransition] = useState(false)
-  const { isVisible: sidebarVisible } = useSidebar()
+  const { isVisible: sidebarVisible, toggleSidebar } = useSidebar()
   const contentRef = useRef(null)
 
   // 사이드바 노출 여부에 따라 메인 콘텐츠 마진 조정
@@ -199,6 +199,55 @@ const ShortBooksPage = () => {
       {/* 사이드바 컴포넌트 렌더링 */}
       <Sidebar />
 
+      {/* ─── 사이드바 토글 버튼─── */}
+      <div className="absolute top-4 left-4 z-50">
+        {sidebarVisible ? (
+          <button
+            onClick={() => toggleSidebar()}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-[#444444] hover:bg-[#555555] transition-colors"
+            aria-label="Close sidebar"
+          >
+            {/* ← 아이콘: 사이드바 닫기 */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+        ) : (
+          <button
+            onClick={() => toggleSidebar()}
+            className="w-12 h-12 flex items-center justify-center bg-transparent text-[#333333] hover:scale-110 transition-transform duration-200"
+            aria-label="Open sidebar"
+          >
+            {/* ☰ 아이콘: 사이드바 열기 */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12h18" />
+              <path d="M3 6h18" />
+              <path d="M3 18h18" />
+            </svg>
+          </button>
+        )}
+      </div>
+
       {/* 사이드바 노출에 따른 메인 콘텐츠 영역 */}
       <div
         ref={contentRef}
@@ -307,7 +356,7 @@ const ShortBooksPage = () => {
               {/* 책 카드 내비게이션 버튼(이전, 다음) */}
               <button
                 onClick={handlePrePage}
-                className="absolute left-[-80px] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
+                className="absolute left-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
                 aria-label="Previous page"
               >
                 <span className="text-7xl font-light">«</span>
@@ -315,7 +364,7 @@ const ShortBooksPage = () => {
 
               <button
                 onClick={handleNextPage}
-                className="absolute right-[-80px] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
+                className="absolute right-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
                 aria-label="Next page"
               >
                 <span className="text-7xl font-light">»</span>
