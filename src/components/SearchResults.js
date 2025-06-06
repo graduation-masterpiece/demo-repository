@@ -35,7 +35,7 @@ const SearchResults = ({ results }) => {
     setIsLoading(true);
     setIsCompleted(false);
     setCurrentIsbn(book.isbn);
-    setModalContent("Processing your request...<br>This can take up to 1 minute.");
+    setModalContent("Processing your request...\nThis can take up to 1 minute.");
     setIsModalOpen(true);
 
     try {
