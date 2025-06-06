@@ -84,7 +84,7 @@ const SettingsPage = () => {
         <div className="flex flex-col items-start h-full max-w-7xl mx-auto px-8 py-12">
           {/* 페이지 제목 */}
           <h1 className="text-[48px] font-normal text-[#1B1B1B] text-left mb-6 relative">
-            Settings
+            Options
             <div className="w-[500px] h-[2px] bg-[#1B1B1B] absolute bottom-[-10px] left-0"></div>
           </h1>
 
