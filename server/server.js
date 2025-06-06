@@ -416,6 +416,7 @@ app.get('/api/my-library', (req, res) => {
     SELECT COUNT(*) AS total
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
+    WHERE bi.id >= 0
   `;
 
   // 2. 페이지 데이터 쿼리
@@ -423,6 +424,7 @@ app.get('/api/my-library', (req, res) => {
     SELECT bi.id, bi.title, bc.image_url, bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
+    WHERE bi.id >= 0
     ORDER BY ${orderBy}
     LIMIT ? OFFSET ?
   `;
