@@ -9,7 +9,14 @@ const Modal = ({ message, onClose, showSpinner, children }) => {
                         <div className="animate-spin h-6 w-6 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
                     </div>
                 )}
-                <p className="text-gray-700">{message}</p>
+                <p className="text-gray-700">
+                    {message.split('\n').map((line, index) => (
+                        <React.Fragment key={index}>
+                            {line}
+                            <br/>
+                        </React.Fragment>
+                    ))}
+                </p>
                 {children}
                 <button
                     onClick={onClose}
