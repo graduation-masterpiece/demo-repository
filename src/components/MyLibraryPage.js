@@ -16,13 +16,12 @@ const MyLibraryPage = () => {
   const [books, setBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [sort, setSort] = useState("latest");
+  const [search, setSearch] = useState(""); // 검색 상태 추가
   const [total, setTotal] = useState(0);
-  const { isVisible: sidebarVisible, toggleSidebar } = useSidebar(); // 전역 사이드바 상태 사용
+  const { isVisible: sidebarVisible, toggleSidebar } = useSidebar();
   const contentRef = useRef(null);
 
-  
-
-  // 사이드바 상태가 변경될 때 콘텐츠 조정
+  // 사이드바 상태 변경 효과 (기존 동일)
   useEffect(() => {
     if (!contentRef.current) return;
     
@@ -35,15 +34,16 @@ const MyLibraryPage = () => {
     }
   }, [sidebarVisible]);
 
+  // 책 데이터 가져오기 (검색 파라미터 추가)
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        // page, itemsPerPage, sort 모두 params로 전달
         const response = await axios.get('/api/my-library', {
           params: {
             page,
             itemsPerPage,
             sort,
+            search, // 검색 파라미터 추가
           },
         });
         setBooks(response.data.books);
@@ -53,39 +53,37 @@ const MyLibraryPage = () => {
       }
     };
     fetchBooks();
-  }, [page, sort]);
+  }, [page, sort, search]); // 검색 의존성 추가
 
-  // 전체 페이지 수는 서버에서 받은 total로 계산
+  // 페이지네이션 함수 (기존 동일)
   const totalPages = Math.ceil(total / itemsPerPage);
+  const handlePrevPage = () => page > 0 && setPage(page - 1);
+  const handleNextPage = () => page < totalPages - 1 && setPage(page + 1);
 
-  // 페이지 이동 함수
-  const handlePrevPage = () => {
-    if (page > 0) setPage(page - 1);
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages - 1) setPage(page + 1);
-  };
-
-  // 필터링 변경 시 페이지 0으로
+  // 정렬 변경 핸들러 (기존 동일)
   const handleSortChange = (e) => {
     setSort(e.target.value);
     setPage(0);
+  };
+
+  // 검색 핸들러 추가
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setPage(0); // 검색 시 페이지 초기화
   };
 
   return (
     <div className="w-screen h-screen bg-[#ECE6CC] overflow-hidden font-['Montserrat']">
       <Sidebar />
 
-      {/* ─── 사이드바 토글 버튼 ─── */}
+      {/* ─── 사이드바 토글 버튼 (기존 동일) ─── */}
       <div className="absolute top-4 left-4 z-50">
         {sidebarVisible ? (
           <button
-            onClick={() => toggleSidebar()}
+            onClick={toggleSidebar}
             className="flex items-center justify-center w-8 h-8 rounded-full bg-[#444444] hover:bg-[#555555] transition-colors"
             aria-label="Close sidebar"
           >
-            {/* ← 아이콘: 사이드바 닫기 */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -102,11 +100,10 @@ const MyLibraryPage = () => {
           </button>
         ) : (
           <button
-            onClick={() => toggleSidebar()}
+            onClick={toggleSidebar}
             className="w-12 h-12 flex items-center justify-center bg-transparent text-[#333333] hover:scale-110 transition-transform duration-200"
             aria-label="Open sidebar"
           >
-            {/* ☰ 아이콘: 사이드바 열기 */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="32"
@@ -126,8 +123,6 @@ const MyLibraryPage = () => {
         )}
       </div>
 
-
-
       <div 
         ref={contentRef}
         className="transition-all duration-300 h-screen overflow-y-auto pb-16"
@@ -141,13 +136,25 @@ const MyLibraryPage = () => {
             !sidebarVisible ? "ml-auto mr-auto" : ""
           }`}
         >
-          {/* 타이틀 + 드롭다운 */}
+          {/* ─── 타이틀 + 검색 + 드롭다운 ─── */}
           <div className="flex flex-row justify-between items-start w-full mb-6">
             <h1 className="text-[48px] font-normal text-[#1B1B1B] text-left mb-10 relative">
               My Library
               <div className="w-[400px] h-[2px] bg-[#1B1B1B] absolute bottom-[-10px] left-0"></div>
             </h1>
-            <div className="mt-4">
+            
+            {/* 검색창 + 필터 컨테이너 */}
+            <div className="flex items-center gap-4 mt-4">
+              {/* 검색 입력 필드 */}
+              <input
+                type="text"
+                placeholder="Search by title/author"
+                value={search}
+                onChange={handleSearchChange}
+                className="text-lg border border-gray-400 rounded px-3 py-1 bg-white w-48 transition-all focus:w-64 focus:outline-none focus:border-gray-500"
+              />
+              
+              {/* 기존 드롭다운 */}
               <select
                 className="text-lg border border-gray-400 rounded px-3 py-1 bg-white"
                 value={sort}
@@ -162,9 +169,8 @@ const MyLibraryPage = () => {
             </div>
           </div>
 
-          {/* 카드 뷰어 중앙 정렬 */}
+          {/* ─── 카드 뷰어 (기존 동일) ─── */}
           <div className="flex-1 flex items-center justify-center w-full">
-            {/* 카드 컨테이너 */}
             <div className="flex-1 mx-auto w-full max-w-full mt-4 mb-8 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-4">
                 {books.map((book) => (
@@ -179,7 +185,8 @@ const MyLibraryPage = () => {
               </div>
             </div>
           </div>
-          {/* 페이지네이션 버튼 */}
+
+          {/* ─── 페이지네이션 (기존 동일) ─── */}
           {totalPages > 1 && (
             <div className="max-w-7xl mx-auto px-4 mb-4">
               <div className="flex justify-end items-center space-x-4">

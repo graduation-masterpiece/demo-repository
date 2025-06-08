@@ -401,51 +401,78 @@ app.get('/api/my-library', (req, res) => {
   const page = parseInt(req.query.page) || 0;
   const itemsPerPage = parseInt(req.query.itemsPerPage) || 12;
   const sort = req.query.sort || 'default';
+  const search = req.query.search || ''; // 검색어 파라미터 추가
 
-  let orderBy = 'bi.id ASC'; // 기본순
+  let orderBy = 'bi.id ASC';
   if (sort === 'latest') {
-    orderBy = 'bc.generate_date DESC'; // 생성순
+    orderBy = 'bc.generate_date DESC';
   } else if (sort === 'likes') {
-    orderBy = 'bc.likes DESC'; // 좋아요순
+    orderBy = 'bc.likes DESC';
   }
 
   const offset = page * itemsPerPage;
 
-  // 1. 전체 개수 쿼리
+  // 1. 검색 조건 생성
+  let whereCondition = 'WHERE bi.id >= 0';
+  const queryParams = [];
+  
+  if (search.trim()) {
+    whereCondition += ' AND (bi.title LIKE ? OR bi.author LIKE ?)';
+    const searchPattern = `%${search.trim()}%`;
+    queryParams.push(searchPattern, searchPattern);
+  }
+
+  // 2. 전체 개수 쿼리 (검색 조건 반영)
   const countQuery = `
     SELECT COUNT(*) AS total
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
-    WHERE bi.id >= 0
+    ${whereCondition}
   `;
 
-  // 2. 페이지 데이터 쿼리
+  // 3. 페이지 데이터 쿼리 (검색 조건 반영)
   const dataQuery = `
-    SELECT bi.id, bi.title, bc.image_url, bc.likes
+    SELECT 
+      bi.id, 
+      bi.title, 
+      bi.author,  // 작가 정보 추가
+      bc.image_url, 
+      bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
-    WHERE bi.id >= 0
+    ${whereCondition}
     ORDER BY ${orderBy}
     LIMIT ? OFFSET ?
   `;
 
-  db.query(countQuery, (err, countResults) => {
+  // COUNT 쿼리 실행
+  db.query(countQuery, queryParams, (err, countResults) => {
     if (err) {
-      console.error('An error has occurred during MySQL Query execution: ', err);
-      return res.status(500).send('Server Error - CountQuery');
+      console.error('MySQL CountQuery 오류:', err);
+      return res.status(500).send('서버 에러 - CountQuery');
     }
-    const total = countResults[0].total;
 
-    db.query(dataQuery, [itemsPerPage, offset], (err, dataResults) => {
+    const total = countResults[0].total;
+    const dataParams = [...queryParams, itemsPerPage, offset];
+
+    // DATA 쿼리 실행
+    db.query(dataQuery, dataParams, (err, dataResults) => {
       if (err) {
-        console.error('An error has occurred during MySQL Query execution: ', err);
-        return res.status(500).send('Server Error - DataQuery');
+        console.error('MySQL DataQuery 오류:', err);
+        return res.status(500).send('서버 에러 - DataQuery');
       }
-      // books와 total을 함께 반환
-      res.status(200).json({ books: dataResults, total });
+
+      res.status(200).json({ 
+        books: dataResults.map(item => ({
+          ...item,
+          // 필요시 추가 데이터 변환
+        })), 
+        total 
+      });
     });
   });
 });
+
 
 // 오류 신고
 app.post('/api/error-report', async (req, res) => {
