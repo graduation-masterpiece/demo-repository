@@ -411,18 +411,17 @@ app.get('/api/my-library', (req, res) => {
   }
 
   const offset = page * itemsPerPage;
-
-  // 1. 검색 조건 생성
   let whereCondition = 'WHERE bi.id >= 0';
   const queryParams = [];
-  
+
+  // 검색 조건 추가
   if (search.trim()) {
     whereCondition += ' AND (bi.title LIKE ? OR bi.author LIKE ?)';
     const searchPattern = `%${search.trim()}%`;
     queryParams.push(searchPattern, searchPattern);
   }
 
-  // 2. 전체 개수 쿼리 (검색 조건 반영)
+  // 1. 전체 개수 쿼리
   const countQuery = `
     SELECT COUNT(*) AS total
     FROM book_info bi
@@ -430,14 +429,9 @@ app.get('/api/my-library', (req, res) => {
     ${whereCondition}
   `;
 
-  // 3. 페이지 데이터 쿼리 (검색 조건 반영)
+  // 2. 페이지 데이터 쿼리
   const dataQuery = `
-    SELECT 
-      bi.id, 
-      bi.title, 
-      bi.author,  // 작가 정보 추가
-      bc.image_url, 
-      bc.likes
+    SELECT bi.id, bi.title, bc.image_url, bc.likes
     FROM book_info bi
     LEFT JOIN book_card bc ON bi.id = bc.book_info_id
     ${whereCondition}
@@ -445,30 +439,23 @@ app.get('/api/my-library', (req, res) => {
     LIMIT ? OFFSET ?
   `;
 
-  // COUNT 쿼리 실행
-  db.query(countQuery, queryParams, (err, countResults) => {
+  // COUNT 쿼리 실행 (검색 파라미터 전달)
+  db.query(countQuery, queryParams, (err, countResults) => { // 수정된 부분
     if (err) {
-      console.error('MySQL CountQuery 오류:', err);
+      console.error('CountQuery 오류:', err);
       return res.status(500).send('서버 에러 - CountQuery');
     }
 
     const total = countResults[0].total;
-    const dataParams = [...queryParams, itemsPerPage, offset];
+    const dataParams = [...queryParams, itemsPerPage, offset]; // 수정된 부분
 
-    // DATA 쿼리 실행
-    db.query(dataQuery, dataParams, (err, dataResults) => {
+    // DATA 쿼리 실행 (모든 파라미터 전달)
+    db.query(dataQuery, dataParams, (err, dataResults) => { // 수정된 부분
       if (err) {
-        console.error('MySQL DataQuery 오류:', err);
+        console.error('DataQuery 오류:', err);
         return res.status(500).send('서버 에러 - DataQuery');
       }
-
-      res.status(200).json({ 
-        books: dataResults.map(item => ({
-          ...item,
-          // 필요시 추가 데이터 변환
-        })), 
-        total 
-      });
+      res.status(200).json({ books: dataResults, total });
     });
   });
 });
