@@ -70,6 +70,21 @@ const MainPage = () => {
     }
   };
 
+  const [generationData, setGenerationData] = useState({ day: [], week: [], month: [])};
+
+  useEffect(() => {
+    const fetchGenerationData = async () => {
+      try {
+        const res = await axios.get("/api/generated");
+        setGenerationData(res.data.result || { day: 0, week: 0, month: 0 });
+      } catch (err) {
+        console.error("Generation data fetch failed: ", err);
+      }
+    };
+
+    fetchGenerationData();
+  }, []);
+
   return (
     <div className="flex w-screen h-screen bg-[#ECE6CC] relative">
       {/* ────────────────────────────────────────────────────────────────────
@@ -220,7 +235,15 @@ const MainPage = () => {
                 className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto"
                 style={{ paddingBottom: "2rem" }}
               >
-                {results.length > 0 && <SearchResults results={results} />}
+                {results.length > 0 ? (
+                  <SearchResults results={results} />}
+                ) : (
+                  <div className="text-center text-gray-500 mt-4">
+                    <p className="text-sm">
+                      Generation Last day: {generationData.day} / Generation Last week: {generationData.week} / Generation Last month: {generationData.month}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
