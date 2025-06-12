@@ -511,10 +511,10 @@ app.get('/api/generated', async (req, res) => {
     let weekCount = 0;
     let monthCount = 0;
 
-    if (result && result[0]) {
-      dayCount = result[0].day ?? 0;
-      weekCount = result[0].week ?? 0;
-      monthCount = result[0].month ?? 0;
+    if (results && results[0]) {
+      dayCount = results[0].day ?? 0;
+      weekCount = results[0].week ?? 0;
+      monthCount = results[0].month ?? 0;
     }
 
     const counts = { dayCount, weekCount, monthCount };
