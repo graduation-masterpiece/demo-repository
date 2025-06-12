@@ -70,7 +70,7 @@ const MainPage = () => {
     }
   };
 
-  const [generationData, setGenerationData] = useState({ day: [], week: [], month: [] });
+  const [generationData, setGenerationData] = useState({ day: 0, week: 0, month: 0 });
 
   useEffect(() => {
     const fetchGenerationData = async () => {
@@ -237,9 +237,8 @@ const MainPage = () => {
                 className="bg-white shadow-lg rounded-lg p-4 h-full overflow-y-auto"
                 style={{ paddingBottom: "2rem" }}
               >
-                {results.length > 0 ? (
-                  <SearchResults results={results} />
-                ) : (
+                {results.length > 0 && <SearchResults results={results} /> ?
+                () : (
                   <div className="text-center text-gray-500 mt-4">
                     <p className="mt-1 text-sm">
                       Generation Last day: {generationData.day ?? 0} / Generation Last week: {generationData.week ?? 0} / Generation Last month: {generationData.month ?? 0}
