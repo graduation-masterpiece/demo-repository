@@ -236,7 +236,7 @@ const MainPage = () => {
                 style={{ paddingBottom: "2rem" }}
               >
                 {results.length > 0 ? (
-                  <SearchResults results={results} />}
+                  <SearchResults results={results} />
                 ) : (
                   <div className="text-center text-gray-500 mt-4">
                     <p className="text-sm">
