@@ -493,7 +493,7 @@ app.post('/api/log-utm', async (req, res) => {
   });
 });
 
-app.get('/api/generated', async (req, res) => {
+app.get('/api/generation', async (req, res) => {
   const generatedQuery = `
     select
       (select count(*) from book_card where generate_date >= now() - interval 1 day) as day,
