@@ -82,6 +82,8 @@ const MainPage = () => {
           week: res.data.weekCount,
           month: res.data.monthCount,
         };
+
+        setGenerationData(newGenerationData);
       } catch (err) {
         console.error("Generation data fetch failed: ", err);
       }
