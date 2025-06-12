@@ -71,14 +71,17 @@ const MainPage = () => {
   };
 
   const [generationData, setGenerationData] = useState({ day: 0, week: 0, month: 0 });
-
+  
   useEffect(() => {
     const fetchGenerationData = async () => {
       try {
-        const res = await axios.get("/api/generated");
+        const res = await axios.get("/api/generation");
         
-        setGenerationData(res.data.result || { day: 0, week: 0, month: 0 });
-        console.log("Generation data fetch result: ", res.data.result);
+        const newGenerationData = {
+          day: res.data.dayCount,
+          week: res.data.weekCount,
+          month: res.data.monthCount,
+        };
       } catch (err) {
         console.error("Generation data fetch failed: ", err);
       }
