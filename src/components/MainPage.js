@@ -76,7 +76,9 @@ const MainPage = () => {
     const fetchGenerationData = async () => {
       try {
         const res = await axios.get("/api/generated");
+        
         setGenerationData(res.data.result || { day: 0, week: 0, month: 0 });
+        console.log("Generation data fetch result: ", res.data.result);
       } catch (err) {
         console.error("Generation data fetch failed: ", err);
       }
@@ -239,8 +241,8 @@ const MainPage = () => {
                   <SearchResults results={results} />
                 ) : (
                   <div className="text-center text-gray-500 mt-4">
-                    <p className="text-sm">
-                      Generation Last day: {generationData.day} / Generation Last week: {generationData.week} / Generation Last month: {generationData.month}
+                    <p className="mt-1 text-sm">
+                      Generation Last day: {generationData.day ?? 0} / Generation Last week: {generationData.week ?? 0} / Generation Last month: {generationData.month ?? 0}
                     </p>
                   </div>
                 )}
