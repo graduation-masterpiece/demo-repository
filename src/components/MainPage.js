@@ -70,7 +70,7 @@ const MainPage = () => {
     }
   };
 
-  const [generationData, setGenerationData] = useState({ day: [], week: [], month: [])};
+  const [generationData, setGenerationData] = useState({ day: [], week: [], month: [] });
 
   useEffect(() => {
     const fetchGenerationData = async () => {
