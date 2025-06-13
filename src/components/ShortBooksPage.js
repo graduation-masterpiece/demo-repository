@@ -349,6 +349,12 @@ const ShortBooksPage = () => {
                         </div>
                       </div>
                     )}
+                    {/* 페이지 표시: cover page(0)에서는 숨김, 첫 sentence page가 1로 시작 */}
+                    {currentSentenceIndex > 0 && (
+                      <div className="absolute bottom-4 right-4 bg-white bg-opacity-70 text-black px-4 py-1 rounded text-sm font-medium shadow-sm">
+                        {currentSentenceIndex} / {currentBook.summary.length + 1}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
