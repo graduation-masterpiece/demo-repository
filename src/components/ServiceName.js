@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const FONT_FAMILY = "Montserrat, sans-serif";
+const FONT_FAMILY = "'Lora', cursive";
 const TEXT = "Books In Shortform";
 
 export const ServiceName = () => {
