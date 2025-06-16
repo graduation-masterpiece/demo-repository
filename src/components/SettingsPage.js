@@ -97,7 +97,7 @@ const SettingsPage = () => {
               Please click the button below to participate in a brief survey.
             </p>
             <a
-              href="https://docs.google.com/forms/d/여기에_설문_ID_삽입"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSePHxtvt4lJ5Xh4zmrd_B9ULW7RO0drhCq0_Nwe-K0kNYb5FA/viewform"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-6 py-3 bg-[#B08B4F] text-white rounded-full hover:bg-[#A7763A] transition-colors shadow-md"

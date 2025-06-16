@@ -166,7 +166,7 @@ const Sidebar = ({ onToggle }) => {
         <div className="px-4 py-6 border-t border-[#444444] flex justify-center space-x-6">
           {/* GitHub 아이콘 */}
           <a
-            href="https://github.com/YourOrganization"
+            href="https://github.com/graduation-masterpiece/demo-repository"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-300 hover:text-white transition-colors"
@@ -185,7 +185,7 @@ const Sidebar = ({ onToggle }) => {
 
           {/* Instagram 공식 로고 */}
           <a
-            href="https://instagram.com/YourAccount"
+            href="https://www.instagram.com/books.in.shortform/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-300 hover:text-white transition-colors"
@@ -205,7 +205,7 @@ const Sidebar = ({ onToggle }) => {
 
           {/* YouTube 아이콘 */}
           <a
-            href="https://youtube.com/YourChannel"
+            href="https://www.youtube.com/channel/UCaI-hjRehiRTka5YqyVpbGQ"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-300 hover:text-white transition-colors"
