@@ -13,7 +13,7 @@ const ShortBooksPage = () => {
   // ShortBooks 페이지 컴포넌트
   // 책 요약(Short Books) 뷰어 역할
   const { id } = useParams()
-  const [shortBooks, setShortBooks] = useState([])
+  const [shortBooks, setShortBooks] = useState([]);
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0)
   const [pageTransition, setPageTransition] = useState(false)
@@ -295,7 +295,7 @@ const ShortBooksPage = () => {
                           <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center p-10">
                             <div
                               className={`
-                                max-w-[80%] text-center text-black text-3xl md:text-4xl font-semibold drop-shadow-md
+                                max-w-[90%] text-center text-black text-base sm:text-lg md:text-xl lg:text-2xl font-semibold drop-shadow-md
                                 transition-opacity duration-500 ease-in-out
                                 ${pageTransition ? "opacity-0" : "opacity-100"}
                               `}
