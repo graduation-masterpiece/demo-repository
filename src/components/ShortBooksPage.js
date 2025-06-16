@@ -362,7 +362,7 @@ const ShortBooksPage = () => {
               {/* 책 카드 내비게이션 버튼(이전, 다음) */}
               <button
                 onClick={handlePrePage}
-                className="absolute left-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
+                className="absolute left-2 sm:left-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
                 aria-label="Previous page"
               >
                 <span className="text-7xl font-light">«</span>
@@ -370,7 +370,7 @@ const ShortBooksPage = () => {
 
               <button
                 onClick={handleNextPage}
-                className="absolute right-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
+                className="absolute right-2 sm:right-[-4rem] top-1/2 transform -translate-y-1/2 p-2 flex items-center justify-center bg-transparent hover:bg-transparent transition duration-200 text-[#333333] hover:scale-110 transition-transform duration-200 ease-in-out"
                 aria-label="Next page"
               >
                 <span className="text-7xl font-light">»</span>

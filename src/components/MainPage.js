@@ -93,7 +93,7 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex w-screen h-screen bg-[#ECE6CC] relative">
+    <div className="flex w-screen min-h-screen bg-[#ECE6CC] relative">
       {/* ────────────────────────────────────────────────────────────────────
           1) 튜토리얼 Spotlight
          ──────────────────────────────────────────────────────────────────── */}
@@ -217,17 +217,21 @@ const MainPage = () => {
         }}
       >
         <div className="flex flex-col items-center h-full">
-          <div className="w-full max-w-[1000px] px-4 flex flex-col h-full relative">
+          <div className="w-full max-w-[1000px] px-4 sm:px-6 flex flex-col h-full relative">
             {/* 서비스 이름 + 검색창 */}
             <div
               className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-700 ease-in-out flex flex-col items-center w-full z-20 ${
                 results.length > 0
-                  ? "top-[1vh] scale-[0.65]"
+                  ? "top-[10vh] sm:top-[1vh] scale-[0.85] sm:scale-[0.65]"
                   : "top-[40%] -translate-y-1/2 scale-100"
               }`}
             >
-              <ServiceName />
-              <SearchBar ref={searchBarWrapperRef} onSearch={handleSearch} />
+              <div className="text-center w-full px-4">
+                <ServiceName />
+              </div>
+              <div className="w-full max-w-2xl px-4 sm:px-0">
+                <SearchBar ref={searchBarWrapperRef} onSearch={handleSearch} />
+              </div>
             </div>
 
             {/* 검색 결과창 */}

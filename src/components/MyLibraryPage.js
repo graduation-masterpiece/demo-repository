@@ -137,7 +137,7 @@ const MyLibraryPage = () => {
           }`}
         >
           {/* ─── 타이틀 + 검색 + 드롭다운 ─── */}
-          <div className="flex flex-row justify-between items-start w-full mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full mb-6 gap-4">
             <h1 className="text-[48px] font-normal text-[#1B1B1B] text-left mb-10 relative">
               My Library
               <div className="w-[400px] h-[2px] bg-[#1B1B1B] absolute bottom-[-10px] left-0"></div>

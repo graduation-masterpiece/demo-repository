@@ -19,7 +19,7 @@ export const ServiceName = () => {
     <div className="w-full flex flex-col items-center">
       <h1
         className={`
-          text-[48px] md:text-[72px] font-thin text-[#1B1B1B]
+          text-[28px] sm:text-[36px] md:text-[48px] lg:text-[72px] font-thin text-[#1B1B1B]
           tracking-tight text-center transition-all duration-300 select-none
         `}
         style={{
