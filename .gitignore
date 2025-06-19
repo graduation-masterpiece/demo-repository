@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Production build
+build/
+dist/
+
+
+# Env file
+.env
+
+
+# User/host-specific configs (서버환경 관련)
+.cache/
+.npm/
+.nvm/
+.pm2/
+.ssh/
+.vscode-server/
+.bash_history
+.bash_logout
+.bashrc
+.lesshst
+.mysql_history
+.profile
+.sudo_as_admin_successful
+.tmux.conf
+.wget-hsts
+
+# Application-generated
+server/generated_images/
